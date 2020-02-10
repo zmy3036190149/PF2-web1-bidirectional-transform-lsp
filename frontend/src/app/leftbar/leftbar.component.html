@@ -1,0 +1,40 @@
+<div style="border-style:solid;">
+  <ul>
+    <!-- <li class="title">&nbsp;icon</li> -->
+    <li [class.disable]="step != 1">
+        <button [title]="'machine'" (click)="clickMachine()">
+          <img src="assets/icons/machine.png">
+        </button>
+    </li>
+
+    <li [class.disable]="step !=2">
+      <button [title]="'domain'" (click)="clickDomain()">
+        <img src="assets/icons/domain.png">
+      </button>
+    </li>
+    
+    <li [class.disable]="step !=5">
+      <button [title]="'requirement'" (click)="clickReq()">
+        <img src="assets/icons/requirement.png">
+      </button>
+    </li>
+
+    <li [class.disable]="step !=3">
+      <button [title]="'interface'" (click)="clickInterface()">
+        <img src="assets/icons/interface.png">
+      </button>
+    </li>
+
+    <li [class.disable]="step != 6">
+      <button [title]="'reference'" (click)="clickReference()">
+        <img src="assets/icons/reference.png">
+      </button>
+    </li>
+
+    <li [class.disable]="step != 6">
+      <button [title]="'constraint'" (click)="clickConstraint()">
+        <img src="assets/icons/constraint.png">
+      </button>
+    </li>
+  </ul>
+</div>

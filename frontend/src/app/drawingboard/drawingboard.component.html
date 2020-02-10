@@ -1,0 +1,274 @@
+<div class=main (window:resize)="onResize($event)">
+
+    <ul class="tab" id="tablabel">
+      <li id="lm1" *ngIf="project" (click)='change_Menu(1)'>{{dg_service.tab1}}  </li>
+      <li id="lm2" *ngIf="project" (click)='change_Menu(2)'>{{dg_service.tab2}}  </li>
+    </ul>
+
+
+  <div class="content" id="content1" style="display: block;" ></div>
+  <div class="content" id="content2" style="display: none;" ></div>
+  <!---poplayer-->
+  <div id="popLayer"></div>
+  <!---machine--->
+  <div id="machinePopBox" class="popBox">
+    <span class="machineEdit">Machine Editor</span>
+    <button class="close" (click)="closeBox($event)">X</button>
+
+    <form action="" method="post" name="elementInputForm" class="element-input" novalidate>
+      <label for="description">Description</label>
+      <textarea class='description' ></textarea>
+      <!-- <input class='description' name="description" type="text" required> -->
+
+      <label for="shortName">ShortName</label>
+      <!-- <textarea class='shortName' ></textarea> -->
+      <input class='shortName' name="shortName" ng-model="a" type="text" required>
+
+      <!--label for="Physical Property"> Physical Property</label>
+      <select-- id="PhysicalProperty">
+        <option value="">{{PhysicalPropertys[0]}}</option>
+        <option value="">{{PhysicalPropertys[1]}}</option>
+        <option value="">{{PhysicalPropertys[2]}}</option>
+      </select-->
+    </form>
+      <input type="submit" class="button1" value="Confirm" (click)="confirm()" />
+      <input type="submit" class="button2" value="Cancel" (click)="closeBox($event)" />
+    
+  </div>
+
+  <!---problemDomainPopBox--->
+  <div id="problemDomainPopBox" class="popBox">
+    <span class="problemDomainEdit">Problem Domain Editor</span>
+    <button class="close" (click)="closeBox($event)">X</button>
+    <form action="" method="post" name="elementInputForm" class="element-input" novalidate>
+
+      <label for="description">Description</label>
+      <textarea class='description' ></textarea>
+      <!-- <input class='description' name="description" type="text" required> -->
+
+      <label for="shortName">ShortName</label>
+      <!-- <textarea class='shortName' ></textarea> -->
+      <input class='shortName' name="shortName" ng-model="a" type="text" required>
+      <label for="physicalProperty"> Physical Property</label>
+      <select class="physicalProperty">
+        <option value="">{{PhysicalPropertys[0]}}</option>
+        <option value="">{{PhysicalPropertys[1]}}</option>
+      </select>
+      <label for="domainType"> DomainType</label>
+      <select class="domainType">
+        <option value="">{{DomainTypes[0]}}</option>
+        <option value="">{{DomainTypes[1]}}</option>
+        <option value="">{{DomainTypes[2]}}</option>
+      </select>
+    </form>
+      <input type="submit" class="button1" value="Confirm" (click)="confirm()" />
+      <input type="submit" class="button2" value="Cancel" (click)="closeBox($event)" />
+    
+    <!-- <button class="button" (click)="toNext()">OK</button> -->
+    <!-- <button class="button" (click)="closeBox()">Cancel</button> -->
+  </div>
+  <!---requirementPopBox?--->
+  <div id="requirementPopBox" class="popBox">
+    <span class="requirementEdit">requirement Editor</span>
+    <button class="close" (click)="closeBox($event)">X</button>
+    <form action="" method="post" name="elementInputForm" class="element-input" novalidate>
+
+      <label for="description">Description</label>
+      <textarea class='description' ></textarea>
+      
+      <label for="shortName">ShortName</label>
+      <input class='shortName' name="shortName" ng-model="a" type="text" required>
+      <!-- <input class='description' name="description" type="text" required> -->
+    </form>
+      <input type="submit" class="button1" value="Confirm" (click)="confirm()" />
+      <input type="submit" class="button2" value="Cancel" (click)="closeBox($event)" />
+    
+  </div>
+  <!---interfacePopBox--->
+  <div id="interfacePopBox" class="popBox">
+    <span class="linkEdit">Interface Editor</span>
+    <button class="close" (click)="closeBox($event)">X</button>
+   
+      <form action="" method="post" name="elementInputForm" class="element-input" novalidate>
+        <label for="initiator">Initiator:</label>
+        <select class="initiator">
+          <option value="">{{dg_service.selectedLinkSource}}</option>
+          <option value="">{{dg_service.selectedLinkTarget}}</option>
+        </select>
+
+        <label for="name">phenomenon</label>
+        <input class= 'name inputLeft' id="nameint" name="name" ng-model="a" type="text"  required>
+        
+
+        <select class="phes inputRight" onchange="document.getElementById('nameint').value = this.options[this.selectedIndex].value">
+          <option value=" "></option>
+          <option value={{phe.phenomenon_name}} *ngFor='let phe of dg_service.selectPhes'>
+            {{phe.phenomenon_name}}
+          </option>
+        </select>
+
+        <label for="phenomenonType"> Type</label>
+        <select class="phenomenonType">
+          <option value="">{{phenomenonTypes[0]}}</option>
+          <option value="">{{phenomenonTypes[1]}}</option>
+          <option value="">{{phenomenonTypes[2]}}</option>
+        </select>
+
+        <label for="phenomenonList"> phenomenonList</label>
+        <div class="content1">
+            <!-- {{dg_service.description}} -->
+            <table class="phenomenonList">
+              <tr *ngFor="let phenomenon of dg_service.phenomenonList">
+                <td (click)="dg_service.selectPhenomenon(this,phenomenon.phenomenon_no)">
+                  {{phenomenon.phenomenon_from}}!
+                  {{phenomenon.phenomenon_name}}&nbsp;
+                  {{phenomenon.phenomenon_type}}
+                </td>
+              </tr>
+            </table>
+        </div>
+      </form>
+        <input type="submit" class=button3_1 id="button_add" value="add" (click)="dg_service.addPhenomenon()" />
+        <input type="submit" class=button3_2 id="button_delete" value="delete" (click)="dg_service.deletePhenomenon()" />
+        <input type="submit" class=button3_3 id="button_confirm" value="Confirm" (click)="confirm()" />
+      
+  </div>
+  <!---referencePopBox--->
+  <div id="referencePopBox" class="popBox">
+    <span class="linkEdit">Reference Editor</span>
+    <button class="close" (click)="closeBox($event)">X</button>
+    <form action="" method="post" name="elementInputForm" class="element-input" novalidate>
+
+      <label for="initiator">Initiator:</label>
+      <select class="initiator" (change)="dg_service.changereceiver()">
+        <option value= {{initiator}} *ngFor="let initiator of dg_service.initiator_receiverList">
+          {{initiator}}
+        </option>
+      </select>
+
+      <label for="receiver">Receiver:</label>
+      <select class="receiver">
+        <option value = {{receiver}} *ngFor="let receiver of dg_service.initiator_or_receiverList">
+          {{receiver}}
+        </option>
+      </select>
+
+      <label for="phenomenonSelect"> phenomenon</label>
+      <input class= 'name inputLeft' id="nameref" name="name" ng-model="a" type="text" required>
+      <select class="phes inputRight" (change)="dg_service.selectPhe()"> 
+      <!-- onchange="document.getElementById('nameref').value = this.options[this.selectedIndex].value"-->
+        <option value=""></option>
+        <option value={{phenomenon.phenomenon_name}} *ngFor="let phenomenon of dg_service.interface_ontologyPhes">
+          {{phenomenon.phenomenon_name}}
+        </option>
+      </select>
+
+      <label for="phenomenonType"> Type</label>
+      <select class="phenomenonType">
+        <option value="">{{phenomenonTypes[0]}}</option>
+        <option value="">{{phenomenonTypes[1]}}</option>
+        <option value="">{{phenomenonTypes[2]}}</option>
+      </select>  
+
+      <!-- <div class='checkbox'> (change)="checkChanges()"-->
+         <input type="checkbox"  class = 'checkbox'/>         
+         <div class="checkboxText" >
+          constraint
+         </div>  
+      <!-- </div>       -->
+
+      <label for="phenomenonList"> phenomenonList</label>
+      <div class="content1">
+          <table class="referencePhenomenonList">
+            <tr *ngFor="let phenomenon of dg_service.phenomenonList">
+              <td (click)="dg_service.selectPhenomenon(this,phenomenon.phenomenon_no)">
+                {{phenomenon.phenomenon_from}}!
+                {{phenomenon.phenomenon_name}}
+                &nbsp;
+                {{phenomenon.phenomenon_type}}
+              </td>
+            </tr>
+          </table>
+      </div>
+      <input type="submit" class=button3_1 id="button_add" value="add" (click)="dg_service.addPhenomenon()" />
+      <input type="submit" class=button3_2 id="button_delete" value="delete" (click)="dg_service.deletePhenomenon()" />
+      <input type="submit" class=button3_3 id="button_confirm" value="Confirm" (click)="confirm()" />
+    </form>
+  </div>
+  <!---constraintPopBox--->
+  <div id="constraintPopBox" class="popBox">
+    <span class="constraint Edit">constraint Editor</span>
+    <button class="close" (click)="closeBox($event)">X</button>
+    <form action="" method="post" name="elementInputForm" class="element-input" novalidate>
+
+      <label for="initiator">Initiator</label>
+      <select class="initiator"  (change)="dg_service.changereceiver()">
+        <option *ngFor="let initiator of dg_service.initiator_receiverList">
+          {{initiator}}
+        </option>
+      </select>
+
+      <label for="receiver">Receiver</label>
+      
+      <select class="receiver">
+        <option *ngFor="let receiver of dg_service.initiator_or_receiverList">
+          {{receiver}}
+        </option>
+      </select>
+
+      <label for="name">phenomenon</label>
+      <!-- <textarea class=name ></textarea> -->
+      <input class= 'name inputLeft' name="name" id="namecon" ng-model="a" type="text" required>
+      <select class="phes inputRight" onchange="document.getElementById('namecon').value = this.options[this.selectedIndex].value">
+        <option value=""></option>
+        <option value={{phenomenon.phenomenon_name}} *ngFor="let phenomenon of dg_service.interface_ontologyPhes">
+          {{phenomenon.phenomenon_name}}
+        </option>
+      </select>
+
+
+      <label for="phenomenonType"> Type</label>
+      <select class="phenomenonType">
+        <option value="">{{phenomenonTypes[0]}}</option>
+        <option value="">{{phenomenonTypes[1]}}</option>
+        <option value="">{{phenomenonTypes[2]}}</option>
+      </select>
+
+      <input type="checkbox" class='checkbox' />         
+      <div class="checkboxText">
+          constraint
+      </div>  
+
+      <label for="phenomenonList"> phenomenonList</label>
+      <div class="content1">
+          <!-- {{dg_service.description}} -->
+          <table class="phenomenonList">
+            <tr *ngFor="let phenomenon of dg_service.phenomenonList">
+              <td (click)="dg_service.selectPhenomenon(this,phenomenon.phenomenon_no)">
+
+                <!-- int{{phenomenon.phenomenon_no}}:
+            {{phenomenon.phenomenon_name}},
+            {{phenomenon.phenomenon_from}},
+            {{phenomenon.phenomenon_to}},
+            {{phenomenon.phenomenon_type}} -->
+                {{phenomenon.phenomenon_from}}!
+                {{phenomenon.phenomenon_name}}&nbsp;
+                {{phenomenon.phenomenon_type}}               
+
+              </td>
+            </tr>
+          </table>
+      </div>
+      <input type="submit" class=button3_1 id="button_add" value="add" (click)="dg_service.addPhenomenon()" />
+      <input type="submit" class=button3_2 id="button_delete" value="delete" (click)="dg_service.deletePhenomenon()" />
+      <input type="submit" class=button3_3 id="button_confirm" value="Confirm" (click)="confirm()" />
+    </form>
+
+  </div>
+
+  <div id='deletePopBox' class="popBox" (click)="deleteCell()">
+    delete
+  </div>
+
+
+</div>

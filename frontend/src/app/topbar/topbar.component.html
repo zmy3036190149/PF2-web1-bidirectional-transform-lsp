@@ -1,0 +1,81 @@
+<div>
+  <img src="assets/icons/3.png">
+  <nav style="text-align:center">
+    <ul>
+      <li (click)="newFile()">New</li>
+      <!-- <li>
+    Edit
+    <ul> -->
+      <li (click)="merge()" [class.disable]="step >2">Merge</li>
+      <!-- </ul>
+  </li> -->
+
+      <li>Upload
+        <ul>
+          <li (click)="uploadFile()">
+            Upload Project
+          </li>
+          <li (click)="uploadPF()">
+            Upload pf
+          </li>
+        </ul>
+      </li>
+      <li (click)="openProject()">Open</li>
+      <li (click)="saveProjectAndPf()">Save</li>
+      <li>
+        Download
+        <ul>
+          <li (click)="download()">XMLProject</li>
+          <li (click)="format()">TranslateFile</li>
+        </ul>
+      </li>
+      <li>
+        Ontology
+        <ul>
+          <li class='Pontology'>
+            Pontology
+            <ul>
+              <li (click)="uploadPOwl()">Load</li>
+              <li (click)="openPOwl()">Open</li>
+              <li (click)="pOntShow()">Show</li>
+              <li>Check</li>
+            </ul>
+          </li>
+          <li class='Eontology'>
+            Eontology
+            <ul>
+              <li (click)="uploadEOwl()">Load</li>
+              <li (click)="openEOwl()">Open</li>
+              <li (click)="eOntShow()">Show</li>
+              <li>Check</li>
+            </ul>
+          </li>
+
+        </ul>
+      </li>
+
+
+
+      <li>Help</li>
+      <!-- <li> <a href="http://localhost/workflow?from=diagrambaseddescription">Next Main Step </a> </li> -->
+
+    </ul>
+  </nav>
+  <div class="tab"></div>
+  <form>
+    <input type="file" ng2FileSelect [uploader]="uploader" name="xmlFile"
+           id="xmlFile" class="openfile"  webkitdirectory (change)="selectedFileOnChanged($event)" />
+    <!-- <input type="file" id="xmlFile" #picked    class="openfile"  multiple webkitdirectory   (click)="message=''"  (change)="onPicked(picked)"> -->
+  </form>
+  <form>
+    <input type="file" ng2FileSelect [uploader]="uploader" name="pfFile"
+           id="pfFile" class="openfile" (change)="selectedPFOnChanged($event)" />
+    <!-- <input type="file" id="xmlFile" #picked    class="openfile"  multiple webkitdirectory   (click)="message=''"  (change)="onPicked(picked)"> -->
+  </form>
+  <form>
+    <input type="file" ng2FileSelect [uploader]="uploader" name="owlFile"
+           id="ontologyFile" class="openfile" (change)="selectedOWLOnChanged($event)" />
+    <!-- <input type="file" id="xmlFile" #picked    class="openfile"  multiple webkitdirectory   (click)="message=''"  (change)="onPicked(picked)"> -->
+  </form>
+</div>
+

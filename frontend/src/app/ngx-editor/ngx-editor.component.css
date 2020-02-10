@@ -1,0 +1,9 @@
+.monaco-editor {
+    position: absolute;
+	float: left;
+	top:12.2%;
+	left: 0;
+	width:29%;
+    height:85%;    
+	border:1px solid grey
+}
