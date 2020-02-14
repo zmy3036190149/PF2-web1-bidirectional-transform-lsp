@@ -54,7 +54,8 @@ export class TextService {
     // install Monaco language client services    
     MonacoServices.install(this.editor,{ rootUri: rootUri });
     // create the web socket
-    const url = 'ws://localhost:8030/sampleServer';
+    // const url = 'ws://localhost:8030/sampleServer';
+    const url = 'ws://localhost:8080/LSP';
     const webSocket = this.createWebSocket(url);
     var that = this
     // listen when the web socket is opened
