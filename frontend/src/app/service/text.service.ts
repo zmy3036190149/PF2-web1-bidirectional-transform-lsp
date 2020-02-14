@@ -32,6 +32,7 @@ export class TextService {
   noError
   connection: MessageConnection
   languageClient: MonacoLanguageClient
+  filename: String
   constructor(
     private fileService: FileService) { 
     this.messageId=0    
@@ -41,15 +42,15 @@ export class TextService {
   languageId = 'problemframe';
   createEditor(title,version,code){ 
     //create model    
-    let filename = title + version+".pf"
+    this.filename = title + version+".pf"
     let model = monaco.editor.createModel(code, "problemframe", 
-      monaco.Uri.parse("file://E:/test-data/"+filename))
+      monaco.Uri.parse("file://E:/test-data/"+this.filename))
     this.editor.setModel(model)
     monaco.editor.getModels().forEach(model => {
       console.log(model)
       console.log(model.uri.toString())      
     })
-    var rootUri = "file://E:/test-data/"+filename;
+    var rootUri = "file://E:/test-data/"+this.filename;
     console.log(this.editor)
     // install Monaco language client services    
     MonacoServices.install(this.editor,{ rootUri: rootUri });
@@ -73,14 +74,18 @@ export class TextService {
     });      
     this.editor.setValue(code)  
     //listen when the editor's value changed
-    this.interval = setInterval(function () {
-      let markers = monaco.editor.getModelMarkers({})
+    this.interval = setInterval(function(){
+      that.save()
+      }
+    ,100)
+  }
+  public  save():void{
+    let markers = monaco.editor.getModelMarkers({})
       let error = false
       if(markers.length>0)
         error = true;
-
-      let value  =  that.editor.getValue()
-      if(value!= that.newValue){
+      let value  =  this.editor.getValue()
+      if(value!= this.newValue){
         // that.connection.sendNotification()
         // let params:DidSaveTextDocumentParams ={
         //   textDocument: {
@@ -92,17 +97,15 @@ export class TextService {
         //   DidSaveTextDocumentNotification.type,params);
         let params:DidCloseTextDocumentParams ={
           textDocument: {
-            uri: "file://E:/test-data/"+filename
+            uri: "file://E:/test-data/"+this.filename
           }
         }
-        that.languageClient.sendNotification(
-          DidCloseTextDocumentNotification.type,params);
-          
+        this.languageClient.sendNotification(
+          DidCloseTextDocumentNotification.type,params); 
         //向服务器发送最新版
-        that.newValue = value
-        that.send(error,value)
+        this.newValue = value
+        this.send(error,value)
       }
-    },100)
   }
   public createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
     return new MonacoLanguageClient({
@@ -293,9 +296,10 @@ export class TextService {
     }
   }
   registered(jsonMessage){
-    
     console.log("registered, jsonMessage.text=",jsonMessage.text)
     this.createEditor(this.projectAddress,this.version,jsonMessage.text)
-
+    let that = this
+    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
+      function(){that.save()},"");
   }
 }
