@@ -182,7 +182,7 @@ public class ProjectService {
 			error.setErrorList(errorList);
 			return error;
 		}
-		String M_name=CDM.getMachine_name();
+		String M_name=CDM.getName();
 		if(M_name.contains("?")) {
 			String errMsg = "machine's name is illegal.";
 			errorList.add(errMsg);

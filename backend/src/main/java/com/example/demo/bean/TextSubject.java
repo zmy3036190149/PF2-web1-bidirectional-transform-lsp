@@ -170,9 +170,9 @@ public class TextSubject extends Subject{
 		
 	}
 	public String getMachineLine(JSONObject jshape ) {
-		String shortName = jshape.getString("machine_shortName");
+		String shortName = jshape.getString("shortName");
 		String sType = " M";
-		String name = jshape.getString("machine_name");
+		String name = jshape.getString("name");
 		String line = shortName + sType + " \"" + name + "\"";
 		return line;
 	}
@@ -281,9 +281,9 @@ public class TextSubject extends Subject{
 		String line = "";
 		switch(shape) {
 		case"mac":
-			 shortName = jshape.getString("machine_shortName");
+			 shortName = jshape.getString("shortName");
 			 sType = " M";
-			 name = jshape.getString("machine_name");
+			 name = jshape.getString("name");
 			 break;
 	     case "pro":
 	    	 shortName = jshape.getString("problemdomain_shortname");
@@ -467,11 +467,11 @@ public class TextSubject extends Subject{
 		String newName = "";
 		switch(shape) {
 		case"mac":
-			 shortName = old.getString("machine_shortName");
+			 shortName = old.getString("shortName");
 			 sType = " M";
-			 name = old.getString("machine_name");
-			 newShortName = new1.getString("machine_shortName");
-			 newName = new1.getString("machine_name");
+			 name = old.getString("name");
+			 newShortName = new1.getString("shortName");
+			 newName = new1.getString("name");
 			 break;
 	     case "pro":
 	    	 shortName = old.getString("problemdomain_shortname");

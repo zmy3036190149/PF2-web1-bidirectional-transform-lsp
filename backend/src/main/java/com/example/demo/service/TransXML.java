@@ -136,21 +136,21 @@ public class TransXML {
 		// TODO Auto-generated method stub
 		Machine machine = new Machine();
 		
-		String machine_name = machineElement.attributeValue("machine_name");
-		String machine_shortName = machineElement.attributeValue("machine_shortname");
+		String name = machineElement.attributeValue("machine_name");
+		String shortName = machineElement.attributeValue("machine_shortname");
 		String machine_locality = machineElement.attributeValue("machine_locality");
 		String[] locality= machine_locality.split(",");
-		int machine_x = Integer.parseInt(locality[0]);
-		int machine_y = Integer.parseInt(locality[1]);
-		int machine_h = Integer.parseInt(locality[2]);
-		int machine_w = Integer.parseInt(locality[3]);
+		int x = Integer.parseInt(locality[0]);
+		int y = Integer.parseInt(locality[1]);
+		int h = Integer.parseInt(locality[2]);
+		int w = Integer.parseInt(locality[3]);
 		
-		machine.setMachine_name(machine_name);
-		machine.setMachine_shortName(machine_shortName);
-		machine.setMachine_h(machine_h);
-		machine.setMachine_w(machine_w);
-		machine.setMachine_x(machine_x);
-		machine.setMachine_y(machine_y);
+		machine.setName(name);
+		machine.setShortName(shortName);
+		machine.setH(h);
+		machine.setW(w);
+		machine.setX(x);
+		machine.setY(y);
 		
 		return machine;
 	}
@@ -455,23 +455,23 @@ public class TransXML {
 		if(machine != null) {
 			Cell cell = new Cell();
 			cell.setId(i);
-			cell.setValue(machine.getMachine_shortName());
+			cell.setValue(machine.getShortName());
 			cell.setType("machine");
 			cellList.add(cell);
 			
 			Element mxCellEle = rootElement.addElement("mxCell");
 			mxCellEle.addAttribute("id", String.valueOf(i++));
 			mxCellEle.addAttribute("parent", String.valueOf(1));
-			mxCellEle.addAttribute("abbr", machine.getMachine_shortName());
+			mxCellEle.addAttribute("abbr", machine.getShortName());
 			mxCellEle.addAttribute("vertex", String.valueOf(1));
 			mxCellEle.addAttribute("style", "shape=machine");
-			mxCellEle.addAttribute("value", machine.getMachine_name());
+			mxCellEle.addAttribute("value", machine.getName());
 			Element mxGeometryEle = mxCellEle.addElement("mxGeometry");
 			mxGeometryEle.addAttribute("as", "geometry");
-			mxGeometryEle.addAttribute("height", String.valueOf(machine.getMachine_w()));
-			mxGeometryEle.addAttribute("width", String.valueOf(machine.getMachine_h()));
-			mxGeometryEle.addAttribute("y", String.valueOf(machine.getMachine_y()));
-			mxGeometryEle.addAttribute("x", String.valueOf(machine.getMachine_x()));
+			mxGeometryEle.addAttribute("height", String.valueOf(machine.getW()));
+			mxGeometryEle.addAttribute("width", String.valueOf(machine.getH()));
+			mxGeometryEle.addAttribute("y", String.valueOf(machine.getY()));
+			mxGeometryEle.addAttribute("x", String.valueOf(machine.getX()));
 			
 		}
 		

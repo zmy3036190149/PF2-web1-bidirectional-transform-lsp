@@ -1,53 +1,53 @@
 export class Machine{
-	machine_name: string;	//��������
-	machine_shortName: string;	//������д
-	machine_x: number;	//λ����Ϣ
-	machine_y: number;
-	machine_h: number;
-	machine_w: number;
+	name: string;	//��������
+	shortName: string;	//������д
+	x: number;	//λ����Ϣ
+	y: number;
+	h: number;
+	w: number;
 	static newMachine(name,shortName,x,y,w,h){
 		let  machine =  new Machine()
-		machine.machine_name=name
-		machine.machine_shortName=shortName
-		machine.machine_x=x
-		machine.machine_y=y
-		machine.machine_h=h
-		machine.machine_w=w
+		machine.name=name
+		machine.shortName=shortName
+		machine.x=x
+		machine.y=y
+		machine.h=h
+		machine.w=w
 		return machine
 	}
 	static newMachineWithOld(old, name,shortName){
 		let  machine =  new Machine()
-		machine.machine_name=name
-		machine.machine_shortName=shortName
-		machine.machine_x=old.machine_x
-		machine.machine_y=old.machine_y
-		machine.machine_h=old.machine_h
-		machine.machine_w=old.machine_w
+		machine.name=name
+		machine.shortName=shortName
+		machine.x=old.x
+		machine.y=old.y
+		machine.h=old.h
+		machine.w=old.w
 		return machine
 	}
 	static copyMachine(old){
 		let  machine =  new Machine()
-		machine.machine_name=old.machine_name
-		machine.machine_shortName=old.machine_shortName
-		machine.machine_x=old.machine_x
-		machine.machine_y=old.machine_y
-		machine.machine_h=old.machine_h
-		machine.machine_w=old.machine_w
+		machine.name=old.name
+		machine.shortName=old.shortName
+		machine.x=old.x
+		machine.y=old.y
+		machine.h=old.h
+		machine.w=old.w
 		return machine
 	}
-	getName(){return this.machine_name}
-	setName(name){this.machine_name=name}
+	getName(){return this.name}
+	setName(name){this.name=name}
 
-	getShortName(){return this.machine_shortName}
-	setShortName(shortName){this.machine_shortName=shortName}
+	getShortName(){return this.shortName}
+	setShortName(shortName){this.shortName=shortName}
 	
-	getX(){return this.machine_x}
-    getY(){return this.machine_y}
-    getH(){return this.machine_h}
-	getW(){return this.machine_w}
+	getX(){return this.x}
+    getY(){return this.y}
+    getH(){return this.h}
+	getW(){return this.w}
 	
-    setX(x){this.machine_x=x}
-    setY(y){this.machine_y=y}
-    setH(h){this.machine_h=h}
-	setW(w){this.machine_w=w}
+    setX(x){this.x=x}
+    setY(y){this.y=y}
+    setH(h){this.h=h}
+	setW(w){this.w=w}
 }

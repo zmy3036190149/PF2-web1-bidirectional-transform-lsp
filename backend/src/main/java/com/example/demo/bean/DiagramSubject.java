@@ -136,12 +136,12 @@ public class DiagramSubject extends Subject{
 		JSONObject  newObject = (JSONObject)json.get("new");
 	    switch(shape){
 	      case "mac":
-	    	  String name = (String)newObject.get("machine_name");
-	    	  String shortName = (String)newObject.get("machine_name");
-	    	  int x = (int)newObject.get("machine_x");
-	    	  int y = (int)newObject.get("machine_y");
-	    	  int w = (int)newObject.get("machine_w");
-	    	  int h = (int)newObject.get("machine_h");
+	    	  String name = (String)newObject.get("name");
+	    	  String shortName = (String)newObject.get("name");
+	    	  int x = (int)newObject.get("x");
+	    	  int y = (int)newObject.get("y");
+	    	  int w = (int)newObject.get("w");
+	    	  int h = (int)newObject.get("h");
 	    	  Machine machine = new Machine(name,shortName,x,y,w,h);
 	    	  if(project == null)
 	    		  System.out.println("project==null");

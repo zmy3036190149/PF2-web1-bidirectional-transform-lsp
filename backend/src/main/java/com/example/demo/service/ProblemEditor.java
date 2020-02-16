@@ -150,15 +150,15 @@ public class ProblemEditor{
 				 }else if(type.equals("M")) {
 					 node.add(name);
 					 if(description == null) {
-						 machine.setMachine_name(name);
+						 machine.setName(name);
 					 }else {
-						 machine.setMachine_name(description);
+						 machine.setName(description);
 					 }
-					 machine.setMachine_shortName(name);
-					 machine.setMachine_h(height);
-					 machine.setMachine_w(width);
-					 machine.setMachine_x( 200 );
-					 machine.setMachine_y( 150 );
+					 machine.setShortName(name);
+					 machine.setH(height);
+					 machine.setW(width);
+					 machine.setX( 200 );
+					 machine.setY( 150 );
 				 }else{
 					 node.add(name);
 					 domainnum = domainnum + 1;
@@ -482,23 +482,23 @@ public class ProblemEditor{
 					 if(project.getContextDiagram().getMachine()!=null) {
 						 Machine machine = project.getContextDiagram().getMachine();
 						 if(description == null) {
-							 machine.setMachine_name(name);
+							 machine.setName(name);
 						 }else {
-							 machine.setMachine_name(description);
+							 machine.setName(description);
 						 }
-						 machine.setMachine_shortName(name);
+						 machine.setShortName(name);
 					 }else {
 						 Machine machine =new Machine();
 						 if(description == null) {
-							 machine.setMachine_name(name);
+							 machine.setName(name);
 						 }else {
-							 machine.setMachine_name(description);
+							 machine.setName(description);
 						 }
-						 machine.setMachine_shortName(name);
-						 machine.setMachine_h(height);
-						 machine.setMachine_w(width);
-						 machine.setMachine_x( 200 );
-						 machine.setMachine_y( 150 );
+						 machine.setShortName(name);
+						 machine.setH(height);
+						 machine.setW(width);
+						 machine.setX( 200 );
+						 machine.setY( 150 );
 						 project.getContextDiagram().setMachine(machine);
 					 }
 					 
@@ -786,10 +786,10 @@ public class ProblemEditor{
 		
 		//Machine
 		Machine machine = project.getContextDiagram().getMachine();
-		buffer.append(machine.getMachine_shortName());
+		buffer.append(machine.getShortName());
 		buffer.append(" M");
-		if(machine.getMachine_name()!="")
-			buffer.append(" \""+machine.getMachine_name()+"\"");
+		if(machine.getName()!="")
+			buffer.append(" \""+machine.getName()+"\"");
 		buffer.append("\n\n");
 		
 		//ProblemDomain
@@ -1332,11 +1332,11 @@ public class ProblemEditor{
 	 }
 	 public static String changeMachine(String shortname,String type,String name,Project project) {
 		 String line = "";
-		 if(shortname.contentEquals(project.getContextDiagram().getMachine().getMachine_shortName())
-				 || name.contentEquals(project.getContextDiagram().getMachine().getMachine_name())) {			 
-			 line += project.getContextDiagram().getMachine().getMachine_shortName();
+		 if(shortname.contentEquals(project.getContextDiagram().getMachine().getShortName())
+				 || name.contentEquals(project.getContextDiagram().getMachine().getName())) {			 
+			 line += project.getContextDiagram().getMachine().getShortName();
 			 line += " M ";
-			 line += "\"" + project.getContextDiagram().getMachine().getMachine_name() + "\"";
+			 line += "\"" + project.getContextDiagram().getMachine().getName() + "\"";
 			 line += "\n";
 			 return line;
 		 }
@@ -1616,10 +1616,10 @@ public class ProblemEditor{
 	 }
 	 public static String getMachinePf(Machine machine) {
 		 String res = "";
-		 res += machine.getMachine_shortName();
+		 res += machine.getShortName();
 		 res += " M ";
-		 if(machine.getMachine_name()!="")
-			 res += "\"" + machine.getMachine_name() + "\"";
+		 if(machine.getName()!="")
+			 res += "\"" + machine.getName() + "\"";
 		 res += "\n";
 		 return res;		 
 	 }

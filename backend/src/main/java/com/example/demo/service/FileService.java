@@ -420,22 +420,22 @@ public class FileService {
 		// TODO Auto-generated method stub
 		Machine machine = new Machine();
 		
-		String machine_name = machineElement.attributeValue("machine_name");
-		machine_name = machine_name.replaceAll("&#x000A", "\n");
-		String machine_shortName = machineElement.attributeValue("machine_shortname");
+		String name = machineElement.attributeValue("machine_name");
+		name = name.replaceAll("&#x000A", "\n");
+		String shortName = machineElement.attributeValue("machine_shortname");
 		String machine_locality = machineElement.attributeValue("machine_locality");
 		String[] locality= machine_locality.split(",");
-		int machine_x = Integer.parseInt(locality[0]);
-		int machine_y = Integer.parseInt(locality[1]);
-		int machine_h = Integer.parseInt(locality[2]);
-		int machine_w = Integer.parseInt(locality[3]);
+		int x = Integer.parseInt(locality[0]);
+		int y = Integer.parseInt(locality[1]);
+		int h = Integer.parseInt(locality[2]);
+		int w = Integer.parseInt(locality[3]);
 		
-		machine.setMachine_name(machine_name);
-		machine.setMachine_shortName(machine_shortName);
-		machine.setMachine_h(machine_h);
-		machine.setMachine_w(machine_w);
-		machine.setMachine_x(machine_x);
-		machine.setMachine_y(machine_y);
+		machine.setName(name);
+		machine.setShortName(shortName);
+		machine.setH(h);
+		machine.setW(w);
+		machine.setX(x);
+		machine.setY(y);
 		
 		return machine;
 	}
@@ -882,16 +882,16 @@ public class FileService {
 		List<ProblemDomain> problemDomainList= contextDiagram.getProblemDomainList();
 		List<Interface> interfaceList = contextDiagram.getInterfaceList();
 		if(machine!=null) {
-			machineElement.addAttribute("machine_name", machine.getMachine_name().replaceAll("\n", "&#x000A"));
-			machineElement.addAttribute("machine_shortname", machine.getMachine_shortName());
+			machineElement.addAttribute("machine_name", machine.getName().replaceAll("\n", "&#x000A"));
+			machineElement.addAttribute("machine_shortname", machine.getShortName());
 			StringBuffer re = new StringBuffer();
-			re.append(machine.getMachine_x());
+			re.append(machine.getX());
 			re.append(",");
-			re.append(machine.getMachine_y());
+			re.append(machine.getY());
 			re.append(",");
-			re.append(machine.getMachine_h());
+			re.append(machine.getH());
 			re.append(",");
-			re.append(machine.getMachine_w());
+			re.append(machine.getW());
 			machineElement.addAttribute("machine_locality",re.toString());
 		}
 		if(problemDomainList.size()>0) {
@@ -941,10 +941,10 @@ public class FileService {
 				String interface_no = String.valueOf(tmp_i.getInterface_no());
 				String interface_name = tmp_i.getInterface_name();
 				String interface_description = tmp_i.getInterface_description();
-				String machine_name=machine.getMachine_shortName();
+				String shortname=machine.getShortName();
 				String interface_to="";
 				String interface_from="";
-				if(tmp_i.getInterface_to().equals(machine_name)) {
+				if(tmp_i.getInterface_to().equals(shortname)) {
 					interface_to = tmp_i.getInterface_from().replaceAll("\n", "&#x000A");
 					interface_from = tmp_i.getInterface_to().replaceAll("\n", "&#x000A");
 				}

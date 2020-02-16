@@ -658,10 +658,10 @@ export class DrawGraphService {
     this.isLabel = false
     let proNum = this.ontologyEntities.length;
     this.project.contextDiagram.machine = Machine.newMachine('machine','M',100, 50*proNum, 100, 50 );
-    // this.project.contextDiagram.machine.machine_name='machine';
-    // this.project.contextDiagram.machine.machine_shortName = 'M';   
-    // this.project.contextDiagram.machine.machine_x = 100;    
-    // this.project.contextDiagram.machine.machine_y = 50*proNum;
+    // this.project.contextDiagram.machine.name='machine';
+    // this.project.contextDiagram.machine.shortName = 'M';   
+    // this.project.contextDiagram.machine.x = 100;    
+    // this.project.contextDiagram.machine.y = 50*proNum;
     let x = 400;
     let y = 50;
     
@@ -983,9 +983,9 @@ export class DrawGraphService {
     machineElement.attr(
       {
         label: {
-          text: machine.machine_name + '\n(' + machine.machine_shortName + ')',
-          // x: machine.machine_x,
-          // y: machine.machine_y,
+          text: machine.name + '\n(' + machine.shortName + ')',
+          // x: machine.x,
+          // y: machine.y,
         },
         r: {
           ref: 'label',
@@ -1020,11 +1020,11 @@ export class DrawGraphService {
         },
         root: {
           name: 'machine',
-          title: machine.machine_name,
-          shortName:  machine.machine_shortName,
+          title: machine.name,
+          shortName:  machine.shortName,
         }
       });
-    machineElement.position(machine.machine_x, machine.machine_y);
+    machineElement.position(machine.x, machine.y);
     machineElement.addTo(graph);
     return machineElement;
   }
@@ -1032,8 +1032,8 @@ export class DrawGraphService {
 
     this.machine = this.project.contextDiagram.machine;
     let selectedDiv = document.getElementById('machinePopBox');
-    (selectedDiv.getElementsByClassName("description")[0] as any).value = this.machine.machine_name;
-    (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.machine.machine_shortName;
+    (selectedDiv.getElementsByClassName("description")[0] as any).value = this.machine.name;
+    (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.machine.shortName;
     
     selectedDiv.style.display = "block";
   }
@@ -1042,7 +1042,7 @@ export class DrawGraphService {
     let selectedDiv = document.getElementById('machinePopBox');
     let description = (selectedDiv.getElementsByClassName("description")[0] as any).value;
     let shortName = (selectedDiv.getElementsByClassName("shortName")[0] as any).value;
-    //this.changeRelatedLink(this.project.contextDiagram.machine.machine_shortName,shortName);
+    //this.changeRelatedLink(this.project.contextDiagram.machine.shortName,shortName);
     //this.changeMachineOnGraph(this.selectedElement, description, shortName);  
     let old = this.project.contextDiagram.machine
     //let machine = this.project.changeMachine(description, shortName)  
@@ -1052,15 +1052,15 @@ export class DrawGraphService {
     return true;
   }
   changeMachinews(old:Machine,new1:Machine) {
-    this.changeRelatedLink(old.machine_shortName,new1.machine_shortName)
+    this.changeRelatedLink(old.shortName,new1.shortName)
     for(let graph of this.graphs)
       for(let ele of graph.getElements()){
-        if(ele.attr("root").title == old.machine_name){
-          console.log(ele.attr("root").title ,"== ",old.machine_name)
-          this.changeMachineOnGraph(ele, new1.machine_name, new1.machine_shortName) 
+        if(ele.attr("root").title == old.name){
+          console.log(ele.attr("root").title ,"== ",old.name)
+          this.changeMachineOnGraph(ele, new1.name, new1.shortName) 
         }             
       }
-   this.project.changeMachine(new1.machine_name, new1.machine_shortName)    
+   this.project.changeMachine(new1.name, new1.shortName)    
     this.projectService.sendProject(this.project)
     return true;
   }
@@ -1076,14 +1076,14 @@ export class DrawGraphService {
   }
 
   deleteMachinews(old:Machine) {
-    this.project.deleteRelatedLink(this.project.contextDiagram.machine.machine_shortName)    
+    this.project.deleteRelatedLink(this.project.contextDiagram.machine.shortName)    
     this.project.contextDiagram.machine = undefined;
     this.project.problemDiagram.contextDiagram.machine = undefined;    
     this.projectService.sendProject(this.project)    
 
     for(let graph of this.graphs){      
       for(let element of graph.getCells() ){
-        if (old.machine_shortName == element.attr('root').shortName)
+        if (old.shortName == element.attr('root').shortName)
           graph.removeCells([element])
       }
     }
@@ -1091,7 +1091,7 @@ export class DrawGraphService {
   deleteMachine(graph) {
     console.log("==========deleteRelatedLink========")
     console.log(this.project)
-    // this.project.deleteRelatedLink(this.project.contextDiagram.machine.machine_shortName)
+    // this.project.deleteRelatedLink(this.project.contextDiagram.machine.shortName)
     let old = this.project.contextDiagram.machine
     // this.project.contextDiagram.machine = undefined;
     // this.project.problemDiagram.contextDiagram.machine = undefined;
@@ -1254,8 +1254,8 @@ export class DrawGraphService {
         (selectedDiv.getElementsByClassName("domainType")[0] as any).selectedIndex = i;
       }
     }
-    //(selectedDiv.getElementsByClassName("physicalProperty")[0] as any)..selectedIndex = this.machine.machine_name;
-    //(selectedDiv.getElementsByClassName("domainType")[0] as any).value = this.machine.machine_shortName;
+    //(selectedDiv.getElementsByClassName("physicalProperty")[0] as any)..selectedIndex = this.machine.name;
+    //(selectedDiv.getElementsByClassName("domainType")[0] as any).value = this.machine.shortName;
   }
   changeProblemDomainDetail(graph) {
     //console.log('changeProblemDomainDetail:');
@@ -1730,12 +1730,12 @@ export class DrawGraphService {
   }
   changeLinkPosition1(from,to,project){
     let x1,x2,y1,y2;
-      if(from==project.contextDiagram.machine.machine_shortName){
-        x1 = this.project.contextDiagram.machine.machine_x;
-        y1 = this.project.contextDiagram.machine.machine_y;
-      }else if(to==this.project.contextDiagram.machine.machine_shortName){
-        x2 = this.project.contextDiagram.machine.machine_x;
-        y2 = this.project.contextDiagram.machine.machine_y;
+      if(from==project.contextDiagram.machine.shortName){
+        x1 = this.project.contextDiagram.machine.x;
+        y1 = this.project.contextDiagram.machine.y;
+      }else if(to==this.project.contextDiagram.machine.shortName){
+        x2 = this.project.contextDiagram.machine.x;
+        y2 = this.project.contextDiagram.machine.y;
       }
 
     for(let ele of project.contextDiagram.problemDomainList){

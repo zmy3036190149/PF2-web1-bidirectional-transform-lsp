@@ -64,12 +64,12 @@ export class Project{
 	}
 	addMachine(name, shortName, x, y,w,h){
 		this.contextDiagram.machine = new Machine()
-		this.contextDiagram.machine.machine_name = name
-		this.contextDiagram.machine.machine_shortName = shortName
-		this.contextDiagram.machine.machine_x = x
-		this.contextDiagram.machine.machine_y = y		
-		this.contextDiagram.machine.machine_w = w
-		this.contextDiagram.machine.machine_h = h
+		this.contextDiagram.machine.name = name
+		this.contextDiagram.machine.shortName = shortName
+		this.contextDiagram.machine.x = x
+		this.contextDiagram.machine.y = y		
+		this.contextDiagram.machine.w = w
+		this.contextDiagram.machine.h = h
 		this.problemDiagram.contextDiagram.machine = this.contextDiagram.machine		
 		return this.contextDiagram.machine
 	}
@@ -81,10 +81,10 @@ export class Project{
 		return this.contextDiagram.machine
 	}
 	changeMachine(name, shortName) {
-		this.contextDiagram.machine.machine_name = name;
-		this.contextDiagram.machine.machine_shortName = shortName;
-		this.problemDiagram.contextDiagram.machine.machine_name = name;
-		this.problemDiagram.contextDiagram.machine.machine_shortName = shortName
+		this.contextDiagram.machine.name = name;
+		this.contextDiagram.machine.shortName = shortName;
+		this.problemDiagram.contextDiagram.machine.name = name;
+		this.problemDiagram.contextDiagram.machine.shortName = shortName
 		return this.contextDiagram.machine
 	}
 	changeMachinePosition(name, position){
@@ -98,10 +98,10 @@ export class Project{
 			return
 		}
 		if(name == this.getMachine().getName()){
-			this.contextDiagram.machine.machine_x = position.x;
-			this.contextDiagram.machine.machine_y = position.y;
-			this.problemDiagram.contextDiagram.machine.machine_x = position.x;
-			this.problemDiagram.contextDiagram.machine.machine_y = position.y;
+			this.contextDiagram.machine.x = position.x;
+			this.contextDiagram.machine.y = position.y;
+			this.problemDiagram.contextDiagram.machine.x = position.x;
+			this.problemDiagram.contextDiagram.machine.y = position.y;
 			return true
 		}else{
 			

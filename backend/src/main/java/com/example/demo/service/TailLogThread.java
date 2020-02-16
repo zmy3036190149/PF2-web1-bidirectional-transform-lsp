@@ -40,7 +40,13 @@ public class TailLogThread extends Thread {
 				reader.read(cbuf, 0, len);				
 				s = new String(cbuf);
 				if(!s.contentEquals("")) {
-					session.getBasicRemote().sendText(s);
+					try {
+						session.getBasicRemote().sendText(s);						
+					}catch (IOException e) {
+						System.out.println("error run");
+						e.printStackTrace();
+						return;
+					}
 					System.out.print("====Send to client====");
 					System.out.print(s);
 					System.out.println("====have sent to client=====");						

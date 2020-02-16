@@ -64,7 +64,12 @@ public class LSP {
 	 */
 	@OnClose
 	public void onClose(){		
-		LSPSet.remove(this);  //从set中删除
+		LSPSet.remove(this);  
+		for(Forward lsp: forwardSet) {
+			if(this.session==lsp.getSession()) {
+				forwardSet.remove(lsp);
+			}
+		}
 	}
 
 	/**
