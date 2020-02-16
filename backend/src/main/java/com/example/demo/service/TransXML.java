@@ -137,7 +137,7 @@ public class TransXML {
 		Machine machine = new Machine();
 		
 		String name = machineElement.attributeValue("machine_name");
-		String shortName = machineElement.attributeValue("machine_shortname");
+		String shortname = machineElement.attributeValue("machine_shortname");
 		String machine_locality = machineElement.attributeValue("machine_locality");
 		String[] locality= machine_locality.split(",");
 		int x = Integer.parseInt(locality[0]);
@@ -146,7 +146,7 @@ public class TransXML {
 		int w = Integer.parseInt(locality[3]);
 		
 		machine.setName(name);
-		machine.setShortName(shortName);
+		machine.setShortname(shortname);
 		machine.setH(h);
 		machine.setW(w);
 		machine.setX(x);
@@ -168,55 +168,55 @@ public class TransXML {
 			ProblemDomain problemDomain = new ProblemDomain();
 			Element givenDomainElement = (Element) object;
 			
-			int problemdomain_no = Integer.parseInt(givenDomainElement.attributeValue("problemdomain_no"));
-			String problemdomain_name = givenDomainElement.attributeValue("problemdomain_name");
-			String problemdomain_shortname = givenDomainElement.attributeValue("problemdomain_shortname");
-			String problemdomain_type = givenDomainElement.attributeValue("problemdomain_type");
-			String problemdomain_property = "GivenDomain";
+			int no = Integer.parseInt(givenDomainElement.attributeValue("problemdomain_no"));
+			String name = givenDomainElement.attributeValue("problemdomain_name");
+			String shortname = givenDomainElement.attributeValue("problemdomain_shortname");
+			String type = givenDomainElement.attributeValue("problemdomain_type");
+			String property = "GivenDomain";
 			String problemdomain_locality = givenDomainElement.attributeValue("problemdomain_locality");
 			String[] locality= problemdomain_locality.split(",");
-			int problemdomain_x = Integer.parseInt(locality[0]);
-			int problemdomain_y = Integer.parseInt(locality[1]);
-			int problemdomain_h = Integer.parseInt(locality[2]);
-			int problemdomain_w = Integer.parseInt(locality[3]);
+			int x = Integer.parseInt(locality[0]);
+			int y = Integer.parseInt(locality[1]);
+			int h = Integer.parseInt(locality[2]);
+			int w = Integer.parseInt(locality[3]);
 			
-			problemDomain.setProblemdomain_no(problemdomain_no);
-			problemDomain.setProblemdomain_name(problemdomain_name);
-			problemDomain.setProblemdomain_shortname(problemdomain_shortname);
-			problemDomain.setProblemdomain_type(problemdomain_type);
-			problemDomain.setProblemdomain_property(problemdomain_property);
-			problemDomain.setProblemdomain_x(problemdomain_x);
-			problemDomain.setProblemdomain_y(problemdomain_y);
-			problemDomain.setProblemdomain_h(problemdomain_h);
-			problemDomain.setProblemdomain_w(problemdomain_w);
+			problemDomain.setNo(no);
+			problemDomain.setName(name);
+			problemDomain.setShortname(shortname);
+			problemDomain.setType(type);
+			problemDomain.setProperty(property);
+			problemDomain.setX(x);
+			problemDomain.setY(y);
+			problemDomain.setH(h);
+			problemDomain.setW(w);
 			
 			problemDomainList.add(problemDomain);
 		}
 		for(Object object : designDomainElementList) {
 			Element designDomainElement = (Element) object;
 			
-			int problemdomain_no = Integer.parseInt(designDomainElement.attributeValue("problemdomain_no"));
-			String problemdomain_name = designDomainElement.attributeValue("problemdomain_name");
-			String problemdomain_shortname = designDomainElement.attributeValue("problemdomain_shortname");
-			String problemdomain_type = designDomainElement.attributeValue("problemdomain_type");
-			String problemdomain_property = "DesignDomain";
-			String problemdomain_locality = designDomainElement.attributeValue("problemdomain_locality");
+			int no = Integer.parseInt(designDomainElement.attributeValue("problemdomain_no"));
+			String name = designDomainElement.attributeValue("problemdomain_name");
+			String shortname = designDomainElement.attributeValue("problemdomain_shortname");
+			String type = designDomainElement.attributeValue("problemdomain_type");
+			String property = "DesignDomain";
+			String problemdomain_locality = designDomainElement.attributeValue("locality");
 			String[] locality= problemdomain_locality.split(",");
-			int problemdomain_x = Integer.parseInt(locality[0]);
-			int problemdomain_y = Integer.parseInt(locality[1]);
-			int problemdomain_h = Integer.parseInt(locality[2]);
-			int problemdomain_w = Integer.parseInt(locality[3]);
+			int x = Integer.parseInt(locality[0]);
+			int y = Integer.parseInt(locality[1]);
+			int h = Integer.parseInt(locality[2]);
+			int w = Integer.parseInt(locality[3]);
 			
 			ProblemDomain problemDomain = new ProblemDomain();
-			problemDomain.setProblemdomain_no(problemdomain_no);
-			problemDomain.setProblemdomain_name(problemdomain_name);
-			problemDomain.setProblemdomain_shortname(problemdomain_shortname);
-			problemDomain.setProblemdomain_type(problemdomain_type);
-			problemDomain.setProblemdomain_property(problemdomain_property);
-			problemDomain.setProblemdomain_x(problemdomain_x);
-			problemDomain.setProblemdomain_y(problemdomain_y);
-			problemDomain.setProblemdomain_h(problemdomain_h);
-			problemDomain.setProblemdomain_w(problemdomain_w);
+			problemDomain.setNo(no);
+			problemDomain.setName(name);
+			problemDomain.setShortname(shortname);
+			problemDomain.setType(type);
+			problemDomain.setProperty(property);
+			problemDomain.setX(x);
+			problemDomain.setY(y);
+			problemDomain.setH(h);
+			problemDomain.setW(w);
 			
 			problemDomainList.add(problemDomain);
 		}
@@ -307,21 +307,21 @@ public class TransXML {
 		// TODO Auto-generated method stub
 		Requirement requirement = new Requirement();
 		
-		int requirement_no = Integer.parseInt(requirementElement.attributeValue("requirement_no"));
-		String requirement_context = requirementElement.attributeValue("requirement_context");
+		int no = Integer.parseInt(requirementElement.attributeValue("requirement_no"));
+		String name = requirementElement.attributeValue("requirement_context");
 		String requirement_locality = requirementElement.attributeValue("requirement_locality");
 		String[] locality= requirement_locality.split(",");
-		int requirement_x = Integer.parseInt(locality[0]);
-		int requirement_y = Integer.parseInt(locality[1]);
-		int requirement_h = Integer.parseInt(locality[2]);
-		int requirement_w = Integer.parseInt(locality[3]);
+		int x = Integer.parseInt(locality[0]);
+		int y = Integer.parseInt(locality[1]);
+		int h = Integer.parseInt(locality[2]);
+		int w = Integer.parseInt(locality[3]);
 		
-		requirement.setRequirement_no(requirement_no);
-		requirement.setRequirement_context(requirement_context);
-		requirement.setRequirement_x(requirement_x);
-		requirement.setRequirement_y(requirement_y);
-		requirement.setRequirement_h(requirement_h);
-		requirement.setRequirement_w(requirement_w);
+		requirement.setNo(no);
+		requirement.setName(name);
+		requirement.setX(x);
+		requirement.setY(y);
+		requirement.setH(h);
+		requirement.setW(w);
 		
 		return requirement;
 	}
@@ -455,21 +455,21 @@ public class TransXML {
 		if(machine != null) {
 			Cell cell = new Cell();
 			cell.setId(i);
-			cell.setValue(machine.getShortName());
+			cell.setValue(machine.getShortname());
 			cell.setType("machine");
 			cellList.add(cell);
 			
 			Element mxCellEle = rootElement.addElement("mxCell");
 			mxCellEle.addAttribute("id", String.valueOf(i++));
 			mxCellEle.addAttribute("parent", String.valueOf(1));
-			mxCellEle.addAttribute("abbr", machine.getShortName());
+			mxCellEle.addAttribute("abbr", machine.getShortname());
 			mxCellEle.addAttribute("vertex", String.valueOf(1));
 			mxCellEle.addAttribute("style", "shape=machine");
 			mxCellEle.addAttribute("value", machine.getName());
 			Element mxGeometryEle = mxCellEle.addElement("mxGeometry");
 			mxGeometryEle.addAttribute("as", "geometry");
-			mxGeometryEle.addAttribute("height", String.valueOf(machine.getW()));
-			mxGeometryEle.addAttribute("width", String.valueOf(machine.getH()));
+			mxGeometryEle.addAttribute("height", String.valueOf(machine.getH()));
+			mxGeometryEle.addAttribute("width", String.valueOf(machine.getW()));
 			mxGeometryEle.addAttribute("y", String.valueOf(machine.getY()));
 			mxGeometryEle.addAttribute("x", String.valueOf(machine.getX()));
 			
@@ -479,25 +479,25 @@ public class TransXML {
 			for(ProblemDomain problemDomain: problemDomains) {
 				Cell cell = new Cell();
 				cell.setId(i);
-				cell.setValue(problemDomain.getProblemdomain_shortname());
+				cell.setValue(problemDomain.getShortname());
 				cell.setType("domain");
 				cellList.add(cell);
 				
 				Element mxCellEle = rootElement.addElement("mxCell");
 				mxCellEle.addAttribute("id", String.valueOf(i++));
 				mxCellEle.addAttribute("parent", String.valueOf(1));
-				mxCellEle.addAttribute("abbr", problemDomain.getProblemdomain_shortname());
+				mxCellEle.addAttribute("abbr", problemDomain.getShortname());
 				mxCellEle.addAttribute("vertex", String.valueOf(1));
 				mxCellEle.addAttribute("style", "shape=domain");
-				mxCellEle.addAttribute("value", problemDomain.getProblemdomain_name());
+				mxCellEle.addAttribute("value", problemDomain.getName());
 				Element mxGeometryEle = mxCellEle.addElement("mxGeometry");
 				mxGeometryEle.addAttribute("as", "geometry");
-				mxGeometryEle.addAttribute("height", String.valueOf(problemDomain.getProblemdomain_w()));
-				mxGeometryEle.addAttribute("width", String.valueOf(problemDomain.getProblemdomain_h()));
+				mxGeometryEle.addAttribute("height", String.valueOf(problemDomain.getW()));
+				mxGeometryEle.addAttribute("width", String.valueOf(problemDomain.getH()));
 //				mxGeometryEle.addAttribute("height", String.valueOf(problemDomain.getProblemdomain_h()));
 //				mxGeometryEle.addAttribute("width", String.valueOf(problemDomain.getProblemdomain_w()));
-				mxGeometryEle.addAttribute("y", String.valueOf(problemDomain.getProblemdomain_y()));
-				mxGeometryEle.addAttribute("x", String.valueOf(problemDomain.getProblemdomain_x()));
+				mxGeometryEle.addAttribute("y", String.valueOf(problemDomain.getY()));
+				mxGeometryEle.addAttribute("x", String.valueOf(problemDomain.getX()));
 			}
 		}
 		
@@ -505,7 +505,7 @@ public class TransXML {
 			for(Requirement requirement: requirements) {
 				Cell cell = new Cell();
 				cell.setId(i);
-				cell.setValue(requirement.getRequirement_context());
+				cell.setValue(requirement.getName());
 				cell.setType("requirement");
 				cellList.add(cell);
 				
@@ -514,13 +514,13 @@ public class TransXML {
 				mxCellEle.addAttribute("parent", String.valueOf(1));
 				mxCellEle.addAttribute("vertex", String.valueOf(1));
 				mxCellEle.addAttribute("style", "shape=requirement");
-				mxCellEle.addAttribute("value", requirement.getRequirement_context());
+				mxCellEle.addAttribute("value", requirement.getName());
 				Element mxGeometryEle = mxCellEle.addElement("mxGeometry");
 				mxGeometryEle.addAttribute("as", "geometry");
-				mxGeometryEle.addAttribute("height", String.valueOf(requirement.getRequirement_w() * 2));
-				mxGeometryEle.addAttribute("width", String.valueOf(requirement.getRequirement_h() * 2));
-				mxGeometryEle.addAttribute("y", String.valueOf(requirement.getRequirement_y()));
-				mxGeometryEle.addAttribute("x", String.valueOf(requirement.getRequirement_x()));
+				mxGeometryEle.addAttribute("height", String.valueOf(requirement.getW() * 2));
+				mxGeometryEle.addAttribute("width", String.valueOf(requirement.getH() * 2));
+				mxGeometryEle.addAttribute("y", String.valueOf(requirement.getY()));
+				mxGeometryEle.addAttribute("x", String.valueOf(requirement.getX()));
 			}
 		}
 		

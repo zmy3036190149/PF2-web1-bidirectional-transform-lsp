@@ -1,24 +1,24 @@
 export class Machine{
 	name: string;	//��������
-	shortName: string;	//������д
+	shortname: string;	//������д
 	x: number;	//λ����Ϣ
 	y: number;
 	h: number;
 	w: number;
-	static newMachine(name,shortName,x,y,w,h){
+	static newMachine(name,shortname,x,y,w,h){
 		let  machine =  new Machine()
 		machine.name=name
-		machine.shortName=shortName
+		machine.shortname=shortname
 		machine.x=x
 		machine.y=y
 		machine.h=h
 		machine.w=w
 		return machine
 	}
-	static newMachineWithOld(old, name,shortName){
+	static newMachineWithOld(old, name,shortname){
 		let  machine =  new Machine()
 		machine.name=name
-		machine.shortName=shortName
+		machine.shortname=shortname
 		machine.x=old.x
 		machine.y=old.y
 		machine.h=old.h
@@ -28,7 +28,7 @@ export class Machine{
 	static copyMachine(old){
 		let  machine =  new Machine()
 		machine.name=old.name
-		machine.shortName=old.shortName
+		machine.shortname=old.shortname
 		machine.x=old.x
 		machine.y=old.y
 		machine.h=old.h
@@ -38,8 +38,8 @@ export class Machine{
 	getName(){return this.name}
 	setName(name){this.name=name}
 
-	getShortName(){return this.shortName}
-	setShortName(shortName){this.shortName=shortName}
+	getShortname(){return this.shortname}
+	setShortname(shortname){this.shortname=shortname}
 	
 	getX(){return this.x}
     getY(){return this.y}

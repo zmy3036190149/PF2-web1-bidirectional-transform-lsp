@@ -47,15 +47,15 @@ public class TailLogThread extends Thread {
 						e.printStackTrace();
 						return;
 					}
-					System.out.print("====Send to client====");
-					System.out.print(s);
-					System.out.println("====have sent to client=====");						
+//					System.out.print("====Send to client====");
+//					System.out.print(s);
+//					System.out.println("====have sent to client=====");						
 				}
 				//Content-Length
 				line = reader.readLine();
 				if(line.contains("Content-Length:")) {
 					String slen = line.substring(line.indexOf("Content-Length: ")+16);
-					System.out.println(slen);
+//					System.out.println(slen);
 					len = Integer.parseInt(slen);
 					reader.readLine();
 				}

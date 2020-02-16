@@ -3,7 +3,7 @@ import { IShape } from './IShape';
 export class Node implements INode,IShape {
     getNo(){}
     getName(){}
-    getShortName(){}
+    getShortname(){}
     getX(){}
     getY(){}
     getH(){}

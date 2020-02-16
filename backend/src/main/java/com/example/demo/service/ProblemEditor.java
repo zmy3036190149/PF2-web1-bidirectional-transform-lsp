@@ -115,36 +115,36 @@ public class ProblemEditor{
 				 if(type == null) {
 					 reqnum = reqnum + 1;
 					 Requirement requirement = new Requirement();
-					 requirement.setRequirement_no(reqnum);
-					 requirement.setRequirement_shortname(name);
+					 requirement.setNo(reqnum);
+					 requirement.setShortname(name);
 					 if(description == null) {
-						 requirement.setRequirement_context(name);
+						 requirement.setName(name);
 						 node.add(name);
 					 }else {
-						 requirement.setRequirement_context(description);
+						 requirement.setName(description);
 						 node.add(description);
 					 }
-					 requirement.setRequirement_h(height);
-					 requirement.setRequirement_w(width);
-					 requirement.setRequirement_x( 900 );
-					 requirement.setRequirement_y( 50 + reqnum * 100 );
+					 requirement.setH(height);
+					 requirement.setW(width);
+					 requirement.setX( 900 );
+					 requirement.setY( 50 + reqnum * 100 );
 					 requirementList.add(requirement);
 				 }else if(type.equals("R")) {
 					 reqnum = reqnum + 1;
 					 Requirement requirement = new Requirement();
-					 requirement.setRequirement_no(reqnum);
-					 requirement.setRequirement_shortname(name);
+					 requirement.setNo(reqnum);
+					 requirement.setShortname(name);
 					 if(description == null) {
-						 requirement.setRequirement_context(name);
+						 requirement.setName(name);
 						 node.add(name);
 					 }else {
-						 requirement.setRequirement_context(description);
+						 requirement.setName(description);
 						 node.add(description);
 					 }
-					 requirement.setRequirement_h(height);
-					 requirement.setRequirement_w(width);
-					 requirement.setRequirement_x( 900 );
-					 requirement.setRequirement_y( 50 + reqnum * 100 );
+					 requirement.setH(height);
+					 requirement.setW(width);
+					 requirement.setX( 900 );
+					 requirement.setY( 50 + reqnum * 100 );
 					 requirementList.add(requirement);
 //					 node.add(description);
 				 }else if(type.equals("M")) {
@@ -154,7 +154,7 @@ public class ProblemEditor{
 					 }else {
 						 machine.setName(description);
 					 }
-					 machine.setShortName(name);
+					 machine.setShortname(name);
 					 machine.setH(height);
 					 machine.setW(width);
 					 machine.setX( 200 );
@@ -164,30 +164,30 @@ public class ProblemEditor{
 					 domainnum = domainnum + 1;
 					 ProblemDomain problemDomain = new ProblemDomain();
 					 if(description == null) {
-						 problemDomain.setProblemdomain_name(name);
+						 problemDomain.setName(name);
 					 }else {
-						 problemDomain.setProblemdomain_name(description);
+						 problemDomain.setName(description);
 					 }
-					 problemDomain.setProblemdomain_shortname(name);
-					 problemDomain.setProblemdomain_no(domainnum);
-					 problemDomain.setProblemdomain_h(height);
-					 problemDomain.setProblemdomain_w(width);
-					 problemDomain.setProblemdomain_x(500);
-					 problemDomain.setProblemdomain_y(domainnum * 100);
+					 problemDomain.setShortname(name);
+					 problemDomain.setNo(domainnum);
+					 problemDomain.setH(height);
+					 problemDomain.setW(width);
+					 problemDomain.setX(500);
+					 problemDomain.setY(domainnum * 100);
 					 if(type.equals("B")) {
-						 problemDomain.setProblemdomain_property("GivenDomain");
-						 problemDomain.setProblemdomain_type("Biddable");
+						 problemDomain.setProperty("GivenDomain");
+						 problemDomain.setType("Biddable");
 					 }else if(type.equals("C")) {
-						 problemDomain.setProblemdomain_property("GivenDomain");
-						 problemDomain.setProblemdomain_type("Causal");
+						 problemDomain.setProperty("GivenDomain");
+						 problemDomain.setType("Causal");
 					 }else if(type.equals("X")) {
-						 problemDomain.setProblemdomain_property("GivenDomain");
-						 problemDomain.setProblemdomain_type("Lexical");
+						 problemDomain.setProperty("GivenDomain");
+						 problemDomain.setType("Lexical");
 					 }else if(type.equals("D")){
-						 problemDomain.setProblemdomain_property("DesignDomain");
+						 problemDomain.setProperty("DesignDomain");
 					 }else {
-						 problemDomain.setProblemdomain_property("GivenDomain");
-						 problemDomain.setProblemdomain_property("");
+						 problemDomain.setProperty("GivenDomain");
+						 problemDomain.setProperty("");
 					 }
 					 problemDomainList.add(problemDomain);
 				 }
@@ -277,9 +277,9 @@ public class ProblemEditor{
 						 reqPhe.setPhenomenon_to(phe.getPhenomenon_to());
 						 reqPhe.setPhenomenon_constraint("false");
 						 for(Requirement req: requirementList) {
-							 if(req.getRequirement_context().equals(from) || 
-									 req.getRequirement_context().equals(to)) {
-								 reqPhe.setPhenomenon_requirement(req.getRequirement_no());
+							 if(req.getName().equals(from) || 
+									 req.getName().equals(to)) {
+								 reqPhe.setPhenomenon_requirement(req.getNo());
 							 }
 						 }
 						 reqPheList.add(reqPhe);
@@ -304,12 +304,11 @@ public class ProblemEditor{
 						 reqPhe.setPhenomenon_to(phe.getPhenomenon_to());
 						 reqPhe.setPhenomenon_constraint("true");
 						 for(Requirement req: requirementList) {
-//							 System.out.println(req.getRequirement_context());
 //							 System.out.println(from);
 //							 System.out.println(to);
-							 if(req.getRequirement_context().equals(from) || 
-									 req.getRequirement_context().equals(to)) {
-								 reqPhe.setPhenomenon_requirement(req.getRequirement_no());
+							 if(req.getName().equals(from) || 
+									 req.getName().equals(to)) {
+								 reqPhe.setPhenomenon_requirement(req.getNo());
 							 }
 						 }
 						 reqPheList.add(reqPhe);
@@ -418,25 +417,25 @@ public class ProblemEditor{
 				 if(type == null) {
 					 reqnum = reqnum + 1;
 					 Requirement requirement = new Requirement();
-					 requirement.setRequirement_no(reqnum);
+					 requirement.setNo(reqnum);
 					 if(description == null) {
-						 requirement.setRequirement_context(name);
+						 requirement.setName(name);
 						 node.add(name);
 					 }else {
-						 requirement.setRequirement_context(description);
+						 requirement.setName(description);
 						 node.add(description);
 					 }
-					 requirement.setRequirement_h(height);
-					 requirement.setRequirement_w(width);
-					 requirement.setRequirement_x( 900 );
-					 requirement.setRequirement_y( 50 + reqnum * 100 );
+					 requirement.setH(height);
+					 requirement.setW(width);
+					 requirement.setX( 900 );
+					 requirement.setY( 50 + reqnum * 100 );
 					 List<Requirement> reqList = project.getProblemDiagram().getRequirementList();
 					 boolean flag = false;
 					 for(int i =0;i<reqnum-1;i++) {						 
-						 if(description.contentEquals(reqList.get(i).getRequirement_context())
-								 || name.contentEquals(reqList.get(i).getRequirement_shortname())) {
-							 reqList.get(i).setRequirement_context(description);
-							 reqList.get(i).setRequirement_shortname(name);
+						 if(description.contentEquals(reqList.get(i).getName())
+								 || name.contentEquals(reqList.get(i).getShortname())) {
+							 reqList.get(i).setName(description);
+							 reqList.get(i).setShortname(name);
 							 flag = true;
 							 break;
 						 }
@@ -447,26 +446,26 @@ public class ProblemEditor{
 				 }else if(type.equals("R")) {
 					 reqnum = reqnum + 1;
 					 Requirement requirement = new Requirement();
-					 requirement.setRequirement_no(reqnum);
+					 requirement.setNo(reqnum);
 					 if(description == null) {
-						 requirement.setRequirement_context(name);
+						 requirement.setName(name);
 						 node.add(name);
 					 }else {
-						 requirement.setRequirement_context(description);
+						 requirement.setName(description);
 						 node.add(description);
 					 }
-					 requirement.setRequirement_h(height);
-					 requirement.setRequirement_w(width);
-					 requirement.setRequirement_x( 900 );
-					 requirement.setRequirement_y( 50 + reqnum * 100 );
+					 requirement.setH(height);
+					 requirement.setW(width);
+					 requirement.setX( 900 );
+					 requirement.setY( 50 + reqnum * 100 );
 					 
 					 List<Requirement> reqList = project.getProblemDiagram().getRequirementList();
 					 boolean flag = false;
 					 for(int i =0;i<reqnum-1;i++) {						 
-						 if(description.contentEquals(reqList.get(i).getRequirement_context())
-								 || name.contentEquals(reqList.get(i).getRequirement_shortname())) {
-							 reqList.get(i).setRequirement_context(description);
-							 reqList.get(i).setRequirement_shortname(name);
+						 if(description.contentEquals(reqList.get(i).getName())
+								 || name.contentEquals(reqList.get(i).getShortname())) {
+							 reqList.get(i).setName(description);
+							 reqList.get(i).setShortname(name);
 							 flag = true;
 							 break;
 						 }
@@ -486,7 +485,7 @@ public class ProblemEditor{
 						 }else {
 							 machine.setName(description);
 						 }
-						 machine.setShortName(name);
+						 machine.setShortname(name);
 					 }else {
 						 Machine machine =new Machine();
 						 if(description == null) {
@@ -494,7 +493,7 @@ public class ProblemEditor{
 						 }else {
 							 machine.setName(description);
 						 }
-						 machine.setShortName(name);
+						 machine.setShortname(name);
 						 machine.setH(height);
 						 machine.setW(width);
 						 machine.setX( 200 );
@@ -507,40 +506,40 @@ public class ProblemEditor{
 					 domainnum = domainnum + 1;
 					 ProblemDomain problemDomain = new ProblemDomain();
 					 if(description == null) {
-						 problemDomain.setProblemdomain_name(name);
+						 problemDomain.setName(name);
 					 }else {
-						 problemDomain.setProblemdomain_name(description);
+						 problemDomain.setName(description);
 					 }
-					 problemDomain.setProblemdomain_shortname(name);
-					 problemDomain.setProblemdomain_no(domainnum);
-					 problemDomain.setProblemdomain_h(height);
-					 problemDomain.setProblemdomain_w(width);
-					 problemDomain.setProblemdomain_x(500);
-					 problemDomain.setProblemdomain_y(domainnum * 100);
+					 problemDomain.setShortname(name);
+					 problemDomain.setNo(domainnum);
+					 problemDomain.setH(height);
+					 problemDomain.setW(width);
+					 problemDomain.setX(500);
+					 problemDomain.setY(domainnum * 100);
 					 if(type.equals("B")) {
-						 problemDomain.setProblemdomain_property("GivenDomain");
-						 problemDomain.setProblemdomain_type("Biddable");
+						 problemDomain.setProperty("GivenDomain");
+						 problemDomain.setType("Biddable");
 					 }else if(type.equals("C")) {
-						 problemDomain.setProblemdomain_property("GivenDomain");
-						 problemDomain.setProblemdomain_type("Causal");
+						 problemDomain.setProperty("GivenDomain");
+						 problemDomain.setType("Causal");
 					 }else if(type.equals("X")) {
-						 problemDomain.setProblemdomain_property("GivenDomain");
-						 problemDomain.setProblemdomain_type("Lexical");
+						 problemDomain.setProperty("GivenDomain");
+						 problemDomain.setType("Lexical");
 					 }else if(type.equals("D")){
-						 problemDomain.setProblemdomain_property("DesignDomain");
+						 problemDomain.setProperty("DesignDomain");
 					 }else {
-						 problemDomain.setProblemdomain_property("GivenDomain");
-						 problemDomain.setProblemdomain_property("");
+						 problemDomain.setProperty("GivenDomain");
+						 problemDomain.setProperty("");
 					 }
 					 
 					 List<ProblemDomain> pdList = project.getContextDiagram().getProblemDomainList();
 					 boolean flag = false;
 					 for(int i =0;i<reqnum-1;i++) {						 
-						 if(description.contentEquals(pdList.get(i).getProblemdomain_name())
-								 || name.contentEquals(pdList.get(i).getProblemdomain_shortname())) {
-							 pdList.get(i).setProblemdomain_name(description);
-							 pdList.get(i).setProblemdomain_shortname(name);
-							 pdList.get(i).setProblemdomain_type(type);
+						 if(description.contentEquals(pdList.get(i).getName())
+								 || name.contentEquals(pdList.get(i).getShortname())) {
+							 pdList.get(i).setName(description);
+							 pdList.get(i).setShortname(name);
+							 pdList.get(i).setType(type);
 							 flag = true;
 							 break;
 						 }
@@ -649,9 +648,9 @@ public class ProblemEditor{
 						 reqPhe.setPhenomenon_constraint("false");
 						 //???
 						 for(Requirement req: reqList) {
-							 if(req.getRequirement_context().equals(from) || 
-									 req.getRequirement_context().equals(to)) {
-								 reqPhe.setPhenomenon_requirement(req.getRequirement_no());
+							 if(req.getName().equals(from) || 
+									 req.getName().equals(to)) {
+								 reqPhe.setPhenomenon_requirement(req.getNo());
 							 }
 						 }	
 						 reqPheList.add(reqPhe);
@@ -695,12 +694,11 @@ public class ProblemEditor{
 						 reqPhe.setPhenomenon_to(phe.getPhenomenon_to());
 						 reqPhe.setPhenomenon_constraint("true");
 						 for(Requirement req: reqList) {
-//							 System.out.println(req.getRequirement_context());
 //							 System.out.println(from);
 //							 System.out.println(to);
-							 if(req.getRequirement_context().equals(from) || 
-									 req.getRequirement_context().equals(to)) {
-								 reqPhe.setPhenomenon_requirement(req.getRequirement_no());
+							 if(req.getName().equals(from) || 
+									 req.getName().equals(to)) {
+								 reqPhe.setPhenomenon_requirement(req.getNo());
 							 }
 						 }
 						 reqPheList.add(reqPhe);
@@ -786,7 +784,7 @@ public class ProblemEditor{
 		
 		//Machine
 		Machine machine = project.getContextDiagram().getMachine();
-		buffer.append(machine.getShortName());
+		buffer.append(machine.getShortname());
 		buffer.append(" M");
 		if(machine.getName()!="")
 			buffer.append(" \""+machine.getName()+"\"");
@@ -796,22 +794,22 @@ public class ProblemEditor{
 		List<ProblemDomain> pd = project.getContextDiagram().getProblemDomainList();
 		int pdlen = project.getContextDiagram().getProblemDomainList().size();			
 		for(int i =0 ;i<pdlen;i++) {
-			buffer.append(pd.get(i).getProblemdomain_shortname());
-			if(pd.get(i).getProblemdomain_property().contentEquals("DesignDomain")) {
+			buffer.append(pd.get(i).getShortname());
+			if(pd.get(i).getProperty().contentEquals("DesignDomain")) {
 				buffer.append(" D ");
-			}else if(pd.get(i).getProblemdomain_type()==null) {
+			}else if(pd.get(i).getType()==null) {
 				buffer.append(" ? ");
-			}else if(pd.get(i).getProblemdomain_type().contentEquals("Causal")) {
+			}else if(pd.get(i).getType().contentEquals("Causal")) {
 				buffer.append(" C ");
-			}else if(pd.get(i).getProblemdomain_type().contentEquals("Biddable")) {
+			}else if(pd.get(i).getType().contentEquals("Biddable")) {
 				buffer.append(" B ");
-			}else if(pd.get(i).getProblemdomain_type().contentEquals("Lexical")) {
+			}else if(pd.get(i).getType().contentEquals("Lexical")) {
 				buffer.append(" X ");
 			}else {
-				buffer.append(" "+ pd.get(i).getProblemdomain_type());
+				buffer.append(" "+ pd.get(i).getType());
 			}
-			if(pd.get(i).getProblemdomain_name()!="")
-				buffer.append("\""+pd.get(i).getProblemdomain_name()+"\"");
+			if(pd.get(i).getName()!="")
+				buffer.append("\""+pd.get(i).getName()+"\"");
 			buffer.append("\n\n");
 		}
 		
@@ -819,10 +817,10 @@ public class ProblemEditor{
 		List<Requirement> req = project.getProblemDiagram().getRequirementList();
 		int reqlen = project.getProblemDiagram().getRequirementList().size();			
 		for(int i =0 ;i<reqlen;i++) {
-			buffer.append(req.get(i).getRequirement_shortname());			
+			buffer.append(req.get(i).getShortname());			
 			buffer.append(" R ");
-			if(pd.get(i).getProblemdomain_name()!="")
-				buffer.append("\""+req.get(i).getRequirement_context()+"\"");
+			if(pd.get(i).getName()!="")
+				buffer.append("\""+req.get(i).getName()+"\"");
 			buffer.append("\n\n");
 		}
 		
@@ -1318,23 +1316,18 @@ public class ProblemEditor{
 		 List<Requirement> req = project.getProblemDiagram().getRequirementList();
 		 int reqlen = req.size();
 		 for(int i = 0;i<reqlen;i++) {
-			 if(req.get(i).getRequirement_context().contentEquals(name)) {
-				 //System.out.println("getShortname-------"+name+"---"+req.get(i).getRequirement_shortname()+"--");
-				 return req.get(i).getRequirement_shortname();
-			 }
-//			 else {
-//				 System.out.println("---"+name+"---"+req.get(i).getRequirement_context()+
-//						 "---" + req.get(i).getRequirement_shortname()+"--");
-//			 }		 
+			 if(req.get(i).getName().contentEquals(name)) {
+				 return req.get(i).getShortname();
+			 }		 
 		 }
 //		 System.out.println("getShortname---------"+name+"-----");
 		 return name;
 	 }
 	 public static String changeMachine(String shortname,String type,String name,Project project) {
 		 String line = "";
-		 if(shortname.contentEquals(project.getContextDiagram().getMachine().getShortName())
+		 if(shortname.contentEquals(project.getContextDiagram().getMachine().getShortname())
 				 || name.contentEquals(project.getContextDiagram().getMachine().getName())) {			 
-			 line += project.getContextDiagram().getMachine().getShortName();
+			 line += project.getContextDiagram().getMachine().getShortname();
 			 line += " M ";
 			 line += "\"" + project.getContextDiagram().getMachine().getName() + "\"";
 			 line += "\n";
@@ -1348,11 +1341,11 @@ public class ProblemEditor{
 		List<Requirement> req = project.getProblemDiagram().getRequirementList();
 		int reqlen = project.getProblemDiagram().getRequirementList().size();			
 		for(int i =0 ;i<reqlen;i++) {
-			if( name.contentEquals(req.get(i).getRequirement_context())){					
-				line += req.get(i).getRequirement_shortname();			
+			if( name.contentEquals(req.get(i).getName())){					
+				line += req.get(i).getShortname();			
 				line += " R";
-				if(req.get(i).getRequirement_context()!="")
-					line += " \""+req.get(i).getRequirement_context()+"\"";
+				if(req.get(i).getName()!="")
+					line += " \""+req.get(i).getName()+"\"";
 				line += "\n";
 			}			
 		}
@@ -1365,22 +1358,22 @@ public class ProblemEditor{
 		List<ProblemDomain> pd = project.getContextDiagram().getProblemDomainList();
 		int pdlen = project.getContextDiagram().getProblemDomainList().size();			
 		for(int i =0 ;i<pdlen;i++) {
-			if(name.contentEquals(pd.get(i).getProblemdomain_name())
-					|| shortname.contentEquals(pd.get(i).getProblemdomain_shortname())) {
-				line += pd.get(i).getProblemdomain_shortname();
-				if(pd.get(i).getProblemdomain_property().contentEquals("DesignDomain")) {
+			if(name.contentEquals(pd.get(i).getName())
+					|| shortname.contentEquals(pd.get(i).getShortname())) {
+				line += pd.get(i).getShortname();
+				if(pd.get(i).getProperty().contentEquals("DesignDomain")) {
 					line += " D";
-				}else if(pd.get(i).getProblemdomain_type()==null) {
+				}else if(pd.get(i).getType()==null) {
 					line += " ?";
-				}else if(pd.get(i).getProblemdomain_type().contentEquals("Causal")) {
+				}else if(pd.get(i).getType().contentEquals("Causal")) {
 					line += " C";
-				}else if(pd.get(i).getProblemdomain_type().contentEquals("Biddable")) {
+				}else if(pd.get(i).getType().contentEquals("Biddable")) {
 					line += " B";
-				}else if(pd.get(i).getProblemdomain_type().contentEquals("Lexical")) {
+				}else if(pd.get(i).getType().contentEquals("Lexical")) {
 					line += " X";
 				}
-				if(pd.get(i).getProblemdomain_name()!="")
-					line += " \""+pd.get(i).getProblemdomain_name()+"\"\n";
+				if(pd.get(i).getName()!="")
+					line += " \""+pd.get(i).getName()+"\"\n";
 				return line;
 			}							
 		}	
@@ -1616,7 +1609,7 @@ public class ProblemEditor{
 	 }
 	 public static String getMachinePf(Machine machine) {
 		 String res = "";
-		 res += machine.getShortName();
+		 res += machine.getShortname();
 		 res += " M ";
 		 if(machine.getName()!="")
 			 res += "\"" + machine.getName() + "\"";
@@ -1625,30 +1618,30 @@ public class ProblemEditor{
 	 }
 	 public static String getProblemDomainPf(ProblemDomain pd) {
 		 String res = "";
-		 res += pd.getProblemdomain_shortname();
-		 if(pd.getProblemdomain_property().contentEquals("DesignDomain")) {
+		 res += pd.getShortname();
+		 if(pd.getProperty().contentEquals("DesignDomain")) {
 			res += " D ";
-		 }else if(pd.getProblemdomain_type()==null) {
+		 }else if(pd.getType()==null) {
 				res += " ? ";
-		 }else if(pd.getProblemdomain_type().contentEquals("Causal")) {
+		 }else if(pd.getType().contentEquals("Causal")) {
 			res += " C ";
-		 }else if(pd.getProblemdomain_type().contentEquals("Biddable")) {
+		 }else if(pd.getType().contentEquals("Biddable")) {
 			res += " B ";
-		 }else if(pd.getProblemdomain_type().contentEquals("Lexical")) {
+		 }else if(pd.getType().contentEquals("Lexical")) {
 			res += " X ";
 		 }
-		 if(pd.getProblemdomain_name()!="")
-			 res += "\"" + pd.getProblemdomain_name()+ "\"";
+		 if(pd.getName()!="")
+			 res += "\"" + pd.getName()+ "\"";
 		 res += "\n";
 		 return res;
 	 }
 	 public static String getRequirementPf(Requirement req) {
 		String line = "";
 		//requirement
-		line += req.getRequirement_shortname();			
+		line += req.getShortname();			
 		line += " R";
-		if(req.getRequirement_context()!="")
-			line += " \""+req.getRequirement_context()+"\"";
+		if(req.getName()!="")
+			line += " \""+req.getName()+"\"";
 		line += "\n";	
 		return line;
 	 }
@@ -1723,10 +1716,10 @@ public class ProblemEditor{
 		String to = ref.getReference_to();
 		List<Requirement> reqList= project.getProblemDiagram().getRequirementList();
 		for(Requirement req:reqList) {
-			if(from.contentEquals(req.getRequirement_context()))
-				from = req.getRequirement_shortname();
-			else if(to.contentEquals(req.getRequirement_context()))
-				to = req.getRequirement_shortname();
+			if(from.contentEquals(req.getName()))
+				from = req.getShortname();
+			else if(to.contentEquals(req.getName()))
+				to = req.getShortname();
 		}
 		List<RequirementPhenomenon> pheList = ref.getPhenomenonList();
 		String pheList1 = " { ";
@@ -1752,10 +1745,10 @@ public class ProblemEditor{
 		String to = con.getConstraint_to();
 		List<Requirement> reqList= project.getProblemDiagram().getRequirementList();
 		for(Requirement req:reqList) {
-			if(from.contentEquals(req.getRequirement_context()))
-				from = req.getRequirement_shortname();
-			else if(to.contentEquals(req.getRequirement_context()))
-				to = req.getRequirement_shortname();
+			if(from.contentEquals(req.getName()))
+				from = req.getShortname();
+			else if(to.contentEquals(req.getName()))
+				to = req.getShortname();
 		}
 		List<RequirementPhenomenon> pheList = con.getPhenomenonList();
 		String pheList1 = " { ";

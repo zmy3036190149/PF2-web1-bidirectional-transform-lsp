@@ -3,8 +3,8 @@ package com.example.demo.bean;
 public abstract class Node extends Shape {
 	
 	
-	public abstract String getShortName();
-	public abstract void setShortName(String node_no);
+	public abstract String getShortname();
+	public abstract void setShortname(String node_no);
 	
 	public abstract int getX();
 	public abstract void setX(int node_x);

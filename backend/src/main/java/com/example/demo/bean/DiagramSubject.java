@@ -137,12 +137,12 @@ public class DiagramSubject extends Subject{
 	    switch(shape){
 	      case "mac":
 	    	  String name = (String)newObject.get("name");
-	    	  String shortName = (String)newObject.get("name");
+	    	  String shortname = (String)newObject.get("name");
 	    	  int x = (int)newObject.get("x");
 	    	  int y = (int)newObject.get("y");
 	    	  int w = (int)newObject.get("w");
 	    	  int h = (int)newObject.get("h");
-	    	  Machine machine = new Machine(name,shortName,x,y,w,h);
+	    	  Machine machine = new Machine(name,shortname,x,y,w,h);
 	    	  if(project == null)
 	    		  System.out.println("project==null");
 	    	  else if(  project.getContextDiagram()==null)
@@ -267,8 +267,8 @@ public class DiagramSubject extends Subject{
 		for(ProblemDomain item: project.getContextDiagram().getProblemDomainList()){
 			if(item.getNo() == old.getNo()){
 				project.getContextDiagram().getProblemDomainList().set(i,new1);
-				if(!item.getShortName().contentEquals(old.getShortName())){
-					changeRelatedLink(old.getShortName(),new1.getShortName());
+				if(!item.getShortname().contentEquals(old.getShortname())){
+					changeRelatedLink(old.getShortname(),new1.getShortname());
 					
 				}
 				break;
@@ -281,8 +281,8 @@ public class DiagramSubject extends Subject{
 		for(Requirement item: project.getProblemDiagram().getRequirementList()){
 			if(item.getNo() == old.getNo()){
 				project.getProblemDiagram().getRequirementList().set(i,new1);
-				if(!item.getShortName().contentEquals(old.getShortName())){
-					changeRelatedLink(old.getShortName(),new1.getShortName());					
+				if(!item.getShortname().contentEquals(old.getShortname())){
+					changeRelatedLink(old.getShortname(),new1.getShortname());					
 				}
 				break;
 			}	
@@ -375,7 +375,7 @@ public class DiagramSubject extends Subject{
 	public  ArrayList<String> getMachineChangeMessages(ArrayList<String> messages,Machine old,Machine new1) {
 //		ArrayList<String> messages= new ArrayList<String>();
 		if(!old.getName().contentEquals(new1.getName())
-			|| 	!old.getShortName().contentEquals(new1.getShortName())) {
+			|| 	!old.getShortname().contentEquals(new1.getShortname())) {
 			messages.add(getChangeMessage("change","mac",old,new1));
 		}
 		return messages;
@@ -388,7 +388,7 @@ public class DiagramSubject extends Subject{
 			for(ProblemDomain old:oldList) {
 				if(new1.getNo()==old.getNo()) {
 					if(!new1.getName().contentEquals(old.getName()) ||
-							!new1.getShortName().contentEquals(old.getShortName()) ||
+							!new1.getShortname().contentEquals(old.getShortname()) ||
 							new1.getX()!=old.getX()||
 							new1.getY()!=old.getY()) {
 						messages.add(getChangeMessage("change","pro",old,new1));

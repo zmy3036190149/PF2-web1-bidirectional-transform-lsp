@@ -1,60 +1,59 @@
 export class Requirement {
-	requirement_no: number;
-	requirement_context: string;	
-	requirement_shortname: string;
-	requirement_x: number;	
-	requirement_y: number;
-	requirement_h: number;
-	requirement_w: number;
+	no: number;
+	name: string;	
+	shortname: string;
+	x: number;	
+	y: number;
+	h: number;
+	w: number;
 	static newRequirement(no,name,x,y,h,w){
 		let req = new Requirement()
-		req.requirement_no=no
-		req.requirement_context=name
-		req.requirement_shortname = getShortName(name)
-		req.requirement_x=x
-		req.requirement_y=y
-		req.requirement_h=h
-		req.requirement_w=w
+		req.no=no
+		req.name=name
+		req.shortname = getShortname(name)
+		req.x=x
+		req.y=y
+		req.h=h
+		req.w=w
 		return req
 	}
-	static newRequirementWithOld(old,name,shortName){
+	static newRequirementWithOld(old:Requirement,name,shortname){
 		let req = new Requirement()
-		req.requirement_no = old.requirement_no
-		req.requirement_context = name	
-		req.requirement_shortname = shortName	
-		// req.requirement_shortname = old.requirement_shortname?old.requirement_shortname:getShortName(old.requirement_context)
-		req.requirement_x = old.requirement_x
-		req.requirement_y = old.requirement_y
-		req.requirement_h = old.requirement_h
-		req.requirement_w = old.requirement_w
+		req.no = old.no
+		req.name = name	
+		req.shortname = shortname	
+		req.x = old.x
+		req.y = old.y
+		req.h = old.h
+		req.w = old.w
 		return req
 	}
-	static copyRequirement(old){
+	static copyRequirement(old:Requirement){
 		let req = new Requirement()
-		req.requirement_no = old.requirement_no
-		req.requirement_context = old.requirement_context	
-		req.requirement_shortname = old.requirement_shortname?old.requirement_shortname:getShortName(old.requirement_context)
-		req.requirement_x = old.requirement_x
-		req.requirement_y = old.requirement_y
-		req.requirement_h = old.requirement_h
-		req.requirement_w = old.requirement_w
+		req.no = old.no
+		req.name = old.name	
+		req.shortname = old.shortname?old.shortname:getShortname(old.name)
+		req.x = old.x
+		req.y = old.y
+		req.h = old.h
+		req.w = old.w
 		return req
 	}
-	getNo(){return this.requirement_no}	
-	setNo(no){this.requirement_no=no}
-	getName(){return this.requirement_context}	
-    setName(name){this.requirement_context=name}
-	getShortName(){return this.requirement_shortname}	
-    setShortName(shortName){this.requirement_shortname=shortName}
-	getX(){return this.requirement_x}
-	setX(x){this.requirement_x=x}
-    getY(){return this.requirement_y}
-    setY(y){this.requirement_y=y}
-    getH(){return this.requirement_h}
-    setH(h){this.requirement_h=h}
-	getW(){return this.requirement_w}
-	setW(w){this.requirement_w=w}
+	getNo(){return this.no}	
+	setNo(no){this.no=no}
+	getName(){return this.name}	
+    setName(name){this.name=name}
+	getShortname(){return this.shortname}	
+    setShortname(shortname){this.shortname=shortname}
+	getX(){return this.x}
+	setX(x){this.x=x}
+    getY(){return this.y}
+    setY(y){this.y=y}
+    getH(){return this.h}
+    setH(h){this.h=h}
+	getW(){return this.w}
+	setW(w){this.w=w}
 }
-function getShortName(name:string){
+function getShortname(name:string){
 	return name.replace(/\s+/g,""); 
 }

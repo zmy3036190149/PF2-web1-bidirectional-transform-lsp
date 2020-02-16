@@ -80,7 +80,7 @@ public class LSP {
 	@OnMessage
 	public void onMessage(String message, Session session) {
 		message = "Content-Length: "+ message.length() + "\r\n\r\n"+ message+"\r";
-		System.out.println(message);
+//		System.out.println(message);
 		//转发
 		for(Forward lsp: LSP.forwardSet) {
 			if(session==lsp.getSession()) {

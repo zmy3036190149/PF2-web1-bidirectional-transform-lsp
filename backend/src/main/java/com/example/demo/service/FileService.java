@@ -422,7 +422,7 @@ public class FileService {
 		
 		String name = machineElement.attributeValue("machine_name");
 		name = name.replaceAll("&#x000A", "\n");
-		String shortName = machineElement.attributeValue("machine_shortname");
+		String shortname = machineElement.attributeValue("machine_shortname");
 		String machine_locality = machineElement.attributeValue("machine_locality");
 		String[] locality= machine_locality.split(",");
 		int x = Integer.parseInt(locality[0]);
@@ -431,7 +431,7 @@ public class FileService {
 		int w = Integer.parseInt(locality[3]);
 		
 		machine.setName(name);
-		machine.setShortName(shortName);
+		machine.setShortname(shortname);
 		machine.setH(h);
 		machine.setW(w);
 		machine.setX(x);
@@ -453,56 +453,56 @@ public class FileService {
 			ProblemDomain problemDomain = new ProblemDomain();
 			Element givenDomainElement = (Element) object;
 			
-			int problemdomain_no = Integer.parseInt(givenDomainElement.attributeValue("problemdomain_no"));
-			String problemdomain_name = givenDomainElement.attributeValue("problemdomain_name");
-			problemdomain_name = problemdomain_name.replaceAll("&#x000A", "\n");
-			String problemdomain_shortname = givenDomainElement.attributeValue("problemdomain_shortname");
-			String problemdomain_type = givenDomainElement.attributeValue("problemdomain_type");
-			String problemdomain_property = "GivenDomain";
+			int no = Integer.parseInt(givenDomainElement.attributeValue("problemdomain_no"));
+			String name = givenDomainElement.attributeValue("problemdomain_name");
+			name = name.replaceAll("&#x000A", "\n");
+			String shortname = givenDomainElement.attributeValue("problemdomain_shortname");
+			String type = givenDomainElement.attributeValue("problemdomain_type");
+			String property = "GivenDomain";
 			String problemdomain_locality = givenDomainElement.attributeValue("problemdomain_locality");
 			String[] locality= problemdomain_locality.split(",");
-			int problemdomain_x = Integer.parseInt(locality[0]);
-			int problemdomain_y = Integer.parseInt(locality[1]);
-			int problemdomain_h = Integer.parseInt(locality[2]);
-			int problemdomain_w = Integer.parseInt(locality[3]);
+			int x = Integer.parseInt(locality[0]);
+			int y = Integer.parseInt(locality[1]);
+			int h = Integer.parseInt(locality[2]);
+			int w = Integer.parseInt(locality[3]);
 			
-			problemDomain.setProblemdomain_no(problemdomain_no);
-			problemDomain.setProblemdomain_name(problemdomain_name);
-			problemDomain.setProblemdomain_shortname(problemdomain_shortname);
-			problemDomain.setProblemdomain_type(problemdomain_type);
-			problemDomain.setProblemdomain_property(problemdomain_property);
-			problemDomain.setProblemdomain_x(problemdomain_x);
-			problemDomain.setProblemdomain_y(problemdomain_y);
-			problemDomain.setProblemdomain_h(problemdomain_h);
-			problemDomain.setProblemdomain_w(problemdomain_w);
+			problemDomain.setNo(no);
+			problemDomain.setName(name);
+			problemDomain.setShortname(shortname);
+			problemDomain.setType(type);
+			problemDomain.setProperty(property);
+			problemDomain.setX(x);
+			problemDomain.setY(y);
+			problemDomain.setH(h);
+			problemDomain.setW(w);
 			
 			problemDomainList.add(problemDomain);
 		}
 		for(Object object : designDomainElementList) {
 			Element designDomainElement = (Element) object;
 			
-			int problemdomain_no = Integer.parseInt(designDomainElement.attributeValue("problemdomain_no"));
-			String problemdomain_name = designDomainElement.attributeValue("problemdomain_name");
-			String problemdomain_shortname = designDomainElement.attributeValue("problemdomain_shortname");
-			String problemdomain_type = designDomainElement.attributeValue("problemdomain_type");
-			String problemdomain_property = "DesignDomain";
+			int no = Integer.parseInt(designDomainElement.attributeValue("problemdomain_no"));
+			String name = designDomainElement.attributeValue("problemdomain_name");
+			String shortname = designDomainElement.attributeValue("problemdomain_shortname");
+			String type = designDomainElement.attributeValue("problemdomain_type");
+			String property = "DesignDomain";
 			String problemdomain_locality = designDomainElement.attributeValue("problemdomain_locality");
 			String[] locality= problemdomain_locality.split(",");
-			int problemdomain_x = Integer.parseInt(locality[0]);
-			int problemdomain_y = Integer.parseInt(locality[1]);
-			int problemdomain_h = Integer.parseInt(locality[2]);
-			int problemdomain_w = Integer.parseInt(locality[3]);
+			int x = Integer.parseInt(locality[0]);
+			int y = Integer.parseInt(locality[1]);
+			int h = Integer.parseInt(locality[2]);
+			int w = Integer.parseInt(locality[3]);
 			
 			ProblemDomain problemDomain = new ProblemDomain();
-			problemDomain.setProblemdomain_no(problemdomain_no);
-			problemDomain.setProblemdomain_name(problemdomain_name);
-			problemDomain.setProblemdomain_shortname(problemdomain_shortname);
-			problemDomain.setProblemdomain_type(problemdomain_type);
-			problemDomain.setProblemdomain_property(problemdomain_property);
-			problemDomain.setProblemdomain_x(problemdomain_x);
-			problemDomain.setProblemdomain_y(problemdomain_y);
-			problemDomain.setProblemdomain_h(problemdomain_h);
-			problemDomain.setProblemdomain_w(problemdomain_w);
+			problemDomain.setNo(no);
+			problemDomain.setName(name);
+			problemDomain.setShortname(shortname);
+			problemDomain.setType(type);
+			problemDomain.setProperty(property);
+			problemDomain.setX(x);
+			problemDomain.setY(y);
+			problemDomain.setH(h);
+			problemDomain.setW(w);
 			
 			problemDomainList.add(problemDomain);
 		}
@@ -593,26 +593,26 @@ public class FileService {
 		// TODO Auto-generated method stub
 		Requirement requirement = new Requirement();
 		
-		int requirement_no = Integer.parseInt(requirementElement.attributeValue("requirement_no"));
-		String requirement_context = requirementElement.attributeValue("requirement_context").replaceAll("&#x000A", "\n");
-		String requirement_shortname = requirementElement.attributeValue("requirement_shortname");
-		if(requirement_shortname==null) {
-			requirement_shortname = requirement_context.replaceAll(" ","");
+		int no = Integer.parseInt(requirementElement.attributeValue("requirement_no"));
+		String name = requirementElement.attributeValue("requirement_context").replaceAll("&#x000A", "\n");
+		String shortname = requirementElement.attributeValue("requirement_shortname");
+		if(shortname==null) {
+			shortname = name.replaceAll(" ","");
 		}
 		String requirement_locality = requirementElement.attributeValue("requirement_locality");
 		String[] locality= requirement_locality.split(",");
-		int requirement_x = Integer.parseInt(locality[0]);
-		int requirement_y = Integer.parseInt(locality[1]);
-		int requirement_h = Integer.parseInt(locality[2]);
-		int requirement_w = Integer.parseInt(locality[3]);
+		int x = Integer.parseInt(locality[0]);
+		int y = Integer.parseInt(locality[1]);
+		int h = Integer.parseInt(locality[2]);
+		int w = Integer.parseInt(locality[3]);
 		
-		requirement.setRequirement_no(requirement_no);
-		requirement.setRequirement_context(requirement_context);
-		requirement.setRequirement_shortname(requirement_shortname);
-		requirement.setRequirement_x(requirement_x);
-		requirement.setRequirement_y(requirement_y);
-		requirement.setRequirement_h(requirement_h);
-		requirement.setRequirement_w(requirement_w);
+		requirement.setNo(no);
+		requirement.setName(name);
+		requirement.setShortname(shortname);
+		requirement.setX(x);
+		requirement.setY(y);
+		requirement.setH(h);
+		requirement.setW(w);
 		
 		return requirement;
 	}
@@ -883,7 +883,7 @@ public class FileService {
 		List<Interface> interfaceList = contextDiagram.getInterfaceList();
 		if(machine!=null) {
 			machineElement.addAttribute("machine_name", machine.getName().replaceAll("\n", "&#x000A"));
-			machineElement.addAttribute("machine_shortname", machine.getShortName());
+			machineElement.addAttribute("machine_shortname", machine.getShortname());
 			StringBuffer re = new StringBuffer();
 			re.append(machine.getX());
 			re.append(",");
@@ -900,36 +900,36 @@ public class FileService {
 			//List<?> designDomainElementList = designDomainListElement.elements("Element ");
 			for(int i=0;i<problemDomainList.size();i++) {
 				ProblemDomain tmp_PD=problemDomainList.get(i);
-				String problemdomain_property=tmp_PD.getProblemdomain_property();
-				String problemdomain_no = String.valueOf(tmp_PD.getProblemdomain_no());
-				String problemdomain_name = tmp_PD.getProblemdomain_name().replaceAll("\n", "&#x000A");
-				String problemdomain_shortname = tmp_PD.getProblemdomain_shortname();
-				String problemdomain_type = tmp_PD.getProblemdomain_type();
+				String property=tmp_PD.getProperty();
+				String no = String.valueOf(tmp_PD.getNo());
+				String name = tmp_PD.getName().replaceAll("\n", "&#x000A");
+				String shortname = tmp_PD.getShortname();
+				String type = tmp_PD.getType();
 				StringBuffer re = new StringBuffer();
-				re.append(tmp_PD.getProblemdomain_x());
+				re.append(tmp_PD.getX());
 				re.append(",");
-				re.append(tmp_PD.getProblemdomain_y());
+				re.append(tmp_PD.getY());
 				re.append(",");
-				re.append(tmp_PD.getProblemdomain_h());
+				re.append(tmp_PD.getH());
 				re.append(",");
-				re.append(tmp_PD.getProblemdomain_w());
-				String problemdomain_locality = re.toString();
-				if(problemdomain_property.equals("GivenDomain")) {
+				re.append(tmp_PD.getW());
+				String locality = re.toString();
+				if(property.equals("GivenDomain")) {
 
 					Element givenDomainElement = givenDomainListElement.addElement("Element");
-					givenDomainElement.addAttribute("problemdomain_no", problemdomain_no);
-					givenDomainElement.addAttribute("problemdomain_name", problemdomain_name);
-					givenDomainElement.addAttribute("problemdomain_shortname", problemdomain_shortname);
-					givenDomainElement.addAttribute("problemdomain_type", problemdomain_type);
-					givenDomainElement.addAttribute("problemdomain_locality",problemdomain_locality);
+					givenDomainElement.addAttribute("problemdomain_no", no);
+					givenDomainElement.addAttribute("problemdomain_name", name);
+					givenDomainElement.addAttribute("problemdomain_shortname", shortname);
+					givenDomainElement.addAttribute("problemdomain_type", type);
+					givenDomainElement.addAttribute("problemdomain_locality",locality);
 				}
 				else {
 					Element designDomainElement = designDomainListElement.addElement("Element");
-					designDomainElement.addAttribute("problemdomain_no", problemdomain_no);
-					designDomainElement.addAttribute("problemdomain_name", problemdomain_name);
-					designDomainElement.addAttribute("problemdomain_shortname", problemdomain_shortname);
-					designDomainElement.addAttribute("problemdomain_type", problemdomain_type);
-					designDomainElement.addAttribute("problemdomain_locality",problemdomain_locality);
+					designDomainElement.addAttribute("problemdomain_no", no);
+					designDomainElement.addAttribute("problemdomain_name", name);
+					designDomainElement.addAttribute("problemdomain_shortname", shortname);
+					designDomainElement.addAttribute("problemdomain_type", type);
+					designDomainElement.addAttribute("problemdomain_locality",locality);
 				}
 
 			}
@@ -941,7 +941,7 @@ public class FileService {
 				String interface_no = String.valueOf(tmp_i.getInterface_no());
 				String interface_name = tmp_i.getInterface_name();
 				String interface_description = tmp_i.getInterface_description();
-				String shortname=machine.getShortName();
+				String shortname=machine.getShortname();
 				String interface_to="";
 				String interface_from="";
 				if(tmp_i.getInterface_to().equals(shortname)) {
@@ -1036,23 +1036,23 @@ public class FileService {
 		
 		for(int i=0;i<requirementList.size();i++) {
 			Requirement tmp_req=requirementList.get(i);
-			String requirement_no = String.valueOf(tmp_req.getRequirement_no());
-			String requirement_context = tmp_req.getRequirement_context().replaceAll("\n", "&#x000A");
-			String requirement_shortname = tmp_req.getRequirement_shortname();
+			String no = String.valueOf(tmp_req.getNo());
+			String name = tmp_req.getName().replaceAll("\n", "&#x000A");
+			String shortname = tmp_req.getShortname();
 			StringBuffer re = new StringBuffer();
-			re.append(tmp_req.getRequirement_x());
+			re.append(tmp_req.getX());
 			re.append(",");
-			re.append(tmp_req.getRequirement_y());
+			re.append(tmp_req.getY());
 			re.append(",");
-			re.append(tmp_req.getRequirement_h());
+			re.append(tmp_req.getH());
 			re.append(",");
-			re.append(tmp_req.getRequirement_w());
-			String requirement_locality = re.toString();
+			re.append(tmp_req.getW());
+			String locality = re.toString();
 			Element requirementElement=requirementListElement.addElement("Element");
-			requirementElement.addAttribute("requirement_no", requirement_no);
-			requirementElement.addAttribute("requirement_context", requirement_context);
-			requirementElement.addAttribute("requirement_shortname", requirement_shortname);
-			requirementElement.addAttribute("requirement_locality", requirement_locality);
+			requirementElement.addAttribute("requirement_no", no);
+			requirementElement.addAttribute("requirement_context", name);
+			requirementElement.addAttribute("requirement_shortname", shortname);
+			requirementElement.addAttribute("requirement_locality", locality);
 		}
 		
 		if(constraintList.size()>0) {

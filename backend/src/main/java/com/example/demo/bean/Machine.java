@@ -2,7 +2,7 @@ package com.example.demo.bean;
 
 public class Machine extends Node{
 	private String name;	//机器名称
-	private String shortName;	//名称缩写
+	private String shortname;	//名称缩写
 	private int x;	//位置信息
 	private int y;
 	private int h;
@@ -10,19 +10,19 @@ public class Machine extends Node{
 	public Machine() {
 		super();
 	}
-	public Machine(String name,String shortName,int x, int y, int w,int h){
+	public Machine(String name,String shortname,int x, int y, int w,int h){
 		this.name = name;
-		this.shortName = shortName;
+		this.shortname = shortname;
 		this.x = x;
 		this.y = y;
 		this.w = w;
 		this.h = h;
 	}
-	public String getShortName() {
-		return shortName;
+	public String getShortname() {
+		return shortname;
 	}
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
+	public void setShortname(String shortname) {
+		this.shortname = shortname;
 	}
 	public int getX() {
 		return x;

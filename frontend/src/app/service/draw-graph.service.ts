@@ -400,7 +400,7 @@ export class DrawGraphService {
         }
         return no;
   }
-  getShortName(name){
+  getShortname(name){
     let len = name.length
     let flag = true
     let res=''
@@ -658,24 +658,20 @@ export class DrawGraphService {
     this.isLabel = false
     let proNum = this.ontologyEntities.length;
     this.project.contextDiagram.machine = Machine.newMachine('machine','M',100, 50*proNum, 100, 50 );
-    // this.project.contextDiagram.machine.name='machine';
-    // this.project.contextDiagram.machine.shortName = 'M';   
-    // this.project.contextDiagram.machine.x = 100;    
-    // this.project.contextDiagram.machine.y = 50*proNum;
     let x = 400;
     let y = 50;
     
     //console.log(this.ontologyEntities);
     for(let ont of this.ontologyEntities){
       let pro = new ProblemDomain()
-      pro.problemdomain_no = ont.id
-      pro.problemdomain_name = ont.name
-      pro.problemdomain_shortname = this.getShortName(ont.name)
-      pro.problemdomain_type = ont.type.slice(0,-6)
+      pro.no = ont.id
+      pro.name = ont.name
+      pro.shortname = this.getShortname(ont.name)
+      pro.type = ont.type.slice(0,-6)
       console.log("=================")
       console.log(pro)
       
-      // pro.problemdomain_property
+      // pro.property
       pro.phes = new Array<Phenomenon>();
       for(let opt of ont.opts){
         let phe = new Phenomenon();
@@ -700,18 +696,18 @@ export class DrawGraphService {
         phe.phenomenon_name = opt;
         pro.phes.push(phe);
       }
-      pro.problemdomain_x= x;
-      pro.problemdomain_y = y;
+      pro.x= x;
+      pro.y = y;
       y+=100;
-      pro.problemdomain_h = 50;
-      pro.problemdomain_w = 100;      
+      pro.h = 50;
+      pro.w = 100;      
       console.log(pro);
       this.project.contextDiagram.problemDomainList.push(pro);
 
       //link
       let int = new Interface();
       int.interface_from = 'M';
-      int.interface_to = pro.problemdomain_shortname;
+      int.interface_to = pro.shortname;
       int.interface_no= this.interface_no;
       this.interface_no += 1;
       int.interface_name = '';
@@ -983,7 +979,7 @@ export class DrawGraphService {
     machineElement.attr(
       {
         label: {
-          text: machine.name + '\n(' + machine.shortName + ')',
+          text: machine.name + '\n(' + machine.shortname + ')',
           // x: machine.x,
           // y: machine.y,
         },
@@ -1021,7 +1017,7 @@ export class DrawGraphService {
         root: {
           name: 'machine',
           title: machine.name,
-          shortName:  machine.shortName,
+          shortname:  machine.shortname,
         }
       });
     machineElement.position(machine.x, machine.y);
@@ -1033,7 +1029,7 @@ export class DrawGraphService {
     this.machine = this.project.contextDiagram.machine;
     let selectedDiv = document.getElementById('machinePopBox');
     (selectedDiv.getElementsByClassName("description")[0] as any).value = this.machine.name;
-    (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.machine.shortName;
+    (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.machine.shortname;
     
     selectedDiv.style.display = "block";
   }
@@ -1041,49 +1037,46 @@ export class DrawGraphService {
   changeMachineDetail() {
     let selectedDiv = document.getElementById('machinePopBox');
     let description = (selectedDiv.getElementsByClassName("description")[0] as any).value;
-    let shortName = (selectedDiv.getElementsByClassName("shortName")[0] as any).value;
-    //this.changeRelatedLink(this.project.contextDiagram.machine.shortName,shortName);
-    //this.changeMachineOnGraph(this.selectedElement, description, shortName);  
+    let shortname = (selectedDiv.getElementsByClassName("shortName")[0] as any).value; 
     let old = this.project.contextDiagram.machine
-    //let machine = this.project.changeMachine(description, shortName)  
-    let machine =  Machine.newMachineWithOld(old,description,shortName)
+    let machine =  Machine.newMachineWithOld(old,description,shortname)
     // this.projectService.sendProject(this.project)    
     this.change("change","mac",old,machine)
     return true;
   }
   changeMachinews(old:Machine,new1:Machine) {
-    this.changeRelatedLink(old.shortName,new1.shortName)
+    this.changeRelatedLink(old.shortname,new1.shortname)
     for(let graph of this.graphs)
       for(let ele of graph.getElements()){
         if(ele.attr("root").title == old.name){
           console.log(ele.attr("root").title ,"== ",old.name)
-          this.changeMachineOnGraph(ele, new1.name, new1.shortName) 
+          this.changeMachineOnGraph(ele, new1.name, new1.shortname) 
         }             
       }
-   this.project.changeMachine(new1.name, new1.shortName)    
+   this.project.changeMachine(new1.name, new1.shortname)    
     this.projectService.sendProject(this.project)
     return true;
   }
-  changeMachineOnGraph(element, name, shortName) {
+  changeMachineOnGraph(element, name, shortname) {
     element.attr({
       root: { 
         title: name,
         name:"machine",
-        shortName:shortName 
+        shortname:shortname 
       },
-      label: { text: name + '\n(' + shortName + ')' }
+      label: { text: name + '\n(' + shortname + ')' }
     });
   }
 
   deleteMachinews(old:Machine) {
-    this.project.deleteRelatedLink(this.project.contextDiagram.machine.shortName)    
+    this.project.deleteRelatedLink(this.project.contextDiagram.machine.shortname)    
     this.project.contextDiagram.machine = undefined;
     this.project.problemDiagram.contextDiagram.machine = undefined;    
     this.projectService.sendProject(this.project)    
 
     for(let graph of this.graphs){      
       for(let element of graph.getCells() ){
-        if (old.shortName == element.attr('root').shortName)
+        if (old.shortname == element.attr('root').shortname)
           graph.removeCells([element])
       }
     }
@@ -1091,7 +1084,6 @@ export class DrawGraphService {
   deleteMachine(graph) {
     console.log("==========deleteRelatedLink========")
     console.log(this.project)
-    // this.project.deleteRelatedLink(this.project.contextDiagram.machine.shortName)
     let old = this.project.contextDiagram.machine
     // this.project.contextDiagram.machine = undefined;
     // this.project.problemDiagram.contextDiagram.machine = undefined;
@@ -1105,7 +1097,7 @@ export class DrawGraphService {
     for (let i = 0; i < problemDomainList.length; i++) {
       var element;
       let problemDomain = problemDomainList[i];
-      if (problemDomain.problemdomain_property === 'DesignDomain') {
+      if (problemDomain.property === 'DesignDomain') {
         element = this.drawDesignDomain(problemDomain, graph);
       } else {
         element = this.drawGivenDomain(problemDomain, graph);
@@ -1113,11 +1105,11 @@ export class DrawGraphService {
       elementList.push(element);
     }
   }
-  drawProblemDomainws(problemDomain){
+  drawProblemDomainws(problemDomain:ProblemDomain){
     problemDomain = ProblemDomain.copyProblemDomain(problemDomain);
     this.project.contextDiagram.problemDomainList.push(problemDomain);
     for(let graph of this.graphs){
-      if (problemDomain.problemdomain_property === 'DesignDomain') {
+      if (problemDomain.property === 'DesignDomain') {
         this.drawDesignDomain(problemDomain, graph);
      } else {
        this.drawGivenDomain(problemDomain, graph);
@@ -1125,15 +1117,15 @@ export class DrawGraphService {
     }
   }
   drawProblemDomain(x, y, graph) {
-    let no,name,shortName
+    let no,name,shortname
     while(true){
       no = this.problemdomain_no;
       this.problemdomain_no += 1;
       name = 'problemDomain' + no;
-      shortName = 'PD' + no;
+      shortname = 'PD' + no;
       let conflicting_name = false;
       for(let pdi of this.project.contextDiagram.problemDomainList){
-        if (pdi.problemdomain_name==name || pdi.problemdomain_shortname==shortName){
+        if (pdi.name==name || pdi.shortname==shortname){
           conflicting_name = true
         }
       }
@@ -1141,11 +1133,7 @@ export class DrawGraphService {
         break;
       }
     }
-    
-    // let pd = this.project.addProblemDomain(no, name, shortName, 'Causal', 'GivenDomain', x, y,100,50);
-    //let element = this.drawGivenDomain(pd, graph); 
-    // this.projectService.sendProject(this.project);  
-    let pd = ProblemDomain.newProblemDomain(no, name, shortName, 'Causal', 'GivenDomain', x, y,100,50)  
+    let pd = ProblemDomain.newProblemDomain(no, name, shortname, 'Causal', 'GivenDomain', x, y,100,50)  
     this.change("add", "pro",null,pd)
     // return element;
   }
@@ -1191,7 +1179,7 @@ export class DrawGraphService {
     var givenElement = new GivenElement();
     givenElement.attr({
       label: {
-        text: givenDomain.problemdomain_name + '\n(' + givenDomain.problemdomain_shortname + ')',
+        text: givenDomain.name + '\n(' + givenDomain.shortname + ')',
       },
       r: {
         ref: 'label',
@@ -1213,11 +1201,11 @@ export class DrawGraphService {
       },
       root: {
         name: 'problemDomain',
-        title: givenDomain.problemdomain_name,
-        shortName:  givenDomain.problemdomain_shortname,
+        title: givenDomain.name,
+        shortname:  givenDomain.shortname,
       }
     });
-    givenElement.position(givenDomain.problemdomain_x, givenDomain.problemdomain_y);
+    givenElement.position(givenDomain.x, givenDomain.y);
     givenElement.addTo(graph);
     return givenElement;
   }
@@ -1226,36 +1214,34 @@ export class DrawGraphService {
     console.log('initDomainPopBox:');
     for (let item of this.project.contextDiagram.problemDomainList) {     
       let name = this.selectedElement.attr('root').title;
-      if (item.problemdomain_name == name) {
-        console.log(item.problemdomain_name+'=='+name);
+      if (item.name == name) {
+        console.log(item.name+'=='+name);
         this.problemDomain = item;
         break;
       }
-      console.log(item.problemdomain_name+'---!='+name+'---');        
+      console.log(item.name+'---!='+name+'---');        
     }
     console.log(this.problemDomain);
     let selectedDiv = document.getElementById('problemDomainPopBox');
-    (selectedDiv.getElementsByClassName("description")[0] as any).value = this.problemDomain.problemdomain_name;
-    (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.problemDomain.problemdomain_shortname;
+    (selectedDiv.getElementsByClassName("description")[0] as any).value = this.problemDomain.name;
+    (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.problemDomain.shortname;
     for (let i = 0; i < 2; i++) {
       let property = this.PhysicalPropertys[i];
-      //console.log('��ǰproblemdomain_property:');
-      //console.log(this.problemDomain.problemdomain_property);
+      //console.log('��ǰproperty:');
+      //console.log(this.problemDomain.property);
       //console.log('��i��property:');
       //console.log(property);
-      if (property == this.problemDomain.problemdomain_property) {
+      if (property == this.problemDomain.property) {
 
         (selectedDiv.getElementsByClassName("physicalProperty")[0] as any).selectedIndex = i;
       }
     }
     for (let i = 0; i < 3; i++) {
       let domainType = this.DomainTypes[i];
-      if (domainType == this.problemDomain.problemdomain_type) {
+      if (domainType == this.problemDomain.type) {
         (selectedDiv.getElementsByClassName("domainType")[0] as any).selectedIndex = i;
       }
     }
-    //(selectedDiv.getElementsByClassName("physicalProperty")[0] as any)..selectedIndex = this.machine.name;
-    //(selectedDiv.getElementsByClassName("domainType")[0] as any).value = this.machine.shortName;
   }
   changeProblemDomainDetail(graph) {
     //console.log('changeProblemDomainDetail:');
@@ -1263,14 +1249,14 @@ export class DrawGraphService {
     //description
     let description = (selectedDiv.getElementsByClassName("description")[0] as any).value;
     for (let existedProblemDomain of this.project.contextDiagram.problemDomainList) {
-      if (existedProblemDomain.problemdomain_name == description &&
-        existedProblemDomain.problemdomain_name != this.problemDomain.problemdomain_name) {
+      if (existedProblemDomain.name == description &&
+        existedProblemDomain.name != this.problemDomain.name) {
         alert(description + 'already exist!');
         return false;
       }
     }
-    //shortName
-    let shortName = (selectedDiv.getElementsByClassName("shortName")[0] as any).value;
+    //shortname
+    let shortname = (selectedDiv.getElementsByClassName("shortName")[0] as any).value;
     //domainType
     let selectElement = selectedDiv.getElementsByClassName("domainType")[0];
     let selectedIndex = (selectElement as any).selectedIndex;
@@ -1281,11 +1267,8 @@ export class DrawGraphService {
     selectedIndex = (selectElement as any).selectedIndex;
     let physicalProperty = this.PhysicalPropertys[selectedIndex];
 
-    //console.log(description, shortName, physicalProperty);
-    // this.changeRelatedLink(this.problemDomain.problemdomain_shortname,shortName)
     let old = this.problemDomain
-    // let pd = this.changeProblemDomainEntity(description, shortName, domainType, physicalProperty)
-    let pd = ProblemDomain.newProblemDomainWithOld(old, description, shortName, domainType, physicalProperty)
+    let pd = ProblemDomain.newProblemDomainWithOld(old, description, shortname, domainType, physicalProperty)
     // this.changeProblemDomainOnGraph(this.problemDomain, this.selectedElement)
     
     // this.projectService.sendProject(this.project)    
@@ -1295,7 +1278,7 @@ export class DrawGraphService {
   changeProblemDomainws(old:ProblemDomain,new1:ProblemDomain){
     old = ProblemDomain.copyProblemDomain(old)
     new1 = ProblemDomain.copyProblemDomain(new1)
-    this.changeRelatedLink(old.problemdomain_shortname,new1.problemdomain_shortname)
+    this.changeRelatedLink(old.shortname,new1.shortname)
     this.project.changeProblemDomain1(old, new1)
     this.projectService.sendProject(this.project)    
     this.changeProblemDomainOnGraph1(old, new1)
@@ -1304,7 +1287,7 @@ export class DrawGraphService {
   changeProblemDomainOnGraph1(old:ProblemDomain, new1:ProblemDomain){
     for(let graph of this.graphs){
       for(let element of graph.getElements()){
-        if(element.attr('root').title==old.problemdomain_name){
+        if(element.attr('root').title==old.name){
           this.changeProblemDomainOnGraph(new1,element)
           break
         }
@@ -1313,18 +1296,18 @@ export class DrawGraphService {
   }
   changeProblemDomainOnGraph(domainEntity:ProblemDomain, domainElement) {
     console.log("=======changeProblemDomainOnGraph=========")
-    console.log(domainEntity,domainEntity.problemdomain_shortname)
+    console.log(domainEntity,domainEntity.shortname)
     domainElement.attr({
       label: {
-        text: domainEntity.problemdomain_name + '\n(' + domainEntity.problemdomain_shortname + ')',
+        text: domainEntity.name + '\n(' + domainEntity.shortname + ')',
       },
       root: {
         name: 'problemDomain',
-        title: domainEntity.problemdomain_name,
-        shortName: domainEntity.problemdomain_shortname,
+        title: domainEntity.name,
+        shortname: domainEntity.shortname,
       }
     });
-    if (domainEntity.problemdomain_property === 'GivenDomain') {
+    if (domainEntity.property === 'GivenDomain') {
       this.change2GivenDomain(domainElement);
     } else {
       this.change2DesignDomain(domainElement);
@@ -1339,24 +1322,23 @@ export class DrawGraphService {
     element.attr('r/refWidth', '10');
   }
 
-  changeProblemDomainEntity(name, shortName, type, property) {
-    this.problemDomain.problemdomain_name = name;
-    this.problemDomain.problemdomain_shortname = shortName;
-    this.problemDomain.problemdomain_type = type;
-    this.problemDomain.problemdomain_property = property;
+  changeProblemDomainEntity(name, shortname, type, property) {
+    this.problemDomain.name = name;
+    this.problemDomain.shortname = shortname;
+    this.problemDomain.type = type;
+    this.problemDomain.property = property;
     return this.problemDomain
     //console.log(this.project.contextDiagram.problemDomainList);
   }
   deleteProblemDomain(graph) {
     let name = this.selectedElement.attr('root').title;
-    let shortName = this.selectedElement.attr('root').shortName;
+    let shortname = this.selectedElement.attr('root').shortname;
     let list = this.project.contextDiagram.problemDomainList
-    // this.project.deleteRelatedLink(shortName)
     //find old Entity
     let i = 0;
     let old
     for (let item of list) {
-      if (item.problemdomain_name == name) {
+      if (item.name == name) {
         old = item
         // list.splice(i, 1);
         break;
@@ -1370,13 +1352,13 @@ export class DrawGraphService {
   }
   deleteProblemDomainws(pd1:ProblemDomain) {
     let pd = ProblemDomain.copyProblemDomain(pd1)
-    let name = pd.problemdomain_name
-    let shortName = pd.problemdomain_shortname
+    let name = pd.name
+    let shortname = pd.shortname
     let list = this.project.contextDiagram.problemDomainList
     //delete Entity
     let i = 0;
     for (let item of list) {
-      if (item.problemdomain_name == name) {
+      if (item.name == name) {
         list.splice(i, 1);
         break;
       }
@@ -1384,9 +1366,9 @@ export class DrawGraphService {
     }
     //console.log('name=' + name);
     for(let graph of this.graphs){    
-      this.project.deleteRelatedLink(shortName)
+      this.project.deleteRelatedLink(shortname)
       for(let element of graph.getCells() ){
-        if (shortName == element.attr('root').shortName)
+        if (shortname == element.attr('root').shortname)
           graph.removeCells([element])
       }      
     }
@@ -1418,7 +1400,7 @@ export class DrawGraphService {
       name = 'requirement' + no;
       let conflicting_name = false;
       for(let reqi of this.project.problemDiagram.requirementList){
-        if (reqi.requirement_context==name){
+        if (reqi.name==name){
           conflicting_name = true
         }
       }
@@ -1434,16 +1416,15 @@ export class DrawGraphService {
     // return element;
   }
   drawRequirement1(requirement: Requirement, graph) {
-    //console.log(requirement.requirement_x, requirement.requirement_y);
     let requirementElement = new joint.shapes.standard.Ellipse();
     requirementElement.attr({
       root: { 
         name: 'requirement', 
-        title: requirement.requirement_context,
-        shortName:  requirement.requirement_context,
+        title: requirement.name,
+        shortname:  requirement.name,
        },
       label: {
-        text: requirement.requirement_context,
+        text: requirement.name,
         fontSize: 25,
         textAnchor: 'middle',	//???????
         textVerticalAnchor: 'middle',
@@ -1461,52 +1442,51 @@ export class DrawGraphService {
         strokeDasharray: '8,4'
       }
     });
-    requirementElement.position(requirement.requirement_x, requirement.requirement_y);
+    requirementElement.position(requirement.x, requirement.y);
     requirementElement.addTo(graph);
     return requirementElement;
   }
 
   initRequirementPopBox() {
     for (let item of this.project.problemDiagram.requirementList) {
-      if (item.requirement_context == this.selectedElement.attr('label').text) {
+      if (item.name == this.selectedElement.attr('label').text) {
         this.requirement = item;
       }
     }
     let selectedDiv = document.getElementById('requirementPopBox');
-    (selectedDiv.getElementsByClassName("description")[0] as any).value = this.requirement.requirement_context;
-    (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.requirement.requirement_shortname;
+    (selectedDiv.getElementsByClassName("description")[0] as any).value = this.requirement.name;
+    (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.requirement.shortname;
   }
   //手动修改，只发送消息
   changeRequirementDetail(graph) {
     let selectedDiv = document.getElementById('requirementPopBox');
     let description = (selectedDiv.getElementsByClassName("description")[0] as any).value;
-    let shortName = (selectedDiv.getElementsByClassName("shortName")[0] as any).value;
+    let shortname = (selectedDiv.getElementsByClassName("shortName")[0] as any).value;
     for (let existedRq of this.project.problemDiagram.requirementList) {
-      if ((existedRq as any).requirement_context == description &&
-        existedRq.requirement_context != this.requirement.requirement_context) {
+      if ((existedRq as any).name == description &&
+        existedRq.name != this.requirement.name) {
         alert(description + 'already exist!');
         return false;
       }
-      if ((existedRq as any).requirement_shortname == shortName &&
-      existedRq.requirement_shortname != this.requirement.requirement_shortname) {
-      alert(shortName + 'already exist!');
+      if ((existedRq as any).shortname == shortname &&
+      existedRq.shortname != this.requirement.shortname) {
+      alert(shortname + 'already exist!');
       return false;
     }
     }
     //console.log(description);
-    // this.changeRelatedLink(this.requirement.requirement_context, description);
     // this.changeRequirementOnGraph(this.selectedElement, description);
     let old = this.requirement
     // let newR = this.project.changeRequirement(old,description)    
     // this.projectService.sendProject(this.project)    
-    let newR = Requirement.newRequirementWithOld(old,description,shortName)
+    let newR = Requirement.newRequirementWithOld(old,description,shortname)
     this.change("change", "req", old, newR)
     return true;
   }
   changeRequirementws(old1:Requirement,new2:Requirement) {
     let old = Requirement.copyRequirement(old1)
     let new1 = Requirement.copyRequirement(new2)
-    this.changeRelatedLink(old.requirement_context,new1.requirement_context)    
+    this.changeRelatedLink(old.name,new1.name)    
     this.project.changeRequirement1(old, new1)    
     this.projectService.sendProject(this.project)
     this.changeRequirementOnGraph1(old, new1)
@@ -1526,7 +1506,7 @@ export class DrawGraphService {
     element.attr({
       root: { 
         title: name,
-        shortName: name
+        shortname: name
       },
       label: { text: name }
     });
@@ -1534,7 +1514,6 @@ export class DrawGraphService {
   //向服务器发生删除信息
   deleteRequirement(graph) {
     let name = this.selectedElement.attr('root').title;
-    //let shortName = this.selectedElement.attr('label').text;
     let list = this.project.problemDiagram.requirementList;
     // this.project.deleteRelatedLink(name);
     //delete requirement
@@ -1542,12 +1521,11 @@ export class DrawGraphService {
     let old
     for (; i >= 0; i--) {
       let item = list[i];
-      if (item.requirement_context == name) {
+      if (item.name == name) {
         old = item
         // list.splice(i, 1);
         break;
       }
-      //console.log(item.requirement_context + '!=' + name);
     }
     // graph.removeCells([this.selectedElement]);
     // this.projectService.sendProject(this.project)    
@@ -1603,80 +1581,76 @@ export class DrawGraphService {
     let i0 = list0.length - 1;
     for (; i0 >= 0; i0--) {
       let item = list0[i0]; 
-      if (item.interface_from == target.attr('root').shortName) {
+      if (item.interface_from == target.attr('root').shortname) {
           list0.splice(i0, 1);
       }
-      else if (item.interface_to == target.attr('root').shortName) {
+      else if (item.interface_to == target.attr('root').shortname) {
         list0.splice(i0, 1);
       }
-      //console.log(item.requirement_context + '!=' + name);
     }
 
     let list1 = this.project.problemDiagram.constraintList;
     let i1 = list1.length - 1;
     for (; i1 >= 0; i1--) {
       let item = list1[i1];
-      if (item.constraint_from == target.attr('root').shortName) {
+      if (item.constraint_from == target.attr('root').shortname) {
         list1.splice(i1, 1);
       }
-      else if (item.constraint_to == target.attr('root').shortName) {
+      else if (item.constraint_to == target.attr('root').shortname) {
         list1.splice(i1, 1);
       }
-      //console.log(item.requirement_context + '!=' + name);
     }
 
     let list2 = this.project.problemDiagram.referenceList;
     let i2 = list2.length - 1;
     for (; i2 >= 0; i2--) {
       let item = list2[i2];
-      if (item.reference_from == target.attr('root').shortName) {
+      if (item.reference_from == target.attr('root').shortname) {
         list2.splice(i2, 1);
       }
-      else if (item.reference_to == target.attr('root').shortName) {
+      else if (item.reference_to == target.attr('root').shortname) {
         list2.splice(i2, 1);
       }
-      //console.log(item.requirement_context + '!=' + name);
     }
 
     for (let item of this.project.contextDiagram.interfaceList) {
-      if (item.interface_from == source.attr('root').shortName) {
-        item.interface_from = source.attr('root').shortName + target.attr('root').shortName
+      if (item.interface_from == source.attr('root').shortname) {
+        item.interface_from = source.attr('root').shortname + target.attr('root').shortname
       }
-      else if (item.interface_to == source.attr('root').shortName) {
-        item.interface_to = source.attr('root').shortName + target.attr('root').shortName
+      else if (item.interface_to == source.attr('root').shortname) {
+        item.interface_to = source.attr('root').shortname + target.attr('root').shortname
       }
     }
     for (let item of this.project.problemDiagram.constraintList) {
-      if (item.constraint_from == source.attr('root').shortName) {
-        item.constraint_from = source.attr('root').shortName + target.attr('root').shortName
+      if (item.constraint_from == source.attr('root').shortname) {
+        item.constraint_from = source.attr('root').shortname + target.attr('root').shortname
       }
-      else if (item.constraint_to == source.attr('root').shortName) {
-        item.constraint_to = source.attr('root').shortName + target.attr('root').shortName
+      else if (item.constraint_to == source.attr('root').shortname) {
+        item.constraint_to = source.attr('root').shortname + target.attr('root').shortname
       }
     }
     for (let item of this.project.problemDiagram.referenceList) {
-      if (item.reference_from == source.attr('root').shortName) {
-        item.reference_from = source.attr('root').shortName + target.attr('root').shortName
+      if (item.reference_from == source.attr('root').shortname) {
+        item.reference_from = source.attr('root').shortname + target.attr('root').shortname
       }
-      else if (item.reference_to == source.attr('root').shortName) {
-        item.reference_to = source.attr('root').shortName + target.attr('root').shortName
+      else if (item.reference_to == source.attr('root').shortname) {
+        item.reference_to = source.attr('root').shortname + target.attr('root').shortname
       }
     }
-    //source.attr('root').shortName
     let list = this.project.contextDiagram.problemDomainList;
     for (let item of this.project.contextDiagram.problemDomainList) {
-      if (item.problemdomain_name == source.attr('root').title) {
+      if (item.name == source.attr('root').title) {
         let j = 0;
         for (let item2 of this.project.contextDiagram.problemDomainList) {
-          if (item2.problemdomain_name == target.attr('root').title) {
-            item.problemdomain_name = item.problemdomain_name + "&" + item2.problemdomain_name;
-            item.problemdomain_shortname = item.problemdomain_shortname + item2.problemdomain_shortname;
+          if (item2.name == target.attr('root').title) {
+            item.name = item.name + "&" + item2.name;
+            item.shortname = item.shortname + item2.shortname;
             for (var i = 0; i < item2.phes.length; i++) {
               item.phes.push(item2.phes[i]);
             }
             graph.removeCells(target);
-            source.attr('root').title = item.problemdomain_name;
-            source.attr('label').text = item.problemdomain_name + '\n(' + item.problemdomain_shortname + ')';
+            source.attr('root').title = item.name;
+            source.attr('label').text = item.name + '\n(' + item.shortname + ')';
             list.splice(j, 1);
             this.drawDiagram(this.project);
           }
@@ -1730,31 +1704,31 @@ export class DrawGraphService {
   }
   changeLinkPosition1(from,to,project){
     let x1,x2,y1,y2;
-      if(from==project.contextDiagram.machine.shortName){
+      if(from==project.contextDiagram.machine.shortname){
         x1 = this.project.contextDiagram.machine.x;
         y1 = this.project.contextDiagram.machine.y;
-      }else if(to==this.project.contextDiagram.machine.shortName){
+      }else if(to==this.project.contextDiagram.machine.shortname){
         x2 = this.project.contextDiagram.machine.x;
         y2 = this.project.contextDiagram.machine.y;
       }
 
     for(let ele of project.contextDiagram.problemDomainList){
-        if(ele.problemdomain_shortname==from){
-          x1 = ele.problemdomain_x;
-          y1 = ele.problemdomain_y;          
-        }else if(ele.problemdomain_shortname==to){
-          x2 = ele.problemdomain_x;
-          y2 = ele.problemdomain_y;          
+        if(ele.shortname==from){
+          x1 = ele.x;
+          y1 = ele.y;          
+        }else if(ele.shortname==to){
+          x2 = ele.x;
+          y2 = ele.y;          
         }
       }
 
     for(let ele of project.problemDiagram.requirementList){
-        if(ele.requirement_context==from){
-          x1 = ele.requirement_x;
-          y1 = ele.requirement_y;          
-        }else if(ele.requirement_context==to){
-          x2 = ele.requirement_x;
-          y2 = ele.requirement_y;          
+        if(ele.name==from){
+          x1 = ele.x;
+          y1 = ele.y;          
+        }else if(ele.name==to){
+          x2 = ele.x;
+          y2 = ele.y;          
         }
       }
       return [x1,x2,y1,y2];
@@ -1778,13 +1752,13 @@ export class DrawGraphService {
       const from = int.interface_from;
       const to = int.interface_to;
       for (var j = 0; j < elementList.length; j++) {
-        if (from == elementList[j].attr('root').shortName) {
+        if (from == elementList[j].attr('root').shortname) {
           elefrom = elementList[j];
           // console.log('elefrom');
           // console.log(elefrom);
           // console.log(from);
         }
-        else if (to === elementList[j].attr('root').shortName) {
+        else if (to === elementList[j].attr('root').shortname) {
           eleto = elementList[j];
           // console.log('eleto');
           // console.log(eleto);
@@ -1813,8 +1787,8 @@ export class DrawGraphService {
       }
     }  
     let name = this.getname(); 
-    let from = source.attr('root').shortName;
-    let to = target.attr('root').shortName;
+    let from = source.attr('root').shortname;
+    let to = target.attr('root').shortname;
     // let myinterface = this.addInterfaceEntity(no, name, name + '?', from, to, [], 0, 0, 0, 0);
     // let element = this.drawInterface1(myinterface, source, target, graph)
     let myinterface = Interface.newInterface(no, name, name + '?', from, to, [], 0, 0, 0, 0);    
@@ -1834,13 +1808,13 @@ export class DrawGraphService {
       var eleto: joint.dia.Element
       let elementList = graph.getElements() 
       for (var j = 0; j < elementList.length; j++) {        
-        if (from == elementList[j].attr('root').shortName) {
+        if (from == elementList[j].attr('root').shortname) {
           elefrom = elementList[j];
           console.log('elefrom');
           console.log(elefrom);
           console.log(from);
         }
-        else if (to === elementList[j].attr('root').shortName) {
+        else if (to === elementList[j].attr('root').shortname) {
           eleto = elementList[j];
           console.log('eleto');
           console.log(eleto);
@@ -1935,12 +1909,12 @@ export class DrawGraphService {
     //console.log(pro);
     //console.log(this.selectPhes);
   }
-  getProblemEntityByShortName(shortName){    
+  getProblemEntityByShortName(shortname){    
     for(let pro of this.project.contextDiagram.problemDomainList){
-      if(pro.problemdomain_shortname==shortName)
+      if(pro.shortname==shortname)
         return pro; 
     }
-    console.log(shortName,this.project.contextDiagram.problemDomainList)
+    console.log(shortname,this.project.contextDiagram.problemDomainList)
     return null;
   }
   changeInterfaceDetail() {
@@ -2005,10 +1979,10 @@ export class DrawGraphService {
       const from = reference.reference_from;
       const to = reference.reference_to;
       for (var j = 0; j < elementList.length; j++) {
-        if (from === elementList[j].attr('root').shortName) {
+        if (from === elementList[j].attr('root').shortname) {
           elefrom = elementList[j];
         }
-        else if (to === elementList[j].attr('root').shortName) {
+        else if (to === elementList[j].attr('root').shortname) {
           eleto = elementList[j];
         }
       }
@@ -2039,19 +2013,19 @@ export class DrawGraphService {
     console.log("elementList.length=",elementList.length)
     console.log("elementList.length=",elementList.length)
     for (var j = 0; j < elementList.length; j++) {
-      if (from == elementList[j].attr('root').shortName) {
+      if (from == elementList[j].attr('root').shortname) {
         elefrom = elementList[j];
         console.log('elefrom');
         console.log(elefrom);
         console.log(from);
       }
-      else if (to === elementList[j].attr('root').shortName) {
+      else if (to === elementList[j].attr('root').shortname) {
         eleto = elementList[j];
         console.log('eleto');
         console.log(eleto);
         console.log(to);
       }
-      console.log(elementList[j].attr('root').shortName)
+      console.log(elementList[j].attr('root').shortname)
     }
     this.drawReference1(ref, elefrom, eleto, this.graphs[1])
 
@@ -2072,8 +2046,8 @@ export class DrawGraphService {
       }
     }    
     let name = this.getname();  
-    let from = source.attr('root').shortName;
-    let to = target.attr('root').shortName;
+    let from = source.attr('root').shortname;
+    let to = target.attr('root').shortname;
     // let ref = this.addReferenceEntity(this.reference_no, name, '', from, to, [], 0, 0, 0, 0);
     // let element = this.drawReference1(ref, source, target, graph);
     let ref = Reference.newReference(this.reference_no, name, '', from, to, [], 0, 0, 0, 0)
@@ -2083,8 +2057,8 @@ export class DrawGraphService {
   }
   getReqNo(req_context){
     for (const req of this.project.problemDiagram.requirementList) {
-      if (req.requirement_context==req_context) {
-        return req.requirement_no;        
+      if (req.name==req_context) {
+        return req.no;        
       }      
     }
     return -1;
@@ -2159,11 +2133,11 @@ export class DrawGraphService {
 
     //get initiator
     for (let temp of this.project.contextDiagram.problemDomainList) {
-      if(temp.problemdomain_shortname==this.reference.reference_from
-        || temp.problemdomain_shortname==this.reference.reference_to){
+      if(temp.shortname==this.reference.reference_from
+        || temp.shortname==this.reference.reference_to){
               //get initiator
-              this.initiator = temp.problemdomain_shortname
-              this.initiator_receiverList.push(temp.problemdomain_shortname)
+              this.initiator = temp.shortname
+              this.initiator_receiverList.push(temp.shortname)
         }      
     }
 
@@ -2370,10 +2344,10 @@ export class DrawGraphService {
       const from = constraint.constraint_from;
       const to = constraint.constraint_to;
       for (var j = 0; j < elementList.length; j++) {
-        if (from === elementList[j].attr('root').shortName) {
+        if (from === elementList[j].attr('root').shortname) {
           elefrom = elementList[j];
         }
-        else if (to === elementList[j].attr('root').shortName) {
+        else if (to === elementList[j].attr('root').shortname) {
           eleto = elementList[j];
         }
       }
@@ -2416,8 +2390,8 @@ export class DrawGraphService {
       source = target;
       target = temp;     
     }
-    let to = target.attr('root').shortName;
-    let from = source.attr('root').shortName
+    let to = target.attr('root').shortname;
+    let from = source.attr('root').shortname
     let con = Constraint.newConstraint(no, name, '', from, to, [], 0, 0, 0, 0)
     this.change("add", "con", null, con)
 
@@ -2437,19 +2411,19 @@ export class DrawGraphService {
     let elementList = this.graphs[1].getElements() 
     console.log(elementList.length)
     for (var j = 0; j < elementList.length; j++) {
-      if (from == elementList[j].attr('root').shortName) {
+      if (from == elementList[j].attr('root').shortname) {
         elefrom = elementList[j];
         console.log('elefrom');
         console.log(elefrom);
         console.log(from);
       }
-      else if (to === elementList[j].attr('root').shortName) {
+      else if (to === elementList[j].attr('root').shortname) {
         eleto = elementList[j];
         console.log('eleto');
         console.log(eleto);
         console.log(to);
       }else{
-        console.log(from,"  ",to,"  ",elementList[j].attr('root').shortName)
+        console.log(from,"  ",to,"  ",elementList[j].attr('root').shortname)
       }
     }
     this.drawConstraint1(constraint, elefrom, eleto, this.graphs[1])
@@ -2504,11 +2478,11 @@ export class DrawGraphService {
 
     //get initiator
     for (let temp of this.project.contextDiagram.problemDomainList) {
-      if(temp.problemdomain_shortname==this.constraint.constraint_from
-        || temp.problemdomain_shortname==this.constraint.constraint_to){
+      if(temp.shortname==this.constraint.constraint_from
+        || temp.shortname==this.constraint.constraint_to){
               //get initiator
-              this.initiator = temp.problemdomain_shortname
-              this.initiator_receiverList.push(temp.problemdomain_shortname)
+              this.initiator = temp.shortname
+              this.initiator_receiverList.push(temp.shortname)
         }      
     }
 
@@ -2626,33 +2600,33 @@ export class DrawGraphService {
   
   //====================================phenomenon=====================================
   //get phenomenon list of interface
-  getPhenomenonList(shortName) {
+  getPhenomenonList(shortname) {
     for (let int of this.project.contextDiagram.interfaceList) {
-      if (int.interface_from == shortName || int.interface_to == shortName) {
+      if (int.interface_from == shortname || int.interface_to == shortname) {
         return int.phenomenonList;
       }
     }
     return null;
   }
-  //get phenomenon list of link according to problem shortName
-  getRefPheList(shortName) {
+  //get phenomenon list of link according to problem shortname
+  getRefPheList(shortname) {
     let res =[];
     for (let int of this.project.contextDiagram.interfaceList) {
-      if (int.interface_from == shortName || int.interface_to == shortName) {
+      if (int.interface_from == shortname || int.interface_to == shortname) {
         for (var i=0; i < int.phenomenonList.length; i++) {
           res.push(int.phenomenonList[i]);
         }
       }
     }
     for (let item of this.project.problemDiagram.referenceList) {
-      if (item.reference_from == shortName || item.reference_to == shortName) {
+      if (item.reference_from == shortname || item.reference_to == shortname) {
         for (var i=0; i < item.phenomenonList.length; i++) {
           res.push(item.phenomenonList[i]);
         }
       }
     }
     for (let item of this.project.problemDiagram.constraintList) {
-      if (item.constraint_from == shortName || item.constraint_to == shortName) {
+      if (item.constraint_from == shortname || item.constraint_to == shortname) {
         for (var i=0; i < item.phenomenonList.length; i++) {
           res.push(item.phenomenonList[i]);
         }

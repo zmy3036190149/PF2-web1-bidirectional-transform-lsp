@@ -170,33 +170,33 @@ public class TextSubject extends Subject{
 		
 	}
 	public String getMachineLine(JSONObject jshape ) {
-		String shortName = jshape.getString("shortName");
+		String shortname = jshape.getString("shortname");
 		String sType = " M";
 		String name = jshape.getString("name");
-		String line = shortName + sType + " \"" + name + "\"";
+		String line = shortname + sType + " \"" + name + "\"";
 		return line;
 	}
 	public String getProblemDomainLine(JSONObject jshape ) {		
-		String shortName = jshape.getString("problemdomain_shortname");
+		String shortname = jshape.getString("shortname");
 		String sType ="";
-		switch(jshape.getString("problemdomain_type")) {
+		switch(jshape.getString("type")) {
 		 	case "Biddable": sType = " B";break;
 		 	case "Causal": sType = " C";break;
 		 	case "Lexical": sType = " X";break;		
 		 }
-		 String name = jshape.getString("problemdomain_name");
-		 String line = shortName + sType + " \"" + name + "\"";
+		 String name = jshape.getString("name");
+		 String line = shortname + sType + " \"" + name + "\"";
 		return line;
 	}
 	public String getRequirementLine(JSONObject jshape) {
-		String shortName = "";
+		String shortname = "";
   		String sType = "";
   		String name ="";
   		String line = "";
-		 shortName = jshape.getString("requirement_shortname");
+		 shortname = jshape.getString("shortname");
 		 sType = " R";
-		 name = jshape.getString("requirement_context");	
-		 line = shortName + sType +  " \"" + name + "\"";  
+		 name = jshape.getString("name");	
+		 line = shortname + sType +  " \"" + name + "\"";  
 		 return line;
 	}
 	public String getInterfaceLine(JSONObject jshape,String lineType) {
@@ -271,7 +271,7 @@ public class TextSubject extends Subject{
 	public void delete(JSONObject json) {
 		String shape = (String) json.get("shape");	
 		JSONObject jshape = json.getJSONObject("old");
-		String shortName = "";
+		String shortname = "";
 		String sType = "";
 		String name ="";
 		String from ="";
@@ -281,17 +281,17 @@ public class TextSubject extends Subject{
 		String line = "";
 		switch(shape) {
 		case"mac":
-			 shortName = jshape.getString("shortName");
+			 shortname = jshape.getString("shortname");
 			 sType = " M";
 			 name = jshape.getString("name");
 			 break;
 	     case "pro":
-	    	 shortName = jshape.getString("problemdomain_shortname");
-			 name = jshape.getString("problemdomain_name");
+	    	 shortname = jshape.getString("shortname");
+			 name = jshape.getString("name");
 	    	   break;
 	      case "req":
-		    	 shortName = jshape.getString("requirement_context");
-				 name = jshape.getString("requirement_context");
+		    	 shortname = jshape.getString("name");
+				 name = jshape.getString("name");
 	    	   break;
 	      case "int":
 	    	  from = jshape.getString("interface_from");
@@ -343,11 +343,9 @@ public class TextSubject extends Subject{
 					 type ="X";
 				 }
 				 String[] s2 = s1[0].split(" "+type+" ");
-				 String shortname = s2[0].trim();
 				 if(sname.contentEquals(name)) {
 					 line = "";
-				 }
-				 
+				 }				 
 			 }else if(s1[0].indexOf("--")!=-1 && shape.contentEquals("int")) {
 				 //System.out.println(line);				 
 				 String[] s2 = s1[0].split("--");
@@ -384,13 +382,13 @@ public class TextSubject extends Subject{
 		 case "mac":
 		 case "pro":
 		 case "req":
-			 deleteRelatedLine(shortName);
+			 deleteRelatedLine(shortname);
 		 }
 
 		
 	}
-	public void deleteRelatedLine(String shortName) {
-		System.out.println("deleteRelatedLine		"+ shortName );
+	public void deleteRelatedLine(String shortname) {
+		System.out.println("deleteRelatedLine		"+ shortname );
 		 String[] lines=text.split("\n");
 		 String res = "";
 		 for(int i = 0; i<lines.length; i++) {
@@ -406,7 +404,7 @@ public class TextSubject extends Subject{
 				 String sfrom = s2[0].trim();
 				 String[] s3 = s2[1].split("\\{");
 				 String sto = s3[0].trim();	
-				 if(shortName.contentEquals(sfrom) || shortName.contentEquals(sto)) {
+				 if(shortname.contentEquals(sfrom) || shortname.contentEquals(sto)) {
 					 line = "";
 				 }
 			 }else if(s1[0].indexOf("->")!=-1) {		 
@@ -414,7 +412,7 @@ public class TextSubject extends Subject{
 				 String sfrom = s2[0].trim();
 				 String[] s3 = s2[1].split("\\{");
 				 String sto = s3[0].trim();	
-				 if(shortName.contentEquals(sfrom) && shortName.contentEquals(sto)) {
+				 if(shortname.contentEquals(sfrom) && shortname.contentEquals(sto)) {
 					 line = "";
 				 }
 			 }else if(s1[0].indexOf("~~")!=-1) {
@@ -422,7 +420,7 @@ public class TextSubject extends Subject{
 				 String sfrom = s2[0].trim(); 
 				 String[] s3 = s2[1].split("\\{");
 				 String sto = s3[0].trim();
-				 if(shortName.contentEquals(sfrom) && shortName.contentEquals(sto)) {
+				 if(shortname.contentEquals(sfrom) && shortname.contentEquals(sto)) {
 					 line = "";
 				 }
 			 }else if(s1[0].indexOf("~>")!=-1 ) {
@@ -430,7 +428,7 @@ public class TextSubject extends Subject{
 				 String sfrom = s2[0].trim();
 				 String[] s3 = s2[1].split("\\{");
 				 String sto = s3[0].trim();			
-				 if(shortName.contentEquals(sfrom) && shortName.contentEquals(sto)) {
+				 if(shortname.contentEquals(sfrom) && shortname.contentEquals(sto)) {
 					 line = "";
 				 }
 			 }else if(s1[0].indexOf("<~")!=-1 ) {
@@ -438,7 +436,7 @@ public class TextSubject extends Subject{
 				 String sfrom = s2[0].trim();
 				 String[] s3 = s2[1].split("\\{");
 				 String sto = s3[0].trim();			
-				 if(shortName.contentEquals(sfrom) && shortName.contentEquals(sto)) {
+				 if(shortname.contentEquals(sfrom) && shortname.contentEquals(sto)) {
 					 line = "";
 				 }
 			 }	
@@ -454,7 +452,7 @@ public class TextSubject extends Subject{
 		String shape = (String) json.get("shape");	
 		JSONObject old = json.getJSONObject("old");
 		JSONObject new1 = json.getJSONObject("new");
-		String shortName = "";
+		String shortname = "";
 		String sType = "";
 		String name ="";
 		String from ="";
@@ -467,29 +465,29 @@ public class TextSubject extends Subject{
 		String newName = "";
 		switch(shape) {
 		case"mac":
-			 shortName = old.getString("shortName");
+			 shortname = old.getString("shortname");
 			 sType = " M";
 			 name = old.getString("name");
-			 newShortName = new1.getString("shortName");
+			 newShortName = new1.getString("shortname");
 			 newName = new1.getString("name");
 			 break;
 	     case "pro":
-	    	 shortName = old.getString("problemdomain_shortname");
-			 switch(old.getString("problemdomain_type")) {
+	    	 shortname = old.getString("shortname");
+			 switch(old.getString("type")) {
 			 	case "Biddable": sType = "B";break;
 			 	case "Causal": sType = "C";break;
 			 	case "Lexical": sType = "X";break;		
 			 }
-			 name = old.getString("problemdomain_name");
-	    	 newShortName = new1.getString("problemdomain_shortname");
-			 newName = new1.getString("problemdomain_name");
+			 name = old.getString("name");
+	    	 newShortName = new1.getString("shortname");
+			 newName = new1.getString("name");
 	    	   break;
 	      case "req":
-		    	 shortName = old.getString("requirement_shortname");
+		    	 shortname = old.getString("shortname");
 		    	 sType = "R";
-				 name = old.getString("requirement_context");  
-		    	 newShortName = new1.getString("requirement_shortname");
-				 newName = new1.getString("requirement_context");
+				 name = old.getString("name");  
+		    	 newShortName = new1.getString("shortname");
+				 newName = new1.getString("name");
 	    	   break;
 	      case "int":
 	    	  from = old.getString("interface_from");
@@ -543,7 +541,6 @@ public class TextSubject extends Subject{
 					 type ="X";
 				 }
 				 String[] s2 = s1[0].split(" "+type+" ");
-				 String shortname = s2[0].trim();
 				 if(sname.contentEquals(name)) {
 					 line = getProblemDomainLine(new1);
 				 }
@@ -564,12 +561,12 @@ public class TextSubject extends Subject{
 				 }
 				 if(shape.contentEquals("mac")|| shape.contentEquals("pro")) {
 					//change related Link
-					 if(sfrom.contentEquals(shortName) && !sfrom.contentEquals(newShortName)) {
+					 if(sfrom.contentEquals(shortname) && !sfrom.contentEquals(newShortName)) {
 						 line = newShortName + " " + type + " " + line.split(type)[1];
 						 System.out.println("change related Link");
 						 System.out.println(line);
 					 }
-					 if(sto.contentEquals(shortName) && !sto.contentEquals(newShortName)) {						 
+					 if(sto.contentEquals(shortname) && !sto.contentEquals(newShortName)) {						 
 						 String templine = line.split(type)[0].trim() + " " + type + " " + newShortName;
 						 String str2 = line.split(type)[1].trim();
 						 int index = str2.indexOf(" ");
@@ -603,12 +600,12 @@ public class TextSubject extends Subject{
 					 }
 				 }if(shape.contentEquals("pro")||shape.contentEquals("req")) {
 					//change related Link
-					 if(sfrom.contentEquals(shortName) && !sfrom.contentEquals(newShortName)) {
+					 if(sfrom.contentEquals(shortname) && !sfrom.contentEquals(newShortName)) {
 						 line = newShortName + " " + type + " " + line.split(type)[1];
 						 System.out.println("change related Link");
 						 System.out.println(line);
 					 }
-					 if(sto.contentEquals(shortName) && !sto.contentEquals(newShortName)) {
+					 if(sto.contentEquals(shortname) && !sto.contentEquals(newShortName)) {
 						 String templine = line.split(type)[0].trim() + " " + type + " " + newShortName;
 						 String str2 = line.split(type)[1].trim();
 						 int index = str2.indexOf(" ");

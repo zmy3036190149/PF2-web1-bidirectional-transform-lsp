@@ -202,7 +202,7 @@ public class ProjectService {
 		List <ProblemDomain> CDPD=CD.getProblemDomainList();
 		for(int i=0;i<CDPD.size();i++) {
 			ProblemDomain PD_check=CDPD.get(i);
-			String PD_name=PD_check.getProblemdomain_name();
+			String PD_name=PD_check.getName();
 			if(PD_name.contains("?")) {
 				String errMsg = "ProblemDomain's name is illegal.";
 				errorList.add(errMsg);
@@ -232,7 +232,7 @@ public class ProjectService {
 		for(int i=0;i<CDPD.size();i++) {
 			int hasconnect=0;
 			ProblemDomain PD_check=CDPD.get(i);
-			String PD_name=PD_check.getProblemdomain_shortname();
+			String PD_name=PD_check.getShortname();
 			for(int j=0;j<CDI.size();j++) {
 				Interface I_check=CDI.get(j);
 				String I_name=I_check.getInterface_description();
@@ -296,7 +296,7 @@ public class ProjectService {
 		List <Requirement> PDR=PD.getRequirementList();
 		for(int i=0;i<PDR.size();i++) {
 			Requirement R_check=PDR.get(i);
-			String R_name=R_check.getRequirement_context();
+			String R_name=R_check.getName();
 			if(R_name.contains("?")) {
 				String errMsg = "Requirement's name is illegal.";
 				errorList.add(errMsg);
@@ -326,7 +326,7 @@ public class ProjectService {
 		for(int i=0;i<PDPD.size();i++) {
 			int hasconnect=0;
 			Requirement R_check=PDPD.get(i);
-			String R_name=R_check.getRequirement_context();
+			String R_name=R_check.getName();
 			for(int j=0;j<PDR.size();j++) {
 				Reference Rr_check=PDR.get(j);
 				String Rr_name=Rr_check.getReference_description();

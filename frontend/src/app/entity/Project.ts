@@ -62,10 +62,10 @@ export class Project{
 	getMachine(){
 		return this.contextDiagram.machine
 	}
-	addMachine(name, shortName, x, y,w,h){
+	addMachine(name, shortname, x, y,w,h){
 		this.contextDiagram.machine = new Machine()
 		this.contextDiagram.machine.name = name
-		this.contextDiagram.machine.shortName = shortName
+		this.contextDiagram.machine.shortname = shortname
 		this.contextDiagram.machine.x = x
 		this.contextDiagram.machine.y = y		
 		this.contextDiagram.machine.w = w
@@ -76,15 +76,15 @@ export class Project{
 
 	changeMachineWithNewProject(newProject:Project) {
 		let name = newProject.getMachine().getName()
-		let shortName = newProject.getMachine().getShortName()
-		this.changeMachine(name,shortName)
+		let shortname = newProject.getMachine().getShortname()
+		this.changeMachine(name,shortname)
 		return this.contextDiagram.machine
 	}
-	changeMachine(name, shortName) {
+	changeMachine(name, shortname) {
 		this.contextDiagram.machine.name = name;
-		this.contextDiagram.machine.shortName = shortName;
+		this.contextDiagram.machine.shortname = shortname;
 		this.problemDiagram.contextDiagram.machine.name = name;
-		this.problemDiagram.contextDiagram.machine.shortName = shortName
+		this.problemDiagram.contextDiagram.machine.shortname = shortname
 		return this.contextDiagram.machine
 	}
 	changeMachinePosition(name, position){
@@ -117,17 +117,17 @@ export class Project{
 	getProblemDomainList(){
 		return this.contextDiagram.problemDomainList
 	}
-	addProblemDomain(no, name, shortName, type, property, x, y,w,h) {
+	addProblemDomain(no, name, shortname, type, property, x, y,w,h) {
 		let problemDomain = new ProblemDomain();
-		problemDomain.problemdomain_no = no;
-		problemDomain.problemdomain_name = name;
-		problemDomain.problemdomain_shortname = shortName;
-		problemDomain.problemdomain_type = type;
-		problemDomain.problemdomain_property = property;
-		problemDomain.problemdomain_x = x;
-		problemDomain.problemdomain_y = y;    
-		problemDomain.problemdomain_w = w;
-		problemDomain.problemdomain_h = h;
+		problemDomain.no = no;
+		problemDomain.name = name;
+		problemDomain.shortname = shortname;
+		problemDomain.type = type;
+		problemDomain.property = property;
+		problemDomain.x = x;
+		problemDomain.y = y;    
+		problemDomain.w = w;
+		problemDomain.h = h;
 		problemDomain.phes = new Array<Phenomenon>();
 		this.contextDiagram.problemDomainList.push(problemDomain);
 		//console.log(this.project.contextDiagram.problemDomainList);
@@ -141,13 +141,13 @@ export class Project{
 			let isFind = false
 			for(let item of oldList){
 				if(newItem.getName()==item.getName()){
-					if(newItem.getShortName()!=item.getShortName()){
-						item.setShortName(newItem.getShortName())
+					if(newItem.getShortname()!=item.getShortname()){
+						item.setShortname(newItem.getShortname())
 						item.setProperty(newItem.getProperty())	
-						console.log("change shortName")
+						console.log("change shortname")
 					}					
 					isFind = true									
-				}else if(newItem.getShortName()==item.getShortName()){
+				}else if(newItem.getShortname()==item.getShortname()){
 					if(newItem.getName()!=item.getName()){
 						item.setName(newItem.getName())
 						item.setProperty(newItem.getProperty())	
@@ -186,7 +186,7 @@ export class Project{
 	changeProblemDomain1(old,new1) {
 		let i = 0
 		for(let item of this.getProblemDomainList()){
-			if(item.problemdomain_name==old.getName()){
+			if(item.name==old.getName()){
 				this.getProblemDomainList()[i] = new1
 				console.log(this.problemDiagram)
 				return
@@ -194,11 +194,11 @@ export class Project{
 			i += 1 			
 		}
 	}
-	changeProblemDomain(old,description, shortName, domainType, physicalProperty) {
+	changeProblemDomain(old,description, shortname, domainType, physicalProperty) {
 		for(let item of this.getProblemDomainList()){
 			if(item.getName()==old.getName()){
 				item.setName(description)
-				item.setShortName(shortName)
+				item.setShortname(shortname)
 				item.setType(domainType)
 				item.setProperty(physicalProperty)
 				break
@@ -209,9 +209,9 @@ export class Project{
 		//let name = this.selectedElement.attr('root').title;
 		console.log(name)
 		for (let item of this.contextDiagram.problemDomainList) {
-		  if (item.problemdomain_name == name) {
-			item.problemdomain_x = position.x;
-			item.problemdomain_y = position.y;
+		  if (item.name == name) {
+			item.x = position.x;
+			item.y = position.y;
 			console.log("changeProblemDomainPosition")
 			console.log(item)
 			return true
@@ -226,12 +226,12 @@ export class Project{
 	}
 	addRequirement(no, context, x, y,w,h) {
 		let requirement = new Requirement();
-		requirement.requirement_no = no;
-		requirement.requirement_context = context;
-		requirement.requirement_x = x;
-		requirement.requirement_y = y;
-		requirement.requirement_w = w;
-		requirement.requirement_h = h;
+		requirement.no = no;
+		requirement.name = context;
+		requirement.x = x;
+		requirement.y = y;
+		requirement.w = w;
+		requirement.h = h;
 		this.problemDiagram.requirementList.push(requirement);
 		return requirement;
 	}
@@ -281,43 +281,42 @@ export class Project{
 		for(let item of this.getRequirementList()){
 			if(item.getName()==old.getName()){
 				item.setName(description)
-				item.setShortName(description)
+				item.setShortname(description)
 				break
 			}				
 		}
 	}
 	changeRequirementPosition(name,position) {
 		for (let item of this.getRequirementList()) {
-		  if (item.requirement_context == name) {
-			item.requirement_x = position.x;
-			item.requirement_y = position.y;
+		  if (item.name == name) {
+			item.x = position.x;
+			item.y = position.y;
 			return true
 		  }
 		}
 		return false
 	}
 	deleteRequirement(requirement:Requirement){
-		let name = requirement.requirement_context;
+		let name = requirement.name;
     	let list = this.problemDiagram.requirementList;
 		let i = list.length - 1;
 		for (; i >= 0; i--) {
 		let item = list[i];
-		if (item.requirement_context == name) {
+		if (item.name == name) {
 
 			list.splice(i, 1);
 			break;
 		}
-		//console.log(item.requirement_context + '!=' + name);
 		}
 	}
 
 	//link
-	deleteRelatedLink(shortName) {
-		console.log('deleteRelatedLink,shortName=' + shortName);
+	deleteRelatedLink(shortname) {
+		console.log('deleteRelatedLink,shortname=' + shortname);
 		let i = this.getReferenceList().length - 1;
 		for (; i >= 0; i--) {
 		  let reference = this.problemDiagram.referenceList[i];
-		  if (reference.reference_from == shortName || reference.reference_to == shortName) {
+		  if (reference.reference_from == shortname || reference.reference_to == shortname) {
 			console.log(reference)
 			let name = reference.reference_name;
 			this.problemDiagram.referenceList.splice(i, 1);
@@ -326,7 +325,7 @@ export class Project{
 		i = this.problemDiagram.constraintList.length - 1;
 		for (; i >= 0; i--) {
 		  let constraint = this.problemDiagram.constraintList[i];
-		  if (constraint.constraint_from == shortName || constraint.constraint_to == shortName) {
+		  if (constraint.constraint_from == shortname || constraint.constraint_to == shortname) {
 			console.log(constraint)
 			this.problemDiagram.constraintList.splice(i, 1);
 		  }
@@ -334,7 +333,7 @@ export class Project{
 		i = this.contextDiagram.interfaceList.length - 1;
 		for (; i >= 0; i--) {
 		  let my_interface = this.contextDiagram.interfaceList[i];
-		  if (my_interface.interface_from == shortName || my_interface.interface_to == shortName) {
+		  if (my_interface.interface_from == shortname || my_interface.interface_to == shortname) {
 			console.log(my_interface)
 			this.contextDiagram.interfaceList.splice(i, 1);
 		  }
