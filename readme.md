@@ -25,5 +25,7 @@ cd /var/lib/docker/volumes/lamp_www/_data/example.com/public_html/
 🔲语言服务器加入后端  
 
 # 变更记录
+## 20200216
+简化实体属性名及方法名
 ## 20200210
 初始化，后端没有语言服务器
