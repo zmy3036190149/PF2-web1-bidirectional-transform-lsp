@@ -1,44 +1,44 @@
 import { RequirementPhenomenon } from './RequirementPhenomenon';
 import { Line } from './Line'
 export class Constraint extends Line{
-	constraint_no: number;	
-	constraint_name: string;	
-	constraint_description: string;	
-	constraint_from: string;	
-	constraint_to: string;
-	constraint_x1: number;	
-	constraint_y1: number;
-	constraint_x2: number;
-	constraint_y2: number;
+	no: number;	
+	name: string;	
+	description: string;	
+	from: string;	
+	to: string;
+	x1: number;	
+	y1: number;
+	x2: number;
+	y2: number;
 	phenomenonList: RequirementPhenomenon[];
 	static newConstraint(no, name, description,from,to,phenomenonList,x1,y1,x2,y2){
 		let con = new Constraint()
-		con.constraint_no=no
-		con.constraint_name=name
-		con.constraint_description=description
-		con.constraint_from=from
-		con.constraint_to=to
+		con.no=no
+		con.name=name
+		con.description=description
+		con.from=from
+		con.to=to
 		if(phenomenonList)
 			con.phenomenonList=phenomenonList
 		else 
 			con.phenomenonList = []
-		con.constraint_x1=x1
-		con.constraint_y1=y1
-		con.constraint_x2=x2
-		con.constraint_y2=y2
+		con.x1=x1
+		con.y1=y1
+		con.x2=x2
+		con.y2=y2
 		return con
 	}
 	static newConstraintWithOld(old, phenomenonList, description){
 		let con = new Constraint()
-		con.constraint_no = old.constraint_no
-		con.constraint_name = old.constraint_name
-		con.constraint_from = old.constraint_from
-		con.constraint_to = old.constraint_to
-		con.constraint_x1 = old.constraint_x1
-		con.constraint_y1 = old.constraint_y1
-		con.constraint_x2 = old.constraint_x2
-		con.constraint_y2 = old.constraint_y2
-		con.constraint_description=description
+		con.no = old.no
+		con.name = old.name
+		con.from = old.from
+		con.to = old.to
+		con.x1 = old.x1
+		con.y1 = old.y1
+		con.x2 = old.x2
+		con.y2 = old.y2
+		con.description=description
 		if(phenomenonList)
 			con.phenomenonList=phenomenonList
 		else 
@@ -47,15 +47,15 @@ export class Constraint extends Line{
 	}
 	static copyConstraint(old){
 		let con = new Constraint()
-		con.constraint_no = old.constraint_no
-		con.constraint_name = old.constraint_name
-		con.constraint_from = old.constraint_from
-		con.constraint_to = old.constraint_to
-		con.constraint_x1 = old.constraint_x1
-		con.constraint_y1 = old.constraint_y1
-		con.constraint_x2 = old.constraint_x2
-		con.constraint_y2 = old.constraint_y2
-		con.constraint_description = old.constraint_description
+		con.no = old.no
+		con.name = old.name
+		con.from = old.from
+		con.to = old.to
+		con.x1 = old.x1
+		con.y1 = old.y1
+		con.x2 = old.x2
+		con.y2 = old.y2
+		con.description = old.description
 		if(old.phenomenonList)
 			con.phenomenonList=old.phenomenonList
 		else 
@@ -63,32 +63,32 @@ export class Constraint extends Line{
 
 		return con
 	}
-	getNo(){return this.constraint_no}	
-	setNo(no){this.constraint_no=no}
+	getNo(){return this.no}	
+	setNo(no){this.no=no}
 
-	getName(){return this.constraint_name}	
-	setName(name){this.constraint_name=name}
+	getName(){return this.name}	
+	setName(name){this.name=name}
 
-	getDescription(){ return this.constraint_description}
-	setDescription(description){ this.constraint_description=description}
+	getDescription(){ return this.description}
+	setDescription(description){ this.description=description}
 
-	getFrom(){return this.constraint_from}
-	setFrom(from){this.constraint_from=from}
+	getFrom(){return this.from}
+	setFrom(from){this.from=from}
 
-	getTo(){return this.constraint_to}
-	setTo(to){ this.constraint_to=to}
+	getTo(){return this.to}
+	setTo(to){ this.to=to}
 
-	getX1(){return this.constraint_x1}
-	setX1(x1){ this.constraint_x1=x1}
+	getX1(){return this.x1}
+	setX1(x1){ this.x1=x1}
 
-	getY1(){return this.constraint_y1}
-	setY1(y1){ this.constraint_y1=y1}
+	getY1(){return this.y1}
+	setY1(y1){ this.y1=y1}
 
-	getX2(){return this.constraint_x2}
-	setX2(x2){ this.constraint_x2=x2}
+	getX2(){return this.x2}
+	setX2(x2){ this.x2=x2}
 
-	getY2(){return this.constraint_y2}
-	setY2(y2){ this.constraint_y2=y2}
+	getY2(){return this.y2}
+	setY2(y2){ this.y2=y2}
 	getPhenomenonList(){return this.phenomenonList}
 	setPhenomenonList(phenomenonList){ this.phenomenonList=phenomenonList}
 }

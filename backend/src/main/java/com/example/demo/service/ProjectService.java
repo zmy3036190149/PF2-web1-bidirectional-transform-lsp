@@ -235,7 +235,7 @@ public class ProjectService {
 			String PD_name=PD_check.getShortname();
 			for(int j=0;j<CDI.size();j++) {
 				Interface I_check=CDI.get(j);
-				String I_name=I_check.getInterface_description();
+				String I_name=I_check.getDescription();
 				if(I_check.getPhenomenonList().size()==0) {
 					String errMsg = "Exist undefined interface.";
 					errorList.add(errMsg);
@@ -255,8 +255,8 @@ public class ProjectService {
 					return error;
 				}
 				Inum++;
-				String I_from=I_check.getInterface_from();
-				String I_to=I_check.getInterface_to();
+				String I_from=I_check.getFrom();
+				String I_to=I_check.getTo();
 				if(I_from==null||I_to==null) {
 					String errMsg = "Interface does not have from or to shape.";
 					errorList.add(errMsg);
@@ -329,7 +329,7 @@ public class ProjectService {
 			String R_name=R_check.getName();
 			for(int j=0;j<PDR.size();j++) {
 				Reference Rr_check=PDR.get(j);
-				String Rr_name=Rr_check.getReference_description();
+				String Rr_name=Rr_check.getDescription();
 				if(Rr_check.getPhenomenonList().size()==0) {
 					String errMsg = "Exist undefine reference.";
 					errorList.add(errMsg);
@@ -349,8 +349,8 @@ public class ProjectService {
 					return error;
 				}
 				RCnum++;
-				String Rr_from=Rr_check.getReference_from();
-				String Rr_to=Rr_check.getReference_to();
+				String Rr_from=Rr_check.getFrom();
+				String Rr_to=Rr_check.getTo();
 				if(Rr_from==null||Rr_to==null) {
 					String errMsg = "Reference does not have from or to shape.";
 					errorList.add(errMsg);
@@ -366,7 +366,7 @@ public class ProjectService {
 			}
 			for(int j=0;j<PDC.size();j++) {
 				Constraint C_check=PDC.get(j);
-				String C_name=C_check.getConstraint_description();
+				String C_name=C_check.getDescription();
 				if(C_name.contains("?")) {
 					String errMsg = "Constraint's name is illegal.";
 					errorList.add(errMsg);
@@ -374,8 +374,8 @@ public class ProjectService {
 					return error;
 				}
 				RCnum++;
-				String C_from=C_check.getConstraint_from();
-				String C_to=C_check.getConstraint_to();
+				String C_from=C_check.getFrom();
+				String C_to=C_check.getTo();
 				if(C_from==null||C_to==null) {
 					String errMsg = "Constraint does not have from or to shape.";
 					errorList.add(errMsg);
@@ -415,7 +415,7 @@ public class ProjectService {
 		List <Constraint> PDC=PD.getConstraintList();
 		for(int i=0;i<PDC.size();i++) {
 			Constraint C_check=PDC.get(i);
-			String C_name=C_check.getConstraint_description();
+			String C_name=C_check.getDescription();
 			if(C_check.getPhenomenonList().size()==0) {
 				String errMsg = "Exist undefine Constraint.";
 				errorList.add(errMsg);

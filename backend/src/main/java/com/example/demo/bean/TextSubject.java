@@ -200,9 +200,9 @@ public class TextSubject extends Subject{
 		 return line;
 	}
 	public String getInterfaceLine(JSONObject jshape,String lineType) {
-		String from = jshape.getString("interface_from");
-  		String to =jshape.getString("interface_to");
-  		String lineName = jshape.getString("interface_name");
+		String from = jshape.getString("from");
+  		String to =jshape.getString("to");
+  		String lineName = jshape.getString("name");
 		JSONArray phe = jshape.getJSONArray("phenomenonList");
 		String line = from + lineType + to + getpheLine(phe) + " \"" + lineName + "\"";
 		return line;		 
@@ -214,10 +214,10 @@ public class TextSubject extends Subject{
   		String lineName = "";
 		JSONArray phe ;  	
 		String line = "";
-  		from = jshape.getString("interface_from");
+  		from = jshape.getString("from");
   	  lineType = " -- ";
-  	  to = jshape.getString("interface_to");
-  	  lineName = jshape.getString("interface_name");
+  	  to = jshape.getString("to");
+  	  lineName = jshape.getString("name");
   	  phe = jshape.getJSONArray("phenomenonList");
 		  line = from + lineType + to + getpheLine(phe) + " \"" + lineName + "\"";
 		  return line;
@@ -229,10 +229,10 @@ public class TextSubject extends Subject{
   		String lineName = "";
 		JSONArray phe ;  	
 		String line = "";
-		from = jshape.getString("reference_from");
+		from = jshape.getString("from");
   	  
-  	  to = jshape.getString("reference_to");
-  	  lineName = jshape.getString("reference_name");
+  	  to = jshape.getString("to");
+  	  lineName = jshape.getString("name");
   	  phe = jshape.getJSONArray("phenomenonList");
   	  line = from + lineType + to + getpheLine(phe) +" \"" + lineName + "\"";
 		  return line;
@@ -244,9 +244,9 @@ public class TextSubject extends Subject{
   		String lineName = "";
 		JSONArray phe ;  	
 		String line = "";
-		from = jshape.getString("constraint_from");
-  	  to = jshape.getString("constraint_to");
-  	  lineName = jshape.getString("constraint_name");
+		from = jshape.getString("from");
+  	  to = jshape.getString("to");
+  	  lineName = jshape.getString("name");
   	  phe = jshape.getJSONArray("phenomenonList");
   	  line = from + lineType + to + getpheLine(phe) + " \"" + lineName + "\"";
 		  return line;
@@ -294,21 +294,21 @@ public class TextSubject extends Subject{
 				 name = jshape.getString("name");
 	    	   break;
 	      case "int":
-	    	  from = jshape.getString("interface_from");
-	    	  to = jshape.getString("interface_to");
-	    	  lineName = jshape.getString("interface_name");
+	    	  from = jshape.getString("from");
+	    	  to = jshape.getString("to");
+	    	  lineName = jshape.getString("name");
 	    	  break;
 	      case "ref":
-	    	  from = jshape.getString("reference_from");
+	    	  from = jshape.getString("from");
 	    	  lineType = "~~";
-	    	  to = jshape.getString("reference_to");
-	    	  lineName = jshape.getString("reference_name");
+	    	  to = jshape.getString("to");
+	    	  lineName = jshape.getString("name");
 	    	  break;
 	      case "con":
-	    	  from = jshape.getString("constraint_from");
+	    	  from = jshape.getString("from");
 	    	  lineType = "~>";
-	    	  to = jshape.getString("constraint_to");
-	    	  lineName = jshape.getString("constraint_name");
+	    	  to = jshape.getString("to");
+	    	  lineName = jshape.getString("name");
 	         break;
 		}
 		 String[] lines=text.split("\n");
@@ -490,21 +490,21 @@ public class TextSubject extends Subject{
 				 newName = new1.getString("name");
 	    	   break;
 	      case "int":
-	    	  from = old.getString("interface_from");
-	    	  to = old.getString("interface_to");
-	    	  lineName = old.getString("interface_name");
+	    	  from = old.getString("from");
+	    	  to = old.getString("to");
+	    	  lineName = old.getString("name");
 	    	  break;
 	      case "ref":
-	    	  from = old.getString("reference_from");
+	    	  from = old.getString("from");
 	    	  lineType = "~~";
-	    	  to = old.getString("reference_to");
-	    	  lineName = old.getString("reference_name");
+	    	  to = old.getString("to");
+	    	  lineName = old.getString("name");
 	    	  break;
 	      case "con":
-	    	  from = old.getString("constraint_from");
+	    	  from = old.getString("from");
 	    	  lineType = "~>";
-	    	  to = old.getString("constraint_to");
-	    	  lineName = old.getString("constraint_name");
+	    	  to = old.getString("to");
+	    	  lineName = old.getString("name");
 	         break;
 		}
 

@@ -253,20 +253,20 @@ public class ProblemEditor{
 				if(type == null) {
 					interfaceNum = interfaceNum + 1;
 					 Interface inte = new Interface();
-					 inte.setInterface_no(interfaceNum);
-					 inte.setInterface_name(name);
-					 inte.setInterface_from(from);
-					 inte.setInterface_to(to);
+					 inte.setNo(interfaceNum);
+					 inte.setName(name);
+					 inte.setFrom(from);
+					 inte.setTo(to);
 					 inte.setPhenomenonList(phenomenonList);
-					 inte.setInterface_description(description);
+					 inte.setDescription(description);
 					 interfaceList.add(inte);
 				}else if(type.equals("~~")) {
 					referenceNum = referenceNum + 1;
 					 Reference reference = new Reference();
-					 reference.setReference_no(referenceNum);
-					 reference.setReference_name(name);
-					 reference.setReference_from(from);
-					 reference.setReference_to(to);
+					 reference.setNo(referenceNum);
+					 reference.setName(name);
+					 reference.setFrom(from);
+					 reference.setTo(to);
 					 List<RequirementPhenomenon> reqPheList = new ArrayList<RequirementPhenomenon>();
 					 for(Phenomenon phe: phenomenonList) {
 						 RequirementPhenomenon reqPhe = new RequirementPhenomenon();
@@ -285,15 +285,15 @@ public class ProblemEditor{
 						 reqPheList.add(reqPhe);
 					 }
 					 reference.setPhenomenonList(reqPheList);
-					 reference.setReference_description(description);
+					 reference.setDescription(description);
 					 referenceList.add(reference);
 				 }else if(type.equals("<~") || type.equals("~>")) {
 					 constraintNum = constraintNum + 1;
 					 Constraint constraint = new Constraint();
-					 constraint.setConstraint_no(constraintNum);
-					 constraint.setConstraint_name(name);
-					 constraint.setConstraint_from(from);
-					 constraint.setConstraint_to(to);
+					 constraint.setNo(constraintNum);
+					 constraint.setName(name);
+					 constraint.setFrom(from);
+					 constraint.setTo(to);
 					 List<RequirementPhenomenon> reqPheList = new ArrayList<RequirementPhenomenon>();
 					 for(Phenomenon phe: phenomenonList) {
 						 RequirementPhenomenon reqPhe = new RequirementPhenomenon();
@@ -314,18 +314,18 @@ public class ProblemEditor{
 						 reqPheList.add(reqPhe);
 					 }
 					 constraint.setPhenomenonList(reqPheList);
-					 constraint.setConstraint_description(description);
+					 constraint.setDescription(description);
 					 constraintList.add(constraint);
 				 }
 				 else {
 					 interfaceNum = interfaceNum + 1;
 					 Interface inte = new Interface();
-					 inte.setInterface_no(interfaceNum);
-					 inte.setInterface_name(name);
-					 inte.setInterface_from(from);
-					 inte.setInterface_to(to);
+					 inte.setNo(interfaceNum);
+					 inte.setName(name);
+					 inte.setFrom(from);
+					 inte.setTo(to);
 					 inte.setPhenomenonList(phenomenonList);
-					 inte.setInterface_description(description);
+					 inte.setDescription(description);
 					 interfaceList.add(inte);
 				 }
 			 }
@@ -607,21 +607,21 @@ public class ProblemEditor{
 				if(type == null) {
 					 interfaceNum = interfaceNum + 1;
 					 Interface inte = new Interface();
-					 inte.setInterface_no(interfaceNum);
-					 inte.setInterface_name(name);
-					 inte.setInterface_from(from);
-					 inte.setInterface_to(to);
+					 inte.setNo(interfaceNum);
+					 inte.setName(name);
+					 inte.setFrom(from);
+					 inte.setTo(to);
 					 inte.setPhenomenonList(phenomenonList);
-					 inte.setInterface_description(description);
+					 inte.setDescription(description);
 					 
 					 boolean flag = false;
 					 for(int i =0;i<interfaceNum-1;i++) {						 
-						 if(from.contentEquals(inteList.get(i).getInterface_to())
-								 && to.contentEquals(inteList.get(i).getInterface_from())
-							|| from.contentEquals(inteList.get(i).getInterface_to())
-								&& to.contentEquals(inteList.get(i).getInterface_from())) {
+						 if(from.contentEquals(inteList.get(i).getTo())
+								 && to.contentEquals(inteList.get(i).getFrom())
+							|| from.contentEquals(inteList.get(i).getTo())
+								&& to.contentEquals(inteList.get(i).getFrom())) {
 							 inteList.get(i).setPhenomenonList(phenomenonList);
-							 inteList.get(i).setInterface_description(description);
+							 inteList.get(i).setDescription(description);
 							 flag = true;
 							 break;
 						 }
@@ -632,10 +632,10 @@ public class ProblemEditor{
 				}else if(type.equals("~~")) {
 					 referenceNum = referenceNum + 1;
 					 Reference reference = new Reference();
-					 reference.setReference_no(referenceNum);
-					 reference.setReference_name(name);
-					 reference.setReference_from(from);
-					 reference.setReference_to(to);
+					 reference.setNo(referenceNum);
+					 reference.setName(name);
+					 reference.setFrom(from);
+					 reference.setTo(to);
 					 List<Requirement> reqList = project.getProblemDiagram().getRequirementList();
 					 List<RequirementPhenomenon> reqPheList = new ArrayList<RequirementPhenomenon>();
 					 for(Phenomenon phe: phenomenonList) {
@@ -656,18 +656,18 @@ public class ProblemEditor{
 						 reqPheList.add(reqPhe);
 					 }
 					 reference.setPhenomenonList(reqPheList);
-					 reference.setReference_description(description);
+					 reference.setDescription(description);
 					 
 					 
 					 
 					 boolean flag = false;
 					 for(int i =0;i<referenceNum-1;i++) {						 
-						 if(from.contentEquals(refList.get(i).getReference_to())
-								 && to.contentEquals(refList.get(i).getReference_from())
-							|| from.contentEquals(refList.get(i).getReference_to())
-								&& to.contentEquals(refList.get(i).getReference_from())) {
+						 if(from.contentEquals(refList.get(i).getTo())
+								 && to.contentEquals(refList.get(i).getFrom())
+							|| from.contentEquals(refList.get(i).getTo())
+								&& to.contentEquals(refList.get(i).getFrom())) {
 							 refList.get(i).setPhenomenonList(reqPheList);
-							 refList.get(i).setReference_description(description);
+							 refList.get(i).setDescription(description);
 							 flag = true;
 							 break;
 						 }
@@ -679,10 +679,10 @@ public class ProblemEditor{
 				 }else if(type.equals("<~") || type.equals("~>")) {
 					 constraintNum = constraintNum + 1;
 					 Constraint constraint = new Constraint();
-					 constraint.setConstraint_no(constraintNum);
-					 constraint.setConstraint_name(name);
-					 constraint.setConstraint_from(from);
-					 constraint.setConstraint_to(to);
+					 constraint.setNo(constraintNum);
+					 constraint.setName(name);
+					 constraint.setFrom(from);
+					 constraint.setTo(to);
 					 List<RequirementPhenomenon> reqPheList = new ArrayList<RequirementPhenomenon>();
 					 List<Requirement> reqList = project.getProblemDiagram().getRequirementList();
 					 for(Phenomenon phe: phenomenonList) {
@@ -704,17 +704,17 @@ public class ProblemEditor{
 						 reqPheList.add(reqPhe);
 					 }
 					 constraint.setPhenomenonList(reqPheList);
-					 constraint.setConstraint_description(description);
+					 constraint.setDescription(description);
 
 					 
 					 boolean flag = false;
 					 for(int i =0;i<constraintNum-1;i++) {						 
-						 if(from.contentEquals(conList.get(i).getConstraint_to())
-								 && to.contentEquals(conList.get(i).getConstraint_from())
-							|| from.contentEquals(conList.get(i).getConstraint_to())
-								&& to.contentEquals(conList.get(i).getConstraint_from())) {
+						 if(from.contentEquals(conList.get(i).getTo())
+								 && to.contentEquals(conList.get(i).getFrom())
+							|| from.contentEquals(conList.get(i).getTo())
+								&& to.contentEquals(conList.get(i).getFrom())) {
 							 conList.get(i).setPhenomenonList(reqPheList);
-							 conList.get(i).setConstraint_description(description);
+							 conList.get(i).setDescription(description);
 							 flag = true;
 							 break;
 						 }
@@ -828,8 +828,8 @@ public class ProblemEditor{
 		List<Interface> intf = project.getContextDiagram().getInterfaceList();
 		int intlen = intf.size();
 		for(int i = 0;i<intlen;i++) {
-			String int_from = intf.get(i).getInterface_from();
-			String int_to = intf.get(i).getInterface_to();
+			String int_from = intf.get(i).getFrom();
+			String int_to = intf.get(i).getTo();
 			
 			List<Phenomenon> pheList = intf.get(i).getPhenomenonList();
 			String pheList1 = " {";
@@ -849,7 +849,7 @@ public class ProblemEditor{
 				buffer.append(" -- ");
 				buffer.append(int_to);
 				buffer.append(pheList1);
-				buffer.append("\""+intf.get(i).getInterface_name()+"\"");
+				buffer.append("\""+intf.get(i).getName()+"\"");
 				buffer.append("\n\n");
 			}	
 			if(pheList2.length()>2) {		
@@ -859,14 +859,14 @@ public class ProblemEditor{
 				buffer.append(" -- ");
 				buffer.append(int_from);
 				buffer.append(pheList2);
-				buffer.append("\""+intf.get(i).getInterface_name()+"\"");
+				buffer.append("\""+intf.get(i).getName()+"\"");
 				buffer.append("\n\n");
 			}	
 			if(pheList.size()==0) {
 				buffer.append(int_from);
 				buffer.append(" -- ");
 				buffer.append(int_to);
-				buffer.append(" \""+intf.get(i).getInterface_name()+"\"");
+				buffer.append(" \""+intf.get(i).getName()+"\"");
 				buffer.append("\n\n");
 			}
 		}
@@ -874,8 +874,8 @@ public class ProblemEditor{
 		List<Reference> ref = project.getProblemDiagram().getReferenceList();
 		int reflen = ref.size();
 		for(int i = 0;i<reflen;i++) {
-			String ref_from = ProblemEditor.getShortname(project, ref.get(i).getReference_from());			
-			String ref_to = ProblemEditor.getShortname(project, ref.get(i).getReference_to());
+			String ref_from = ProblemEditor.getShortname(project, ref.get(i).getFrom());			
+			String ref_to = ProblemEditor.getShortname(project, ref.get(i).getTo());
 			buffer.append(ref_from);
 			buffer.append(" ~~ ");
 			buffer.append(ref_to);
@@ -888,15 +888,15 @@ public class ProblemEditor{
 				buffer.deleteCharAt(buffer.length() - 1);
 				buffer.append(" }");
 			}	
-			buffer.append(" \"" + ref.get(i).getReference_name()+"\"");			
+			buffer.append(" \"" + ref.get(i).getName()+"\"");			
 			buffer.append("\n\n");
 		}
 		//constraint
 		List<Constraint> con = project.getProblemDiagram().getConstraintList();
 		int conlen = con.size();
 		for(int i = 0;i<conlen;i++) {
-			String con_from = ProblemEditor.getShortname(project, con.get(i).getConstraint_from());			
-			String con_to = ProblemEditor.getShortname(project, con.get(i).getConstraint_to());
+			String con_from = ProblemEditor.getShortname(project, con.get(i).getFrom());			
+			String con_to = ProblemEditor.getShortname(project, con.get(i).getTo());
 			buffer.append(con_from);
 			buffer.append(" ~> ");
 			buffer.append(con_to);
@@ -909,7 +909,7 @@ public class ProblemEditor{
 				buffer.deleteCharAt(buffer.length() - 1);
 				buffer.append(" }");
 			}	
-			buffer.append(" \"" + con.get(i).getConstraint_name()+"\"");
+			buffer.append(" \"" + con.get(i).getName()+"\"");
 			buffer.append("\n\n");
 		}
 		String filename = rootAddress + projectAddress + ".pf";
@@ -1094,7 +1094,7 @@ public class ProblemEditor{
 		String intf_from = pflink.getFrom();
 		String intf_to = pflink.getTo();
 		for(Interface intf:intList) {
-			if(pflink.getName().contentEquals(intf.getInterface_name())) {							
+			if(pflink.getName().contentEquals(intf.getName())) {							
 				//遍历pf中phe,修改并删除多余phe				
 				Iterator<PfPhenomenon> it = pfPheList.iterator();
 				while(it.hasNext()){
@@ -1160,9 +1160,9 @@ public class ProblemEditor{
 		List<String> arrayList = Arrays.asList(pheList);
 		List<String> arrList = new ArrayList<String>(arrayList);
 		for(int i = 0; i<reflen; i++) {
-			if(name.contentEquals(ref.get(i).getReference_name())) {
-			String ref_from = ProblemEditor.getShortname(project, ref.get(i).getReference_from());			
-			String ref_to = ProblemEditor.getShortname(project, ref.get(i).getReference_to());			
+			if(name.contentEquals(ref.get(i).getName())) {
+			String ref_from = ProblemEditor.getShortname(project, ref.get(i).getFrom());			
+			String ref_to = ProblemEditor.getShortname(project, ref.get(i).getTo());			
 			//遍历pf中phe
 			Iterator<String> it = arrList.iterator();
 			while(it.hasNext()){
@@ -1224,7 +1224,7 @@ public class ProblemEditor{
 				line= line.substring(0,line.length() - 1);
 				line += "}";
 			}
-			line += " \"" + ref.get(i).getReference_name()+"\"";
+			line += " \"" + ref.get(i).getName()+"\"";
 			line += "\n";
 			return line;
 			}
@@ -1239,9 +1239,9 @@ public class ProblemEditor{
 		List<String> arrayList = Arrays.asList(pheList);
 		List<String> arrList = new ArrayList<String>(arrayList);
 		for(int i = 0;i<conlen;i++) {
-			if(name.contentEquals(con.get(i).getConstraint_name())) {
-				String con_from = ProblemEditor.getShortname(project, con.get(i).getConstraint_from());			
-				String con_to = ProblemEditor.getShortname(project, con.get(i).getConstraint_to());
+			if(name.contentEquals(con.get(i).getName())) {
+				String con_from = ProblemEditor.getShortname(project, con.get(i).getFrom());			
+				String con_to = ProblemEditor.getShortname(project, con.get(i).getTo());
 				
 				//遍历pf中phe
 				Iterator<String> it = arrList.iterator();
@@ -1304,7 +1304,7 @@ public class ProblemEditor{
 					line= line.substring(0,line.length() - 1);
 					line += " }";
 				}
-				line += " \"" + con.get(i).getConstraint_name()+"\"";
+				line += " \"" + con.get(i).getName()+"\"";
 				line += "\n";
 				return line;
 			}
@@ -1481,9 +1481,9 @@ public class ProblemEditor{
 	 }
 	 //在pf中找interface,找不到就在最后加一条,找到多条，删除重复的	 
 	 public static String searchInterface(String res,Interface intf,Boolean forward)  throws IOException{		 
-		 String link_name = intf.getInterface_name();
-		 String link_from = intf.getInterface_from();
-		 String link_to = intf.getInterface_to();
+		 String link_name = intf.getName();
+		 String link_from = intf.getFrom();
+		 String link_to = intf.getTo();
 		 String[] lines = res.split("\n");
 		 res = "";
 		 Boolean flag = false;
@@ -1543,11 +1543,11 @@ public class ProblemEditor{
 		String from;
 		String to;
 		if(forward) {
-			from = intf.getInterface_from();
-			to = intf.getInterface_to();
+			from = intf.getFrom();
+			to = intf.getTo();
 		}else {
-			from = intf.getInterface_to();
-			to = intf.getInterface_from();
+			from = intf.getTo();
+			to = intf.getFrom();
 		}
 			
 		String pheList1 = " {";
@@ -1572,7 +1572,7 @@ public class ProblemEditor{
 			line += " -- ";
 			line += to;
 			line += pheList1;
-			line += " \"" + intf.getInterface_name()+"\"";
+			line += " \"" + intf.getName()+"\"";
 			line += "\n";
 			return line;
 		}
@@ -1712,8 +1712,8 @@ public class ProblemEditor{
 //	 
 	 public static String getReferencePf(Reference ref,Project project) {
 			
-		String from = ref.getReference_from();
-		String to = ref.getReference_to();
+		String from = ref.getFrom();
+		String to = ref.getTo();
 		List<Requirement> reqList= project.getProblemDiagram().getRequirementList();
 		for(Requirement req:reqList) {
 			if(from.contentEquals(req.getName()))
@@ -1736,13 +1736,13 @@ public class ProblemEditor{
 		line += " ~~ ";
 		line += to;
 		line += pheList1;
-		line += " \"" + ref.getReference_name()+"\"";
+		line += " \"" + ref.getName()+"\"";
 		line += "\n\n";
 		return line;
 	 }
 	 public static String getConstraintPf(Constraint con,Project project) {
-		String from = con.getConstraint_from();
-		String to = con.getConstraint_to();
+		String from = con.getFrom();
+		String to = con.getTo();
 		List<Requirement> reqList= project.getProblemDiagram().getRequirementList();
 		for(Requirement req:reqList) {
 			if(from.contentEquals(req.getName()))
@@ -1768,7 +1768,7 @@ public class ProblemEditor{
 		line += " ~> ";
 		line += to;
 		line += pheList1;
-		line += " \"" + con.getConstraint_name()+"\"";
+		line += " \"" + con.getName()+"\"";
 		line += "\n";
 //		System.out.println("======" + line +"======");
 		return line;
@@ -1782,24 +1782,24 @@ public class ProblemEditor{
 			 for(int j = interfaces.size() - 1; j > i ; j --) {
 				 Interface intej = interfaces.get(j);
 //				 System.out.println("to:" + intej.getInterface_to());
-				 if(intei.getInterface_from().equals(intej.getInterface_to()) && 
-						 intei.getInterface_to().equals(intej.getInterface_from())) {
-					 String name = intei.getInterface_name() + "," + intej.getInterface_name();
-					 intei.setInterface_name(name);
+				 if(intei.getFrom().equals(intej.getTo()) && 
+						 intei.getTo().equals(intej.getFrom())) {
+					 String name = intei.getName() + "," + intej.getName();
+					 intei.setName(name);
 					 intei.getPhenomenonList().addAll(intej.getPhenomenonList());
 					 String description = name + ":";
-					 if(intej.getInterface_description().split(":").length == 1) {
-						 if(intei.getInterface_description().split(":").length != 1) {
-							 description = description + intei.getInterface_description().split(":")[1];
+					 if(intej.getDescription().split(":").length == 1) {
+						 if(intei.getDescription().split(":").length != 1) {
+							 description = description + intei.getDescription().split(":")[1];
 						 }
 					 }else {
-						 if(intei.getInterface_description().split(":").length == 1) {
-							 description = description + intej.getInterface_description().split(":")[1];
+						 if(intei.getDescription().split(":").length == 1) {
+							 description = description + intej.getDescription().split(":")[1];
 						 }else {
-							 description = description + intei.getInterface_description().split(":")[1] + "," + intej.getInterface_description().split(":")[1];
+							 description = description + intei.getDescription().split(":")[1] + "," + intej.getDescription().split(":")[1];
 						 }
 					 }
-					 intei.setInterface_description(description);
+					 intei.setDescription(description);
 					 interfaces.remove(intej);
 				 }
 			 }
@@ -1811,24 +1811,24 @@ public class ProblemEditor{
 			 Reference referencei = references.get(i);
 			 for(int j = references.size() - 1; j > i ; j --) {
 				 Reference referencej = references.get(j);
-				 if(referencei.getReference_from().equals(referencej.getReference_to()) && 
-						 referencei.getReference_to().equals(referencej.getReference_from())) {
-					 String name = referencei.getReference_name() + "," + referencej.getReference_name();
-					 referencei.setReference_name(name);
+				 if(referencei.getFrom().equals(referencej.getTo()) && 
+						 referencei.getTo().equals(referencej.getFrom())) {
+					 String name = referencei.getName() + "," + referencej.getName();
+					 referencei.setName(name);
 					 referencei.getPhenomenonList().addAll(referencej.getPhenomenonList());
 					 String description = name + ":";
-					 if(referencej.getReference_description().split(":").length == 1) {
-						 if(referencei.getReference_description().split(":").length != 1) {
-							 description = description + referencei.getReference_description().split(":")[1];
+					 if(referencej.getDescription().split(":").length == 1) {
+						 if(referencei.getDescription().split(":").length != 1) {
+							 description = description + referencei.getDescription().split(":")[1];
 						 }
 					 }else {
-						 if(referencei.getReference_description().split(":").length == 1) {
-							 description = description + referencej.getReference_description().split(":")[1];
+						 if(referencei.getDescription().split(":").length == 1) {
+							 description = description + referencej.getDescription().split(":")[1];
 						 }else {
-							 description = description + referencej.getReference_description().split(":")[1] + "," + referencej.getReference_description().split(":")[1];
+							 description = description + referencej.getDescription().split(":")[1] + "," + referencej.getDescription().split(":")[1];
 						 }
 					 }
-					 referencei.setReference_description(description);
+					 referencei.setDescription(description);
 					 references.remove(referencej);
 				 }
 			 }
@@ -1840,24 +1840,24 @@ public class ProblemEditor{
 			 Constraint constrainti = constraints.get(i);
 			 for(int j = constraints.size() - 1; j > i ; j --) {
 				 Constraint constraintj = constraints.get(j);
-				 if(constrainti.getConstraint_from().equals(constraintj.getConstraint_to()) && 
-						 constrainti.getConstraint_to().equals(constraintj.getConstraint_from())) {
-					 String name = constrainti.getConstraint_name() + "," + constraintj.getConstraint_name();
-					 constrainti.setConstraint_name(name);
+				 if(constrainti.getFrom().equals(constraintj.getTo()) && 
+						 constrainti.getTo().equals(constraintj.getFrom())) {
+					 String name = constrainti.getName() + "," + constraintj.getName();
+					 constrainti.setName(name);
 					 constrainti.getPhenomenonList().addAll(constraintj.getPhenomenonList());
 					 String description = name + ":";
-					 if(constraintj.getConstraint_description().split(":").length == 1) {
-						 if(constrainti.getConstraint_description().split(":").length != 1) {
-							 description = description + constrainti.getConstraint_description().split(":")[1];
+					 if(constraintj.getDescription().split(":").length == 1) {
+						 if(constrainti.getDescription().split(":").length != 1) {
+							 description = description + constrainti.getDescription().split(":")[1];
 						 }
 					 }else {
-						 if(constrainti.getConstraint_description().split(":").length == 1) {
-							 description = description + constraintj.getConstraint_description().split(":")[1];
+						 if(constrainti.getDescription().split(":").length == 1) {
+							 description = description + constraintj.getDescription().split(":")[1];
 						 }else {
-							 description = description + constrainti.getConstraint_description().split(":")[1] + "," + constraintj.getConstraint_description().split(":")[1];
+							 description = description + constrainti.getDescription().split(":")[1] + "," + constraintj.getDescription().split(":")[1];
 						 }
 					 }
-					 constrainti.setConstraint_description(description);
+					 constrainti.setDescription(description);
 					 constraints.remove(constraintj);
 				 }
 			 }

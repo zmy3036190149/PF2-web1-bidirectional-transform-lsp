@@ -114,18 +114,18 @@
         </tr> -->
           <tr>Interface:</tr>
           <tr *ngFor="let interface of project.contextDiagram.interfaceList">
-            <td>{{interface.interface_description}}</td>
+            <td>{{interface.description}}</td>
           </tr>
           <!-- <tr *ngFor="let interface of problemDiagram.interfaceList">
-          <td>{{interface.interface_description}}</td>
+          <td>{{interface.description}}</td>
         </tr>  -->
           <br>
           <tr>Reference:</tr>
           <tr *ngFor="let constraint of project.problemDiagram.constraintList">
-            <td>{{constraint.constraint_description}}</td>
+            <td>{{constraint.description}}</td>
           </tr>
           <tr *ngFor="let reference of project.problemDiagram.referenceList">
-            <td>{{reference.reference_description}}</td>
+            <td>{{reference.description}}</td>
           </tr>
           <br>
           <tr *ngFor="let req of project.problemDiagram.requirementList">

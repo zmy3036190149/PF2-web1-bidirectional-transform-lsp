@@ -342,17 +342,15 @@ export class DrawGraphService {
     let name = 'a';
     if(project.problemDiagram!=undefined){
       for (let reference of project.problemDiagram.referenceList) {        
-          name = this.compareLinkName(name,reference.reference_name)        
-        //console.log(name+"<"+reference.reference_name);
+          name = this.compareLinkName(name,reference.name)    
       }
       for (let constraint of project.problemDiagram.constraintList){       
-        name = this.compareLinkName(name,constraint.constraint_name)
-        //console.log(name+'<'+constraint.constraint_name);
+        name = this.compareLinkName(name,constraint.name)
       }
     }    
     for (let my_interface of project.contextDiagram.interfaceList) {
       name = this.compareLinkName(name,my_interface.interface_name)
-      //console.log(name+'<'+my_interface.interface_name);
+      //console.log(name+'<'+my_interface.name);
     }
     //console.log(name);
     return this.getLinkNameNo(name);
@@ -622,23 +620,19 @@ export class DrawGraphService {
     if(!this.isLabel){      
       //console.log(this.link_name_no)
       for(let int of this.project.contextDiagram.interfaceList){
-        int.interface_name= this.getlink_name(this.link_name_no);
-        //console.log(int.interface_name)
+        int.name= this.getlink_name(this.link_name_no);
         this.link_name_no += 1;
-        int.interface_description = this.project.getDescription(int.interface_name,int.phenomenonList);
+        int.description = this.project.getDescription(int.name,int.phenomenonList);
         // change interface link on graph
         let links = this.graphs[0].getLinks();
         for(let link of links){
           //此时只有interface,所以可以用no判断
-          if(link.attr('root').no==int.interface_no){
-            link.attr('root').title = int.interface_name   
-            // //console.log(link.labels()[0].attrs.text.text)
-            // link.labels()[0].attrs.text.text=int.interface_name
-            // //console.log(int.interface_name)
+          if(link.attr('root').no==int.no){
+            link.attr('root').title = int.name   
             link.appendLabel({
               attrs: {
                 text: {
-                  text: int.interface_name,
+                  text: int.name,
                   fontSize: 25,
                   textAnchor: 'middle',
                   textVerticalAnchor: 'middle',
@@ -706,13 +700,11 @@ export class DrawGraphService {
 
       //link
       let int = new Interface();
-      int.interface_from = 'M';
-      int.interface_to = pro.shortname;
-      int.interface_no= this.interface_no;
+      int.from = 'M';
+      int.to = pro.shortname;
+      int.no= this.interface_no;
       this.interface_no += 1;
-      int.interface_name = '';
-      // int.interface_name = String.fromCharCode(this.link_name_no);
-      // this.link_name_no += 1;
+      int.name = '';
       this.project.contextDiagram.interfaceList.push(int);
       int.phenomenonList = new Array<Phenomenon>();
       //phe
@@ -1553,26 +1545,24 @@ export class DrawGraphService {
   changeRelatedLink(oldName,newName) {
     let i = this.project.problemDiagram.referenceList.length - 1;
     for (let reference of this.project.problemDiagram.referenceList) {
-      if (reference.reference_from == oldName) {        
-        reference.reference_from = newName;        
-      }else if(reference.reference_to == oldName){
-        reference.reference_to = newName;
+      if (reference.from == oldName) {        
+        reference.from = newName;        
+      }else if(reference.to == oldName){
+        reference.to = newName;
       }
     }
     for (let constraint of this.project.problemDiagram.constraintList) {
-      if (constraint.constraint_from == oldName) {
-        constraint.constraint_from = newName;
-      }else if(constraint.constraint_to == oldName){
-        constraint.constraint_to = newName;
+      if (constraint.from == oldName) {
+        constraint.from = newName;
+      }else if(constraint.to == oldName){
+        constraint.to = newName;
       }
     }
     for (let my_interface of this.project.contextDiagram.interfaceList) {
-      if (my_interface.interface_from == oldName) {
-        my_interface.interface_from = newName;
-        //console.log('interface_from:oldName:'+oldName+',newName='+newName);
-      }else if(my_interface.interface_to == oldName){
-        my_interface.interface_to = newName;
-        //console.log('interface_to:oldName:'+oldName+',newName='+newName);
+      if (my_interface.from == oldName) {
+        my_interface.from = newName;
+      }else if(my_interface.to == oldName){
+        my_interface.to = newName;
       }
     }
   }
@@ -1581,10 +1571,10 @@ export class DrawGraphService {
     let i0 = list0.length - 1;
     for (; i0 >= 0; i0--) {
       let item = list0[i0]; 
-      if (item.interface_from == target.attr('root').shortname) {
+      if (item.from == target.attr('root').shortname) {
           list0.splice(i0, 1);
       }
-      else if (item.interface_to == target.attr('root').shortname) {
+      else if (item.to == target.attr('root').shortname) {
         list0.splice(i0, 1);
       }
     }
@@ -1593,10 +1583,10 @@ export class DrawGraphService {
     let i1 = list1.length - 1;
     for (; i1 >= 0; i1--) {
       let item = list1[i1];
-      if (item.constraint_from == target.attr('root').shortname) {
+      if (item.from == target.attr('root').shortname) {
         list1.splice(i1, 1);
       }
-      else if (item.constraint_to == target.attr('root').shortname) {
+      else if (item.to == target.attr('root').shortname) {
         list1.splice(i1, 1);
       }
     }
@@ -1605,36 +1595,36 @@ export class DrawGraphService {
     let i2 = list2.length - 1;
     for (; i2 >= 0; i2--) {
       let item = list2[i2];
-      if (item.reference_from == target.attr('root').shortname) {
+      if (item.from == target.attr('root').shortname) {
         list2.splice(i2, 1);
       }
-      else if (item.reference_to == target.attr('root').shortname) {
+      else if (item.to == target.attr('root').shortname) {
         list2.splice(i2, 1);
       }
     }
 
     for (let item of this.project.contextDiagram.interfaceList) {
-      if (item.interface_from == source.attr('root').shortname) {
-        item.interface_from = source.attr('root').shortname + target.attr('root').shortname
+      if (item.from == source.attr('root').shortname) {
+        item.from = source.attr('root').shortname + target.attr('root').shortname
       }
-      else if (item.interface_to == source.attr('root').shortname) {
-        item.interface_to = source.attr('root').shortname + target.attr('root').shortname
+      else if (item.to == source.attr('root').shortname) {
+        item.to = source.attr('root').shortname + target.attr('root').shortname
       }
     }
     for (let item of this.project.problemDiagram.constraintList) {
-      if (item.constraint_from == source.attr('root').shortname) {
-        item.constraint_from = source.attr('root').shortname + target.attr('root').shortname
+      if (item.from == source.attr('root').shortname) {
+        item.from = source.attr('root').shortname + target.attr('root').shortname
       }
-      else if (item.constraint_to == source.attr('root').shortname) {
-        item.constraint_to = source.attr('root').shortname + target.attr('root').shortname
+      else if (item.to == source.attr('root').shortname) {
+        item.to = source.attr('root').shortname + target.attr('root').shortname
       }
     }
     for (let item of this.project.problemDiagram.referenceList) {
-      if (item.reference_from == source.attr('root').shortname) {
-        item.reference_from = source.attr('root').shortname + target.attr('root').shortname
+      if (item.from == source.attr('root').shortname) {
+        item.from = source.attr('root').shortname + target.attr('root').shortname
       }
-      else if (item.reference_to == source.attr('root').shortname) {
-        item.reference_to = source.attr('root').shortname + target.attr('root').shortname
+      else if (item.to == source.attr('root').shortname) {
+        item.to = source.attr('root').shortname + target.attr('root').shortname
       }
     }
     let list = this.project.contextDiagram.problemDomainList;
@@ -1658,7 +1648,6 @@ export class DrawGraphService {
         }
 
       }
-      //console.log(item.interface_name + '!=' + this.selectedElement.label('root').title);
     }
   }
   drawLink(source, target, graph) {
@@ -1681,25 +1670,25 @@ export class DrawGraphService {
   }
   changeLinkPosition(project){
     for (let reference of project.problemDiagram.referenceList ) {
-      let pos = this.changeLinkPosition1(reference.reference_from,reference.reference_to,project);
-      reference.reference_x1 = pos[0];
-      reference.reference_x2 = pos[1];
-      reference.reference_y1 = pos[2];
-      reference.reference_y2 = pos[3];
+      let pos = this.changeLinkPosition1(reference.from,reference.to,project);
+      reference.x1 = pos[0];
+      reference.x2 = pos[1];
+      reference.y1 = pos[2];
+      reference.y2 = pos[3];
     }
     for (let constraint of project.problemDiagram.constraintList) {
-      let pos = this.changeLinkPosition1(constraint.constraint_from,constraint.constraint_to,project);
-      constraint.constraint_x1 = pos[0];
-      constraint.constraint_x2 = pos[1];
-      constraint.constraint_y1 = pos[2];
-      constraint.constraint_y2 = pos[3];
+      let pos = this.changeLinkPosition1(constraint.from,constraint.to,project);
+      constraint.x1 = pos[0];
+      constraint.x2 = pos[1];
+      constraint.y1 = pos[2];
+      constraint.y2 = pos[3];
     }
    for (let my_interface of project.contextDiagram.interfaceList) {
-      let pos = this.changeLinkPosition1(my_interface.interface_from,my_interface.interface_to,project);
-      my_interface.interface_x1 = pos[0];
-      my_interface.interface_x2 = pos[1];
-      my_interface.interface_y1 = pos[2];
-      my_interface.interface_y2 = pos[3];
+      let pos = this.changeLinkPosition1(my_interface.from,my_interface.to,project);
+      my_interface.x1 = pos[0];
+      my_interface.x2 = pos[1];
+      my_interface.y1 = pos[2];
+      my_interface.y2 = pos[3];
     }
   }
   changeLinkPosition1(from,to,project){
@@ -1749,8 +1738,8 @@ export class DrawGraphService {
     var eleto: joint.dia.Element;
     for (var i = 0; i < interfaceList.length; i++) {
       const int = interfaceList[i];
-      const from = int.interface_from;
-      const to = int.interface_to;
+      const from = int.from;
+      const to = int.to;
       for (var j = 0; j < elementList.length; j++) {
         if (from == elementList[j].attr('root').shortname) {
           elefrom = elementList[j];
@@ -1778,7 +1767,7 @@ export class DrawGraphService {
       this.interface_no += 1;
       let conflicting_no = false;
       for(let inti of this.project.contextDiagram.interfaceList){
-        if (inti.interface_no==no){
+        if (inti.no==no){
           conflicting_no = true
         }
       }
@@ -1801,8 +1790,8 @@ export class DrawGraphService {
     this.drawInterfaceOnGraph(int)
   }
   drawInterfaceOnGraph(int){
-    let from = int.interface_from
-    let to = int.interface_to
+    let from = int.from
+    let to = int.to
     for(let graph of this.graphs){
       var elefrom: joint.dia.Element
       var eleto: joint.dia.Element
@@ -1826,16 +1815,16 @@ export class DrawGraphService {
   }
   addInterfaceEntity(no, name, description, from, to, phe, x1, y1, x2, y2) {
     let myinterface = new Interface();
-    myinterface.interface_no = no;
-    myinterface.interface_name = name;
-    myinterface.interface_from = from;
-    myinterface.interface_to = to;
-    myinterface.interface_x1 = x1;
-    myinterface.interface_y1 = y1;
-    myinterface.interface_x2 = x2;
-    myinterface.interface_y2 = y2;
+    myinterface.no = no;
+    myinterface.name = name;
+    myinterface.from = from;
+    myinterface.to = to;
+    myinterface.x1 = x1;
+    myinterface.y1 = y1;
+    myinterface.x2 = x2;
+    myinterface.y2 = y2;
     myinterface.phenomenonList = phe;
-    myinterface.interface_description = description;
+    myinterface.description = description;
     this.project.contextDiagram.interfaceList.push(myinterface);
     //console.log('addInterfaceEntity:');
     //console.log(this.project.contextDiagram.interfaceList);
@@ -1850,8 +1839,8 @@ export class DrawGraphService {
     link.attr({
       root: { 
         name: 'interface', 
-        title: int.interface_name,
-        no:int.interface_no
+        title: int.name,
+        no:int.no
     },
       line: {
         strokeWidth: 1,
@@ -1864,7 +1853,7 @@ export class DrawGraphService {
     link.appendLabel({
       attrs: {
         text: {
-          text: int.interface_name,
+          text: int.name,
           fontSize: 25,
           textAnchor: 'middle',	//???????
           textVerticalAnchor: 'middle',
@@ -1880,16 +1869,13 @@ export class DrawGraphService {
   initInterfacePopBox() {
     //console.log(this.selectedElement);
     for (let item of this.project.contextDiagram.interfaceList) {
-      if (item.interface_no == this.selectedElement.attr('root').no) {
+      if (item.no == this.selectedElement.attr('root').no) {
         this.interface = item;
         this.phenomenonList = item.phenomenonList;
-        this.selectedLinkSource = item.interface_from;
-        this.selectedLinkTarget = item.interface_to;
-        //console.log(item.interface_no + '=' + this.selectedElement.attr('root').no);
-        //console.log(this.phenomenonList);
+        this.selectedLinkSource = item.from;
+        this.selectedLinkTarget = item.to;
         break;
       }
-      //console.log(item.interface_name + '!=' + this.selectedElement.label('root').title);
     }
     let selectedDiv = document.getElementById('interfacePopBox');
     (selectedDiv.getElementsByClassName("name")[0] as any).value='';
@@ -1918,10 +1904,7 @@ export class DrawGraphService {
     return null;
   }
   changeInterfaceDetail() {
-    // this.interface.phenomenonList = this.phenomenonList;
-    // this.interface.interface_description = this.project.getDescription(this.interface.interface_name, this.phenomenonList)
-    // this.projectService.sendProject(this.project)
-    let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.interface_name, this.phenomenonList))
+    let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
     this.change("change", "int", this.interface, int)
     //console.log('changeInterfaceDetail');
     //console.log(this.project.contextDiagram.interfaceList);
@@ -1941,7 +1924,7 @@ export class DrawGraphService {
     let i = 0
     let inter
     for (let item of list) {
-      if (item.interface_no == no) {
+      if (item.no == no) {
         inter = item
         // list.splice(i, 1);
         break;
@@ -1976,8 +1959,8 @@ export class DrawGraphService {
     var eleto: joint.dia.Element;
     for (var i = 0; i < referenceList.length; i++) {
       const reference = referenceList[i];
-      const from = reference.reference_from;
-      const to = reference.reference_to;
+      const from = reference.from;
+      const to = reference.to;
       for (var j = 0; j < elementList.length; j++) {
         if (from === elementList[j].attr('root').shortname) {
           elefrom = elementList[j];
@@ -2004,8 +1987,8 @@ export class DrawGraphService {
     this.drawReferenceOnGraph(ref)     
   }
   drawReferenceOnGraph(ref){
-    const from = ref.reference_from
-    const to = ref.reference_to    
+    const from = ref.from
+    const to = ref.to    
     var elefrom: joint.dia.Element
     var eleto: joint.dia.Element
     let elementList = this.graphs[1].getElements()
@@ -2037,7 +2020,7 @@ export class DrawGraphService {
       this.reference_no += 1;
       let conflicting_no = false;
       for(let refi of this.project.problemDiagram.referenceList){
-        if (refi.reference_name==no){
+        if (refi.name==no){
           conflicting_no = true
         }
       }
@@ -2048,8 +2031,6 @@ export class DrawGraphService {
     let name = this.getname();  
     let from = source.attr('root').shortname;
     let to = target.attr('root').shortname;
-    // let ref = this.addReferenceEntity(this.reference_no, name, '', from, to, [], 0, 0, 0, 0);
-    // let element = this.drawReference1(ref, source, target, graph);
     let ref = Reference.newReference(this.reference_no, name, '', from, to, [], 0, 0, 0, 0)
     this.change( "add", "ref", null, ref)
     // return element;
@@ -2066,16 +2047,16 @@ export class DrawGraphService {
   addReferenceEntity(no, name, description, from, to, phe, x1, y1, x2, y2) {
     //console.log('addReferenceEntity');
     let reference = new Reference();
-    reference.reference_no = no;
-    reference.reference_name = name;
-    reference.reference_description = description;
-    reference.reference_from = from;
-    reference.reference_to = to;
+    reference.no = no;
+    reference.name = name;
+    reference.description = description;
+    reference.from = from;
+    reference.to = to;
     reference.phenomenonList = phe;
-    reference.reference_x1 = x1;
-    reference.reference_y1 = y1;
-    reference.reference_x2 = x2;
-    reference.reference_y2 = y2;
+    reference.x1 = x1;
+    reference.y1 = y1;
+    reference.x2 = x2;
+    reference.y2 = y2;
     this.project.problemDiagram.referenceList.push(reference);
     return reference;
   }
@@ -2088,8 +2069,8 @@ export class DrawGraphService {
     link.attr({
       root: {
         name: 'reference',
-        title: reference.reference_name,
-        no: reference.reference_no
+        title: reference.name,
+        no: reference.no
       },
       line: {
         strokeWidth: 1,
@@ -2104,7 +2085,7 @@ export class DrawGraphService {
     link.appendLabel({
       attrs: {
         text: {
-          text: reference.reference_name,
+          text: reference.name,
           fontSize: 25,
           textAnchor: 'middle',	//???????
           textVerticalAnchor: 'middle',
@@ -2118,9 +2099,10 @@ export class DrawGraphService {
   }
   initReferencePopBox() {
     for (let item of this.project.problemDiagram.referenceList) {
-      if (item.reference_name == this.selectedElement.attr('root').title) {
+      if (item.name == this.selectedElement.attr('root').title) {
         this.reference = item;
-        this.phenomenonList = item.phenomenonList;        
+        this.phenomenonList = item.phenomenonList;   
+        console.log(item)     
         break;
       }
     }
@@ -2133,8 +2115,8 @@ export class DrawGraphService {
 
     //get initiator
     for (let temp of this.project.contextDiagram.problemDomainList) {
-      if(temp.shortname==this.reference.reference_from
-        || temp.shortname==this.reference.reference_to){
+      if(temp.shortname==this.reference.from
+        || temp.shortname==this.reference.to){
               //get initiator
               this.initiator = temp.shortname
               this.initiator_receiverList.push(temp.shortname)
@@ -2143,10 +2125,10 @@ export class DrawGraphService {
 
     //get receiver list
     for (let temp_int of this.project.contextDiagram.interfaceList) {
-      if (temp_int.interface_from == this.initiator) {
-        this.receiverList.push(temp_int.interface_to)
-        this.initiator_receiverList.push(temp_int.interface_to)
-        this.initiator_or_receiverList.push(temp_int.interface_to)
+      if (temp_int.from == this.initiator) {
+        this.receiverList.push(temp_int.to)
+        this.initiator_receiverList.push(temp_int.to)
+        this.initiator_or_receiverList.push(temp_int.to)
         //console.log('--------------')
         //console.log('this.receiverList')
         //console.log(this.receiverList)
@@ -2155,10 +2137,10 @@ export class DrawGraphService {
         //console.log('this.initiator_or_receiverList')
         //console.log(this.initiator_or_receiverList)
       }
-      else if (temp_int.interface_to == this.initiator) {
-        this.receiverList.push(temp_int.interface_from)
-        this.initiator_receiverList.push(temp_int.interface_from)          
-        this.initiator_or_receiverList.push(temp_int.interface_from)  
+      else if (temp_int.to == this.initiator) {
+        this.receiverList.push(temp_int.from)
+        this.initiator_receiverList.push(temp_int.from)          
+        this.initiator_or_receiverList.push(temp_int.from)  
         //console.log('--------------')
         //console.log('this.receiverList')
         //console.log(this.receiverList)
@@ -2197,7 +2179,8 @@ export class DrawGraphService {
     //phe name and initiator
     let selectedDiv = document.getElementById('referencePopBox') as any
     (selectedDiv.getElementsByClassName("name")[0] as any).value='';
-    console.log(selectedDiv.getElementsByClassName("initiator")[0]);
+    console.log(this.phenomenonList);
+    // console.log(selectedDiv.getElementsByClassName("initiator")[0]);
     // let selectElement = (selectedDiv.getElementsByClassName("initiator")[0] as any)
     // console.log(selectElement)
     // let options= selectElement.getElementsByTagName('option')
@@ -2262,12 +2245,7 @@ export class DrawGraphService {
     //console.log(this.initiator_or_receiverList)
   }
   changeReferenceDetail() {
-    // this.reference.phenomenonList = this.phenomenonList;
-    // this.reference.reference_description = this.project.getDescription(this.reference.reference_name, this.phenomenonList)
-    // this.projectService.sendProject(this.project);
-    //console.log('changeReferenceDetail');
-    //console.log(this.referencePhenomenonList);
-    let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.reference_name, this.phenomenonList))
+    let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
     this.change("change", "ref", this.reference, ref)
   }
   changeReferencews(old:Reference,new1:Reference) {
@@ -2283,7 +2261,7 @@ export class DrawGraphService {
     let i = 0
     let ref
     for (let item of list) {
-      if (item.reference_name == name) {
+      if (item.name == name) {
         ref = item
         // list.splice(i, 1);
         break;
@@ -2315,17 +2293,17 @@ export class DrawGraphService {
       this.link_name_no += 1;
       let conflicting_name = false;
       for(let inti of this.project.contextDiagram.interfaceList){
-        if (inti.interface_name==name){
+        if (inti.name==name){
           conflicting_name = true
         }
       }
       for(let refi of this.project.problemDiagram.referenceList){
-        if (refi.reference_name==name){
+        if (refi.name==name){
           conflicting_name = true
         }
       }
       for(let coni of this.project.problemDiagram.constraintList){
-        if (coni.constraint_name==name){
+        if (coni.name==name){
           conflicting_name = true
         }
       }
@@ -2341,8 +2319,8 @@ export class DrawGraphService {
     var eleto: joint.dia.Element;
     for (var i = 0; i < constraintList.length; i++) {
       const constraint = constraintList[i];
-      const from = constraint.constraint_from;
-      const to = constraint.constraint_to;
+      const from = constraint.from;
+      const to = constraint.to;
       for (var j = 0; j < elementList.length; j++) {
         if (from === elementList[j].attr('root').shortname) {
           elefrom = elementList[j];
@@ -2375,7 +2353,7 @@ export class DrawGraphService {
       this.constraint_no += 1;
       let conflicting_no = false;
       for(let coni of this.project.problemDiagram.constraintList){
-        if (coni.constraint_no==no){
+        if (coni.no==no){
           conflicting_no = true
         }
       }
@@ -2404,8 +2382,8 @@ export class DrawGraphService {
     this.drawConstraintOnGraph(con)
   }
   drawConstraintOnGraph(constraint){
-    const from = constraint.constraint_from;
-    const to = constraint.constraint_to;
+    const from = constraint.from;
+    const to = constraint.to;
     var elefrom: joint.dia.Element
     var eleto: joint.dia.Element
     let elementList = this.graphs[1].getElements() 
@@ -2437,8 +2415,8 @@ export class DrawGraphService {
     link.attr({
       root: { 
         name: 'constraint', 
-        title: con.constraint_name,
-        no: con.constraint_no
+        title: con.name,
+        no: con.no
 
       },
       line: { strokeWidth: 1, strokeDasharray: '8,4' }
@@ -2446,7 +2424,7 @@ export class DrawGraphService {
     link.appendLabel({
       attrs: {
         text: {
-          text: con.constraint_name,
+          text: con.name,
           fontSize: 25,
           textAnchor: 'middle',	//???????
           textVerticalAnchor: 'middle',
@@ -2460,7 +2438,7 @@ export class DrawGraphService {
   }
   initConstraintPopBox() {
     for (let item of this.project.problemDiagram.constraintList) {
-      if (item.constraint_name == this.selectedElement.attr('root').title) {
+      if (item.name == this.selectedElement.attr('root').title) {
         this.constraint = item;
         this.phenomenonList = item.phenomenonList;        
         break;
@@ -2478,8 +2456,8 @@ export class DrawGraphService {
 
     //get initiator
     for (let temp of this.project.contextDiagram.problemDomainList) {
-      if(temp.shortname==this.constraint.constraint_from
-        || temp.shortname==this.constraint.constraint_to){
+      if(temp.shortname==this.constraint.from
+        || temp.shortname==this.constraint.to){
               //get initiator
               this.initiator = temp.shortname
               this.initiator_receiverList.push(temp.shortname)
@@ -2488,10 +2466,10 @@ export class DrawGraphService {
 
     //get receiver list
     for (let temp_int of this.project.contextDiagram.interfaceList) {
-      if (temp_int.interface_from == this.initiator) {
-        this.receiverList.push(temp_int.interface_to)
-        this.initiator_receiverList.push(temp_int.interface_to)
-        this.initiator_or_receiverList.push(temp_int.interface_to)
+      if (temp_int.from == this.initiator) {
+        this.receiverList.push(temp_int.to)
+        this.initiator_receiverList.push(temp_int.to)
+        this.initiator_or_receiverList.push(temp_int.to)
         //console.log('--------------')
         //console.log('this.receiverList')
         //console.log(this.receiverList)
@@ -2500,10 +2478,10 @@ export class DrawGraphService {
         //console.log('this.initiator_or_receiverList')
         //console.log(this.initiator_or_receiverList)
       }
-      else if (temp_int.interface_to == this.initiator) {
-        this.receiverList.push(temp_int.interface_from)
-        this.initiator_receiverList.push(temp_int.interface_from)          
-        this.initiator_or_receiverList.push(temp_int.interface_from)  
+      else if (temp_int.to == this.initiator) {
+        this.receiverList.push(temp_int.from)
+        this.initiator_receiverList.push(temp_int.from)          
+        this.initiator_or_receiverList.push(temp_int.from)  
         //console.log('--------------')
         //console.log('this.receiverList')
         //console.log(this.receiverList)
@@ -2551,12 +2529,7 @@ export class DrawGraphService {
         
   }
   changeConstraintDetail() {
-    // this.constraint.phenomenonList = this.phenomenonList;
-    // this.constraint.constraint_description = this.project.getDescription(this.constraint.constraint_name, this.phenomenonList);
-    // this.projectService.sendProject(this.project);
-    //console.log('changeReferenceDetail');
-    //console.log(this.constraintPhenomenonList);
-    let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.constraint_name, this.phenomenonList))
+    let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
     console.log(con)
     this.change("change", "con", this.constraint, con)
   }
@@ -2572,7 +2545,7 @@ export class DrawGraphService {
     let i = 0;
     let con
     for (let item of list) {
-      if (item.constraint_name == name) {
+      if (item.name == name) {
         con = item
         // list.splice(i, 1);
         break;
@@ -2602,7 +2575,7 @@ export class DrawGraphService {
   //get phenomenon list of interface
   getPhenomenonList(shortname) {
     for (let int of this.project.contextDiagram.interfaceList) {
-      if (int.interface_from == shortname || int.interface_to == shortname) {
+      if (int.from == shortname || int.to == shortname) {
         return int.phenomenonList;
       }
     }
@@ -2612,21 +2585,21 @@ export class DrawGraphService {
   getRefPheList(shortname) {
     let res =[];
     for (let int of this.project.contextDiagram.interfaceList) {
-      if (int.interface_from == shortname || int.interface_to == shortname) {
+      if (int.from == shortname || int.to == shortname) {
         for (var i=0; i < int.phenomenonList.length; i++) {
           res.push(int.phenomenonList[i]);
         }
       }
     }
     for (let item of this.project.problemDiagram.referenceList) {
-      if (item.reference_from == shortname || item.reference_to == shortname) {
+      if (item.from == shortname || item.to == shortname) {
         for (var i=0; i < item.phenomenonList.length; i++) {
           res.push(item.phenomenonList[i]);
         }
       }
     }
     for (let item of this.project.problemDiagram.constraintList) {
-      if (item.constraint_from == shortname || item.constraint_to == shortname) {
+      if (item.from == shortname || item.to == shortname) {
         for (var i=0; i < item.phenomenonList.length; i++) {
           res.push(item.phenomenonList[i]);
         }
@@ -2665,7 +2638,7 @@ export class DrawGraphService {
   addInterfacePhenomenon() {
     let phenomenon = new Phenomenon();
     this.changePhenomenon(phenomenon, this.phenomenonList);
-    let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.interface_name, this.phenomenonList))
+    let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
     this.change("change", "int", this.interface, int)
   }
   addReferencePhenomenon() {
@@ -2682,7 +2655,7 @@ export class DrawGraphService {
       reqno = this.getReqNo(target.attr('root').title);
     }
     phenomenon.phenomenon_requirement = reqno;
-    let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.reference_name, this.phenomenonList))
+    let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
     this.change("change", "ref", this.reference, ref)
   }
   addConstraintPhenomenon() {
@@ -2699,7 +2672,7 @@ export class DrawGraphService {
       }   
       phenomenon.phenomenon_requirement = reqno;  
     this.description = this.project.getDescription(this.selectedElement.attr('root').title, this.constraintPhenomenonList)
-    let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.constraint_name, this.phenomenonList))
+    let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
     this.change("change", "con", this.constraint, con)
   }
   changePhenomenon(phenomenon, phenomenonList) {
@@ -2965,15 +2938,15 @@ export class DrawGraphService {
   deletePhenomenon() {
     if (this.selectedType == 'interface') {
       this.deletePhenomenon1();
-      let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.interface_name, this.phenomenonList))
+      let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
       this.change("change", "int", this.interface, int)
     } else if (this.selectedType == 'reference') {
       this.deletePhenomenon1();
-      let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.reference_name, this.phenomenonList))
+      let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
       this.change("change", "ref", this.reference, ref)
     } else if (this.selectedType == 'constraint') {
       this.deletePhenomenon1();
-      let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.constraint_name, this.phenomenonList))
+      let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
       this.change("change", "con", this.constraint, con)
     }
   }

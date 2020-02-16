@@ -519,30 +519,30 @@ public class FileService {
 			Element interfaceElement = (Element) object;
 			List<?> phenomenonElementList = interfaceElement.elements("Phenomenon");
 			
-			int interface_no = Integer.parseInt(interfaceElement.attributeValue("interface_no"));
-			String interface_name = interfaceElement.attributeValue("interface_name");
-			String interface_description = interfaceElement.attributeValue("interface_description");
-			String interface_from = interfaceElement.attributeValue("interface_from").replaceAll("&#x000A", "\n");;
-			String interface_to = interfaceElement.attributeValue("interface_to").replaceAll("&#x000A", "\n");;
+			int no = Integer.parseInt(interfaceElement.attributeValue("interface_no"));
+			String name = interfaceElement.attributeValue("interface_name");
+			String description = interfaceElement.attributeValue("interface_description");
+			String from = interfaceElement.attributeValue("interface_from").replaceAll("&#x000A", "\n");;
+			String to = interfaceElement.attributeValue("interface_to").replaceAll("&#x000A", "\n");;
 			String interface_locality = interfaceElement.attributeValue("interface_locality");
 			List<Phenomenon> phenomenonList = getPhenomenonList(phenomenonElementList);
 			String[] locality= interface_locality.split(",");
-			int interface_x1 = Integer.parseInt(locality[0]);
-			int interface_x2 = Integer.parseInt(locality[1]);
-			int interface_y1 = Integer.parseInt(locality[2]);
-			int interface_y2 = Integer.parseInt(locality[3]);
+			int x1 = Integer.parseInt(locality[0]);
+			int x2 = Integer.parseInt(locality[1]);
+			int y1 = Integer.parseInt(locality[2]);
+			int y2 = Integer.parseInt(locality[3]);
 			
 			Interface inte = new Interface();
-			inte.setInterface_no(interface_no);
-			inte.setInterface_name(interface_name);
-			inte.setInterface_description(interface_description);
-			inte.setInterface_from(interface_from);
-			inte.setInterface_to(interface_to);
+			inte.setNo(no);
+			inte.setName(name);
+			inte.setDescription(description);
+			inte.setFrom(from);
+			inte.setTo(to);
 			inte.setPhenomenonList(phenomenonList);
-			inte.setInterface_x1(interface_x1);
-			inte.setInterface_y1(interface_y1);
-			inte.setInterface_x2(interface_x2);
-			inte.setInterface_y2(interface_y2);
+			inte.setX1(x1);
+			inte.setY1(y1);
+			inte.setX2(x2);
+			inte.setY2(y2);
 			
 			interfaceList.add(inte);
 		}
@@ -625,30 +625,30 @@ public class FileService {
 			Element constraintElement = (Element)object;
 			List<?> phenomenonElementList = constraintElement.elements("Phenomenon");
 			
-			int constraint_no = Integer.parseInt(constraintElement.attributeValue("constraint_no"));
-			String constraint_name = constraintElement.attributeValue("constraint_name");
-			String constraint_description = constraintElement.attributeValue("constraint_description");
-			String constraint_from = constraintElement.attributeValue("constraint_from").replaceAll("&#x000A", "\n");;
-			String constraint_to = constraintElement.attributeValue("constraint_to").replaceAll("&#x000A", "\n");;
+			int no = Integer.parseInt(constraintElement.attributeValue("constraint_no"));
+			String name = constraintElement.attributeValue("constraint_name");
+			String description = constraintElement.attributeValue("constraint_description");
+			String from = constraintElement.attributeValue("constraint_from").replaceAll("&#x000A", "\n");;
+			String to = constraintElement.attributeValue("constraint_to").replaceAll("&#x000A", "\n");;
 			List<RequirementPhenomenon> phenomenonList = getRequirementPhenomenonList(phenomenonElementList);
 			String constraint_locality = constraintElement.attributeValue("constraint_locality");
 			String[] locality= constraint_locality.split(",");
-			int constraint_x1 = Integer.parseInt(locality[0]);
-			int constraint_x2 = Integer.parseInt(locality[1]);
-			int constraint_y1 = Integer.parseInt(locality[2]);
-			int constraint_y2 = Integer.parseInt(locality[3]);
+			int x1 = Integer.parseInt(locality[0]);
+			int x2 = Integer.parseInt(locality[1]);
+			int y1 = Integer.parseInt(locality[2]);
+			int y2 = Integer.parseInt(locality[3]);
 			
 			Constraint constraint = new Constraint();
-			constraint.setConstraint_no(constraint_no);
-			constraint.setConstraint_name(constraint_name);
-			constraint.setConstraint_description(constraint_description);
-			constraint.setConstraint_from(constraint_from);
-			constraint.setConstraint_to(constraint_to);
+			constraint.setNo(no);
+			constraint.setName(name);
+			constraint.setDescription(description);
+			constraint.setFrom(from);
+			constraint.setTo(to);
 			constraint.setPhenomenonList(phenomenonList);
-			constraint.setConstraint_x1(constraint_x1);
-			constraint.setConstraint_x2(constraint_x2);
-			constraint.setConstraint_y1(constraint_y1);
-			constraint.setConstraint_y2(constraint_y2);
+			constraint.setX1(x1);
+			constraint.setX2(x2);
+			constraint.setY1(y1);
+			constraint.setY2(y2);
 			
 			constraintList.add(constraint);
 		}
@@ -691,30 +691,30 @@ public class FileService {
 			Element referenceElement = (Element)object;
 			List<?> phenomenonElementList = referenceElement.elements("Phenomenon");
 			
-			int reference_no = Integer.parseInt(referenceElement.attributeValue("reference_no"));
-			String reference_name = referenceElement.attributeValue("reference_name");
-			String reference_description = referenceElement.attributeValue("reference_description");
-			String reference_from = referenceElement.attributeValue("reference_from").replaceAll("&#x000A", "\n");;
-			String reference_to = referenceElement.attributeValue("reference_to").replaceAll("&#x000A", "\n");;
+			int no = Integer.parseInt(referenceElement.attributeValue("reference_no"));
+			String name = referenceElement.attributeValue("reference_name");
+			String description = referenceElement.attributeValue("reference_description");
+			String from = referenceElement.attributeValue("reference_from").replaceAll("&#x000A", "\n");;
+			String to = referenceElement.attributeValue("reference_to").replaceAll("&#x000A", "\n");;
 			List<RequirementPhenomenon> phenomenonList = getRequirementPhenomenonList(phenomenonElementList);
 			String reference_locality = referenceElement.attributeValue("reference_locality");
 			String[] locality= reference_locality.split(",");
-			int reference_x1 = Integer.parseInt(locality[0]);
-			int reference_x2 = Integer.parseInt(locality[1]);
-			int reference_y1 = Integer.parseInt(locality[2]);
-			int reference_y2 = Integer.parseInt(locality[3]);
+			int x1 = Integer.parseInt(locality[0]);
+			int x2 = Integer.parseInt(locality[1]);
+			int y1 = Integer.parseInt(locality[2]);
+			int y2 = Integer.parseInt(locality[3]);
 			
 			Reference reference = new Reference();
-			reference.setReference_no(reference_no);
-			reference.setReference_name(reference_name);
-			reference.setReference_description(reference_description);
-			reference.setReference_from(reference_from);
-			reference.setReference_to(reference_to);
+			reference.setNo(no);
+			reference.setName(name);
+			reference.setDescription(description);
+			reference.setFrom(from);
+			reference.setTo(to);
 			reference.setPhenomenonList(phenomenonList);
-			reference.setReference_x1(reference_x1);
-			reference.setReference_x2(reference_x2);
-			reference.setReference_y1(reference_y1);
-			reference.setReference_y2(reference_y2);
+			reference.setX1(x1);
+			reference.setX2(x2);
+			reference.setY1(y1);
+			reference.setY2(y2);
 			
 			referenceList.add(reference);
 		}
@@ -938,38 +938,38 @@ public class FileService {
 			for(int i=0;i<interfaceList.size();i++) {
 				Interface tmp_i=interfaceList.get(i);
 				List<Phenomenon> phenomenonElementList = tmp_i.getPhenomenonList();
-				String interface_no = String.valueOf(tmp_i.getInterface_no());
-				String interface_name = tmp_i.getInterface_name();
-				String interface_description = tmp_i.getInterface_description();
+				String no = String.valueOf(tmp_i.getNo());
+				String name = tmp_i.getName();
+				String description = tmp_i.getDescription();
 				String shortname=machine.getShortname();
-				String interface_to="";
-				String interface_from="";
-				if(tmp_i.getInterface_to().equals(shortname)) {
-					interface_to = tmp_i.getInterface_from().replaceAll("\n", "&#x000A");
-					interface_from = tmp_i.getInterface_to().replaceAll("\n", "&#x000A");
+				String to="";
+				String from="";
+				if(tmp_i.getTo().equals(shortname)) {
+					to = tmp_i.getFrom().replaceAll("\n", "&#x000A");
+					from = tmp_i.getTo().replaceAll("\n", "&#x000A");
 				}
 				else {
-				interface_from = tmp_i.getInterface_from().replaceAll("\n", "&#x000A");
-				interface_to = tmp_i.getInterface_to().replaceAll("\n", "&#x000A");
+				from = tmp_i.getFrom().replaceAll("\n", "&#x000A");
+				to = tmp_i.getTo().replaceAll("\n", "&#x000A");
 				}
 				StringBuffer re = new StringBuffer();
-				re.append(tmp_i.getInterface_x1());
+				re.append(tmp_i.getX1());
 				re.append(",");
-				re.append(tmp_i.getInterface_x2());
+				re.append(tmp_i.getX2());
 				re.append(",");
-				re.append(tmp_i.getInterface_y1());
+				re.append(tmp_i.getY1());
 				re.append(",");
-				re.append(tmp_i.getInterface_y1());
+				re.append(tmp_i.getY1());
 				
 				String interface_locality = re.toString();
 				
 				Element interfaceElement=interfaceListElement.addElement("Element");
-				interfaceElement.addAttribute("interface_description", interface_description);
-				interfaceElement.addAttribute("interface_no", interface_no);
-				interfaceElement.addAttribute("interface_locality",interface_locality);
-				interfaceElement.addAttribute("interface_from", interface_from);
-				interfaceElement.addAttribute("interface_to", interface_to);
-				interfaceElement.addAttribute("interface_name", interface_name);
+				interfaceElement.addAttribute("interface_description", description);
+				interfaceElement.addAttribute("interface_no", no);
+				interfaceElement.addAttribute("interface_locality",locality);
+				interfaceElement.addAttribute("interface_from", from);
+				interfaceElement.addAttribute("interface_to", to);
+				interfaceElement.addAttribute("interface_name", name);
 				
 				for(int j=0;j<phenomenonElementList.size();j++) {
 
@@ -1059,29 +1059,29 @@ public class FileService {
 			for(int i=0;i<constraintList.size();i++) {
 				Constraint tmp_c=constraintList.get(i);
 				List<RequirementPhenomenon> phenomenonElementList = tmp_c.getPhenomenonList();
-				String constraint_no = String.valueOf(tmp_c.getConstraint_no());
-				String constraint_name = tmp_c.getConstraint_name();
-				String constraint_description = tmp_c.getConstraint_description();
-				String constraint_from = tmp_c.getConstraint_from().replaceAll("\n", "&#x000A");
-				String constraint_to = tmp_c.getConstraint_to().replaceAll("\n", "&#x000A");
+				String no = String.valueOf(tmp_c.getNo());
+				String name = tmp_c.getName();
+				String description = tmp_c.getDescription();
+				String from = tmp_c.getFrom().replaceAll("\n", "&#x000A");
+				String to = tmp_c.getTo().replaceAll("\n", "&#x000A");
 				StringBuffer re = new StringBuffer();
-				re.append(tmp_c.getConstraint_x1());
+				re.append(tmp_c.getX1());
 				re.append(",");
-				re.append(tmp_c.getConstraint_x2());
+				re.append(tmp_c.getX2());
 				re.append(",");
-				re.append(tmp_c.getConstraint_y1());
+				re.append(tmp_c.getY1());
 				re.append(",");
-				re.append(tmp_c.getConstraint_y1());
+				re.append(tmp_c.getY1());
 				
-				String constraint_locality = re.toString();
+				String locality = re.toString();
 				
 				Element constraintElement=constraintListElement.addElement("Element");
-				constraintElement.addAttribute("constraint_description", constraint_description);
-				constraintElement.addAttribute("constraint_no", constraint_no);
-				constraintElement.addAttribute("constraint_locality",constraint_locality);
-				constraintElement.addAttribute("constraint_from", constraint_from);
-				constraintElement.addAttribute("constraint_to", constraint_to);
-				constraintElement.addAttribute("constraint_name", constraint_name);
+				constraintElement.addAttribute("constraint_description", description);
+				constraintElement.addAttribute("constraint_no", no);
+				constraintElement.addAttribute("constraint_locality",locality);
+				constraintElement.addAttribute("constraint_from", from);
+				constraintElement.addAttribute("constraint_to", to);
+				constraintElement.addAttribute("constraint_name", name);
 				
 				for(int j=0;j<phenomenonElementList.size();j++) {
 
@@ -1111,29 +1111,29 @@ public class FileService {
 			for(int i=0;i<referenceList.size();i++) {
 				Reference tmp_c=referenceList.get(i);
 				List<RequirementPhenomenon> phenomenonElementList = tmp_c.getPhenomenonList();
-				String Reference_no = String.valueOf(tmp_c.getReference_no());
-				String Reference_name = tmp_c.getReference_name();
-				String Reference_description = tmp_c.getReference_description();
-				String Reference_from = tmp_c.getReference_from().replaceAll("\n", "&#x000A");
-				String Reference_to = tmp_c.getReference_to().replaceAll("\n", "&#x000A");
+				String no = String.valueOf(tmp_c.getNo());
+				String name = tmp_c.getName();
+				String description = tmp_c.getDescription();
+				String from = tmp_c.getFrom().replaceAll("\n", "&#x000A");
+				String to = tmp_c.getTo().replaceAll("\n", "&#x000A");
 				StringBuffer re = new StringBuffer();
-				re.append(tmp_c.getReference_x1());
+				re.append(tmp_c.getX1());
 				re.append(",");
-				re.append(tmp_c.getReference_x2());
+				re.append(tmp_c.getX2());
 				re.append(",");
-				re.append(tmp_c.getReference_y1());
+				re.append(tmp_c.getY1());
 				re.append(",");
-				re.append(tmp_c.getReference_y1());
+				re.append(tmp_c.getY1());
 				
-				String Reference_locality = re.toString();
+				String locality = re.toString();
 				
 				Element ReferenceElement=referenceListElement.addElement("Element");
-				ReferenceElement.addAttribute("reference_description", Reference_description);
-				ReferenceElement.addAttribute("reference_no", Reference_no);
-				ReferenceElement.addAttribute("reference_locality",Reference_locality);
-				ReferenceElement.addAttribute("reference_from", Reference_from);
-				ReferenceElement.addAttribute("reference_to", Reference_to);
-				ReferenceElement.addAttribute("reference_name", Reference_name);
+				ReferenceElement.addAttribute("reference_description", description);
+				ReferenceElement.addAttribute("reference_no", no);
+				ReferenceElement.addAttribute("reference_locality",locality);
+				ReferenceElement.addAttribute("reference_from", from);
+				ReferenceElement.addAttribute("reference_to", to);
+				ReferenceElement.addAttribute("reference_name", name);
 				
 				for(int j=0;j<phenomenonElementList.size();j++) {
 

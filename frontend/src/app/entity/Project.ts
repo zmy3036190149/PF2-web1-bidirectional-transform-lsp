@@ -316,16 +316,16 @@ export class Project{
 		let i = this.getReferenceList().length - 1;
 		for (; i >= 0; i--) {
 		  let reference = this.problemDiagram.referenceList[i];
-		  if (reference.reference_from == shortname || reference.reference_to == shortname) {
+		  if (reference.from == shortname || reference.to == shortname) {
 			console.log(reference)
-			let name = reference.reference_name;
+			let name = reference.name;
 			this.problemDiagram.referenceList.splice(i, 1);
 		  }
 		}
 		i = this.problemDiagram.constraintList.length - 1;
 		for (; i >= 0; i--) {
 		  let constraint = this.problemDiagram.constraintList[i];
-		  if (constraint.constraint_from == shortname || constraint.constraint_to == shortname) {
+		  if (constraint.from == shortname || constraint.to == shortname) {
 			console.log(constraint)
 			this.problemDiagram.constraintList.splice(i, 1);
 		  }
@@ -333,7 +333,7 @@ export class Project{
 		i = this.contextDiagram.interfaceList.length - 1;
 		for (; i >= 0; i--) {
 		  let my_interface = this.contextDiagram.interfaceList[i];
-		  if (my_interface.interface_from == shortname || my_interface.interface_to == shortname) {
+		  if (my_interface.from == shortname || my_interface.to == shortname) {
 			console.log(my_interface)
 			this.contextDiagram.interfaceList.splice(i, 1);
 		  }
@@ -396,11 +396,11 @@ export class Project{
 		  }
 	}
 	deleteInterface(int:Interface){
-		let no = int.interface_no;
+		let no = int.no;
 		let list = this.contextDiagram.interfaceList;
 		let i = 0
 		for (let item of list) {
-		if (item.interface_no == no) {
+		if (item.no == no) {
 			list.splice(i, 1);
 			break;
 		}
@@ -412,23 +412,6 @@ export class Project{
 	getConstraintList(){
 		return this.problemDiagram.constraintList
 	}
-	// addConstraint(no, name, description, from, to, phe, x1, y1, x2, y2) {
-	// 	let constraint = new Constraint();
-	// 	constraint.constraint_no = no;
-	// 	constraint.constraint_name = name;
-	// 	constraint.constraint_description = description;
-	// 	constraint.constraint_from = from;
-	// 	constraint.constraint_to = to;
-	// 	constraint.phenomenonList = phe;
-	// 	constraint.constraint_x1 = x1;
-	// 	constraint.constraint_y1 = y1;
-	// 	constraint.constraint_x2 = x2;
-	// 	constraint.constraint_y2 = y2;
-	// 	this.problemDiagram.constraintList.push(constraint);
-	// 	//console.log('this.constraintList');
-	// 	//console.log(this.project.problemDiagram.constraintList);
-	// 	return constraint;
-	// }
 	addConstraint(con){
 		this.problemDiagram.constraintList.push(con)
 	}
@@ -450,11 +433,11 @@ export class Project{
 		  }
 	}
 	deleteConstraint(con){
-		let no = con.constraint_no
+		let no = con.no
 		let list = this.problemDiagram.constraintList;
 		let i = 0
 		for (let item of list) {
-		  if (item.constraint_no == no) {
+		  if (item.no == no) {
 			list.splice(i, 1);
 			break;
 		  }
@@ -551,11 +534,11 @@ export class Project{
 		return s;
 	}
 	deleteReference(ref:Reference){
-		let no = ref.reference_no
+		let no = ref.no
 		let list = this.problemDiagram.referenceList;
 		let i = 0
 		for (let item of list) {
-		  if (item.reference_no == no) {
+		  if (item.no == no) {
 			list.splice(i, 1);
 			break;
 		  }

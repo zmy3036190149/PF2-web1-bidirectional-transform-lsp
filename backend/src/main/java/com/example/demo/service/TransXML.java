@@ -233,30 +233,30 @@ public class TransXML {
 			Element interfaceElement = (Element) object;
 			List<?> phenomenonElementList = interfaceElement.elements("Phenomenon");
 			
-			int interface_no = Integer.parseInt(interfaceElement.attributeValue("interface_no"));
-			String interface_name = interfaceElement.attributeValue("interface_name");
-			String interface_description = interfaceElement.attributeValue("interface_description");
-			String interface_from = interfaceElement.attributeValue("interface_from");
-			String interface_to = interfaceElement.attributeValue("interface_to");
+			int no = Integer.parseInt(interfaceElement.attributeValue("interface_no"));
+			String name = interfaceElement.attributeValue("interface_name");
+			String description = interfaceElement.attributeValue("interface_description");
+			String from = interfaceElement.attributeValue("interface_from");
+			String to = interfaceElement.attributeValue("interface_to");
 			String interface_locality = interfaceElement.attributeValue("interface_locality");
 			List<Phenomenon> phenomenonList = getPhenomenonList(phenomenonElementList);
 			String[] locality= interface_locality.split(",");
-			int interface_x1 = Integer.parseInt(locality[0]);
-			int interface_x2 = Integer.parseInt(locality[1]);
-			int interface_y1 = Integer.parseInt(locality[2]);
-			int interface_y2 = Integer.parseInt(locality[3]);
+			int x1 = Integer.parseInt(locality[0]);
+			int x2 = Integer.parseInt(locality[1]);
+			int y1 = Integer.parseInt(locality[2]);
+			int y2 = Integer.parseInt(locality[3]);
 			
 			Interface inte = new Interface();
-			inte.setInterface_no(interface_no);
-			inte.setInterface_name(interface_name);
-			inte.setInterface_description(interface_description);
-			inte.setInterface_from(interface_from);
-			inte.setInterface_to(interface_to);
+			inte.setNo(no);
+			inte.setName(name);
+			inte.setDescription(description);
+			inte.setFrom(from);
+			inte.setTo(to);
 			inte.setPhenomenonList(phenomenonList);
-			inte.setInterface_x1(interface_x1);
-			inte.setInterface_y1(interface_y1);
-			inte.setInterface_x2(interface_x2);
-			inte.setInterface_y2(interface_y2);
+			inte.setX1(x1);
+			inte.setY1(y1);
+			inte.setX2(x2);
+			inte.setY2(y2);
 			
 			interfaceList.add(inte);
 		}
@@ -334,30 +334,30 @@ public class TransXML {
 			Element constraintElement = (Element)object;
 			List<?> phenomenonElementList = constraintElement.elements("Phenomenon");
 			
-			int constraint_no = Integer.parseInt(constraintElement.attributeValue("constraint_no"));
-			String constraint_name = constraintElement.attributeValue("constraint_name");
-			String constraint_description = constraintElement.attributeValue("constraint_description");
-			String constraint_from = constraintElement.attributeValue("constraint_from");
-			String constraint_to = constraintElement.attributeValue("constraint_to");
+			int no = Integer.parseInt(constraintElement.attributeValue("no"));
+			String name = constraintElement.attributeValue("constraint_name");
+			String description = constraintElement.attributeValue("constraint_description");
+			String from = constraintElement.attributeValue("constraint_from");
+			String to = constraintElement.attributeValue("constraint_to");
 			List<RequirementPhenomenon> phenomenonList = getRequirementPhenomenonList(phenomenonElementList);
 			String constraint_locality = constraintElement.attributeValue("constraint_locality");
 			String[] locality= constraint_locality.split(",");
-			int constraint_x1 = Integer.parseInt(locality[0]);
-			int constraint_x2 = Integer.parseInt(locality[1]);
-			int constraint_y1 = Integer.parseInt(locality[2]);
-			int constraint_y2 = Integer.parseInt(locality[3]);
+			int x1 = Integer.parseInt(locality[0]);
+			int x2 = Integer.parseInt(locality[1]);
+			int y1 = Integer.parseInt(locality[2]);
+			int y2 = Integer.parseInt(locality[3]);
 			
 			Constraint constraint = new Constraint();
-			constraint.setConstraint_no(constraint_no);
-			constraint.setConstraint_name(constraint_name);
-			constraint.setConstraint_description(constraint_description);
-			constraint.setConstraint_from(constraint_from);
-			constraint.setConstraint_to(constraint_to);
+			constraint.setNo(no);
+			constraint.setName(name);
+			constraint.setDescription(description);
+			constraint.setFrom(from);
+			constraint.setTo(to);
 			constraint.setPhenomenonList(phenomenonList);
-			constraint.setConstraint_x1(constraint_x1);
-			constraint.setConstraint_x2(constraint_x2);
-			constraint.setConstraint_y1(constraint_y1);
-			constraint.setConstraint_y2(constraint_y2);
+			constraint.setX1(x1);
+			constraint.setX2(x2);
+			constraint.setY1(y1);
+			constraint.setY2(y2);
 			
 			constraintList.add(constraint);
 		}
@@ -400,30 +400,30 @@ public class TransXML {
 			Element referenceElement = (Element)object;
 			List<?> phenomenonElementList = referenceElement.elements("Phenomenon");
 			
-			int reference_no = Integer.parseInt(referenceElement.attributeValue("reference_no"));
-			String reference_name = referenceElement.attributeValue("reference_name");
-			String reference_description = referenceElement.attributeValue("reference_description");
-			String reference_from = referenceElement.attributeValue("reference_from");
-			String reference_to = referenceElement.attributeValue("reference_to");
+			int no = Integer.parseInt(referenceElement.attributeValue("reference_no"));
+			String name = referenceElement.attributeValue("reference_name");
+			String description = referenceElement.attributeValue("reference_description");
+			String from = referenceElement.attributeValue("reference_from");
+			String to = referenceElement.attributeValue("reference_to");
 			List<RequirementPhenomenon> phenomenonList = getRequirementPhenomenonList(phenomenonElementList);
 			String reference_locality = referenceElement.attributeValue("reference_locality");
 			String[] locality= reference_locality.split(",");
-			int reference_x1 = Integer.parseInt(locality[0]);
-			int reference_x2 = Integer.parseInt(locality[1]);
-			int reference_y1 = Integer.parseInt(locality[2]);
-			int reference_y2 = Integer.parseInt(locality[3]);
+			int x1 = Integer.parseInt(locality[0]);
+			int x2 = Integer.parseInt(locality[1]);
+			int y1 = Integer.parseInt(locality[2]);
+			int y2 = Integer.parseInt(locality[3]);
 			
 			Reference reference = new Reference();
-			reference.setReference_no(reference_no);
-			reference.setReference_name(reference_name);
-			reference.setReference_description(reference_description);
-			reference.setReference_from(reference_from);
-			reference.setReference_to(reference_to);
+			reference.setNo(no);
+			reference.setName(name);
+			reference.setDescription(description);
+			reference.setFrom(from);
+			reference.setTo(to);
 			reference.setPhenomenonList(phenomenonList);
-			reference.setReference_x1(reference_x1);
-			reference.setReference_x2(reference_x2);
-			reference.setReference_y1(reference_y1);
-			reference.setReference_y2(reference_y2);
+			reference.setX1(x1);
+			reference.setX2(x2);
+			reference.setY1(y1);
+			reference.setY2(y2);
 			
 			referenceList.add(reference);
 		}
@@ -526,8 +526,8 @@ public class TransXML {
 		
 		if(interfaces != null) {
 			for(Interface inte: interfaces) {
-				String from = inte.getInterface_from();
-				String to = inte.getInterface_to();
+				String from = inte.getFrom();
+				String to = inte.getTo();
 				List<Phenomenon> phenomenons = inte.getPhenomenonList();
 				
 				List<String> desList = new ArrayList<String>();
@@ -553,8 +553,8 @@ public class TransXML {
 				String property = "";
 				String value = "";
 				for(int j = 0; j < desList.size(); j ++ ) {
-					property = property + inte.getInterface_name() + ( j + 1 ) + ":" + desList.get(j) + "};";
-					value = value + inte.getInterface_name() + ( j + 1 ) + ",";
+					property = property + inte.getName() + ( j + 1 ) + ":" + desList.get(j) + "};";
+					value = value + inte.getName() + ( j + 1 ) + ",";
 				}
 				
 				Element mxCellEle = rootElement.addElement("mxCell");
@@ -587,22 +587,22 @@ public class TransXML {
 				if(source != 0) {
 					Element mxPointEle = mxGeometryEle.addElement("mxPoint");
 					mxPointEle.addAttribute("as", "targetPoint");
-					mxPointEle.addAttribute("y", String.valueOf(inte.getInterface_y1()));
-					mxPointEle.addAttribute("x", String.valueOf(inte.getInterface_x1()));
+					mxPointEle.addAttribute("y", String.valueOf(inte.getY1()));
+					mxPointEle.addAttribute("x", String.valueOf(inte.getX1()));
 				}
 				if(target != 0) {
 					Element mxPointEle = mxGeometryEle.addElement("mxPoint");
 					mxPointEle.addAttribute("as", "sourcePoint");
-					mxPointEle.addAttribute("y", String.valueOf(inte.getInterface_y2()));
-					mxPointEle.addAttribute("x", String.valueOf(inte.getInterface_x2()));
+					mxPointEle.addAttribute("y", String.valueOf(inte.getY2()));
+					mxPointEle.addAttribute("x", String.valueOf(inte.getX2()));
 				}
 			}
 		}
 		
 		if(references != null) {
 			for(Reference reference: references) {
-				String from = reference.getReference_from();
-				String to = reference.getReference_to();
+				String from = reference.getFrom();
+				String to = reference.getTo();
 				List<RequirementPhenomenon> phenomenons = reference.getPhenomenonList();
 				
 				List<String> desList = new ArrayList<String>();
@@ -628,20 +628,8 @@ public class TransXML {
 				String property = "";
 				String value = "";
 				for(int j = 0; j < desList.size(); j ++ ) {
-					property = property + reference.getReference_name() + ( j + 1 ) + ":" + desList.get(j) + "};";
-					value = value + reference.getReference_name() + ( j + 1 ) + ",";
-//					if(property == null) {
-//						property = reference.getReference_name() + ( j + 1 ) + 
-//								":" + desList.get(j) + "}";
-//					}else {
-//						property = property + "," + inte.getInterface_name() + ( j + 1 ) + 
-//								":" + desList.get(j) + "}";
-//					}
-//					if(value == null) {
-//						value = inte.getInterface_name() + ( j + 1 );
-//					}else {
-//						value = value + "," + inte.getInterface_name() + ( j + 1 );
-//					}
+					property = property + reference.getName() + ( j + 1 ) + ":" + desList.get(j) + "};";
+					value = value + reference.getName() + ( j + 1 ) + ",";
 				}
 				
 				Element mxCellEle = rootElement.addElement("mxCell");
@@ -675,22 +663,22 @@ public class TransXML {
 				if(source != 0) {
 					Element mxPointEle = mxGeometryEle.addElement("mxPoint");
 					mxPointEle.addAttribute("as", "targetPoint");
-					mxPointEle.addAttribute("y", String.valueOf(reference.getReference_y1()));
-					mxPointEle.addAttribute("x", String.valueOf(reference.getReference_x1()));
+					mxPointEle.addAttribute("y", String.valueOf(reference.getY1()));
+					mxPointEle.addAttribute("x", String.valueOf(reference.getX1()));
 				}
 				if(target != 0) {
 					Element mxPointEle = mxGeometryEle.addElement("mxPoint");
 					mxPointEle.addAttribute("as", "sourcePoint");
-					mxPointEle.addAttribute("y", String.valueOf(reference.getReference_y2()));
-					mxPointEle.addAttribute("x", String.valueOf(reference.getReference_x2()));
+					mxPointEle.addAttribute("y", String.valueOf(reference.getY2()));
+					mxPointEle.addAttribute("x", String.valueOf(reference.getX2()));
 				}
 			}
 		}
 		
 		if(constraints != null) {
 			for(Constraint constraint: constraints) {
-				String from = constraint.getConstraint_from();
-				String to = constraint.getConstraint_to();
+				String from = constraint.getFrom();
+				String to = constraint.getTo();
 				List<RequirementPhenomenon> phenomenons = constraint.getPhenomenonList();
 				
 				List<String> desList = new ArrayList<String>();
@@ -716,20 +704,8 @@ public class TransXML {
 				String property = "";
 				String value = "";
 				for(int j = 0; j < desList.size(); j ++ ) {
-					property = property + constraint.getConstraint_name() + ( j + 1 ) + ":" + desList.get(j) + "};";
-					value = value + constraint.getConstraint_name() + ( j + 1 ) + ",";
-//					if(property == null) {
-//						property = reference.getReference_name() + ( j + 1 ) + 
-//								":" + desList.get(j) + "}";
-//					}else {
-//						property = property + "," + inte.getInterface_name() + ( j + 1 ) + 
-//								":" + desList.get(j) + "}";
-//					}
-//					if(value == null) {
-//						value = inte.getInterface_name() + ( j + 1 );
-//					}else {
-//						value = value + "," + inte.getInterface_name() + ( j + 1 );
-//					}
+					property = property + constraint.getName() + ( j + 1 ) + ":" + desList.get(j) + "};";
+					value = value + constraint.getName() + ( j + 1 ) + ",";
 				}
 				
 				Element mxCellEle = rootElement.addElement("mxCell");
@@ -772,14 +748,14 @@ public class TransXML {
 				if(source != 0) {
 					Element mxPointEle = mxGeometryEle.addElement("mxPoint");
 					mxPointEle.addAttribute("as", "targetPoint");
-					mxPointEle.addAttribute("y", String.valueOf(constraint.getConstraint_y1()));
-					mxPointEle.addAttribute("x", String.valueOf(constraint.getConstraint_x1()));
+					mxPointEle.addAttribute("y", String.valueOf(constraint.getY1()));
+					mxPointEle.addAttribute("x", String.valueOf(constraint.getX1()));
 				}
 				if(target != 0) {
 					Element mxPointEle = mxGeometryEle.addElement("mxPoint");
 					mxPointEle.addAttribute("as", "sourcePoint");
-					mxPointEle.addAttribute("y", String.valueOf(constraint.getConstraint_y2()));
-					mxPointEle.addAttribute("x", String.valueOf(constraint.getConstraint_x2()));
+					mxPointEle.addAttribute("y", String.valueOf(constraint.getY2()));
+					mxPointEle.addAttribute("x", String.valueOf(constraint.getX2()));
 				}
 			}
 		}

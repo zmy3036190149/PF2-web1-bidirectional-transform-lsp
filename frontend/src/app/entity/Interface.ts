@@ -1,93 +1,93 @@
 import { Phenomenon } from './Phenomenon';
 import { Line } from './Line'
 export class Interface extends Line{
-	interface_no: number;	//�������
-	interface_name: string;	//��������
-	interface_description: string;	//��������
-	interface_from: string;
-	interface_to: string;
+	no: number;	//�������
+	name: string;	//��������
+	description: string;	//��������
+	from: string;
+	to: string;
 	phenomenonList: Phenomenon[];	//�����б�
-	interface_x1: number;	//λ����Ϣ
-	interface_y1: number;
-	interface_x2: number;
-	interface_y2: number;
+	x1: number;	//λ����Ϣ
+	y1: number;
+	x2: number;
+	y2: number;
 	static newInterface(no, name, description,from,to,phenomenonList,x1,y1,x2,y2){
 		let int = new Interface()
-		int.interface_no=no
-		int.interface_name=name
-		int.interface_description=description
-		int.interface_from=from
-		int.interface_to=to
+		int.no=no
+		int.name=name
+		int.description=description
+		int.from=from
+		int.to=to
 		if(phenomenonList)
 		int.phenomenonList=phenomenonList
 		else 
 		int.phenomenonList = []
-		int.interface_x1=x1
-		int.interface_y1=y1
-		int.interface_x2=x2
-		int.interface_y2=y2
+		int.x1=x1
+		int.y1=y1
+		int.x2=x2
+		int.y2=y2
 		return int
 	}
 	static newInterfaceWithOld(old, phenomenonList, description){
 		let int = new Interface()
-		int.interface_no=old.interface_no
-		int.interface_name=old.interface_name
-		int.interface_description=description
-		int.interface_from=old.interface_from
-		int.interface_to=old.interface_to
+		int.no=old.no
+		int.name=old.name
+		int.description=description
+		int.from=old.from
+		int.to=old.to
 		if(old.phenomenonList)
 		int.phenomenonList=old.phenomenonList
 		else 
 		int.phenomenonList = []
-		int.interface_x1=old.interface_x1
-		int.interface_y1=old.interface_y1
-		int.interface_x2=old.interface_x2
-		int.interface_y2=old.interface_y2
+		int.x1=old.x1
+		int.y1=old.y1
+		int.x2=old.x2
+		int.y2=old.y2
 		return int
 	}
 	static copyInterface(old){
 		let int = new Interface()
-		int.interface_no=old.interface_no
-		int.interface_name=old.interface_name
-		int.interface_description=old.interface_description
-		int.interface_from=old.interface_from
-		int.interface_to=old.interface_to
+		int.no=old.no
+		int.name=old.name
+		int.description=old.description
+		int.from=old.from
+		int.to=old.to
 		if(old.phenomenonList)
 		int.phenomenonList=old.phenomenonList
 		else 
 		int.phenomenonList = []
-		int.interface_x1=old.interface_x1
-		int.interface_y1=old.interface_y1
-		int.interface_x2=old.interface_x2
-		int.interface_y2=old.interface_y2
+		int.x1=old.x1
+		int.y1=old.y1
+		int.x2=old.x2
+		int.y2=old.y2
 		return int
 	}
-	getNo(){return this.interface_no}	
-	setNo(no){this.interface_no=no}
+	getNo(){return this.no}	
+	setNo(no){this.no=no}
 
-	getName(){return this.interface_name}	
-	setName(name){this.interface_name=name}
+	getName(){return this.name}	
+	setName(name){this.name=name}
 
-	getDescription(){ return this.interface_description}
-	setDescription(description){ this.interface_description=description}
+	getDescription(){ return this.description}
+	setDescription(description){ this.description=description}
 
-	getFrom(){return this.interface_from}
-	setFrom(from){this.interface_from=from}
+	getFrom(){return this.from}
+	setFrom(from){this.from=from}
 
-	getTo(){return this.interface_to}
-	setTo(to){ this.interface_to=to}
+	getTo(){return this.to}
+	setTo(to){ this.to=to}
 
-	getX1(){return this.interface_x1}
-	setX1(x1){ this.interface_x1=x1}
+	getX1(){return this.x1}
+	setX1(x1){ this.x1=x1}
 
-	getY1(){return this.interface_y1}
-	setY1(y1){ this.interface_y1=y1}
+	getY1(){return this.y1}
+	setY1(y1){ this.y1=y1}
 
-	getX2(){return this.interface_x2}
-	setX2(x2){ this.interface_x2=x2}
+	getX2(){return this.x2}
+	setX2(x2){ this.x2=x2}
 
-	getY2(){return this.interface_y2}
-	setY2(y2){ this.interface_y2=y2}
+	getY2(){return this.y2}
+	setY2(y2){ this.y2=y2}
 	getPhenomenonList(){return this.phenomenonList}
 	setPhenomenonList(phenomenonList){ this.phenomenonList=phenomenonList}
 }
