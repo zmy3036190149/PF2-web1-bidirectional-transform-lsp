@@ -55,13 +55,8 @@ export class DrawingboardComponent implements OnInit {
    )
     }
   changeInput(){
-      //console.log(event);
-      // //console.log(this.dg_service.selectPhes[index].phenomenon_name)
-      //console.log((document.getElementById('nameint') as any).value)
       let ele = (document.getElementById('nameint') as any)
-      // ele.value = this.dg_service.selectPhes[index].phenomenon_name
-      // (document.getElementById('nameint') as any).value = this.dg_service.selectPhes[index].phenomenon_name
-  }
+    }
   ngOnInit() {
     this.eventManager.addGlobalEventListener('window', 'keyup.delete', () => {
       ////console.log("close");

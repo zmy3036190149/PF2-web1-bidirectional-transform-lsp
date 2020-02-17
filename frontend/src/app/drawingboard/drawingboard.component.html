@@ -102,8 +102,8 @@
 
         <select class="phes inputRight" onchange="document.getElementById('nameint').value = this.options[this.selectedIndex].value">
           <option value=" "></option>
-          <option value={{phe.phenomenon_name}} *ngFor='let phe of dg_service.selectPhes'>
-            {{phe.phenomenon_name}}
+          <option value={{phe.name}} *ngFor='let phe of dg_service.selectPhes'>
+            {{phe.name}}
           </option>
         </select>
 
@@ -119,10 +119,10 @@
             <!-- {{dg_service.description}} -->
             <table class="phenomenonList">
               <tr *ngFor="let phenomenon of dg_service.phenomenonList">
-                <td (click)="dg_service.selectPhenomenon(this,phenomenon.phenomenon_no)">
-                  {{phenomenon.phenomenon_from}}!
-                  {{phenomenon.phenomenon_name}}&nbsp;
-                  {{phenomenon.phenomenon_type}}
+                <td (click)="dg_service.selectPhenomenon(this,phenomenon.no)">
+                  {{phenomenon.from}}!
+                  {{phenomenon.name}}&nbsp;
+                  {{phenomenon.type}}
                 </td>
               </tr>
             </table>
@@ -158,8 +158,8 @@
       <select class="phes inputRight" (change)="dg_service.selectPhe()"> 
       <!-- onchange="document.getElementById('nameref').value = this.options[this.selectedIndex].value"-->
         <option value=""></option>
-        <option value={{phenomenon.phenomenon_name}} *ngFor="let phenomenon of dg_service.interface_ontologyPhes">
-          {{phenomenon.phenomenon_name}}
+        <option value={{phenomenon.name}} *ngFor="let phenomenon of dg_service.interface_ontologyPhes">
+          {{phenomenon.name}}
         </option>
       </select>
 
@@ -181,11 +181,11 @@
       <div class="content1">
           <table class="referencePhenomenonList">
             <tr *ngFor="let phenomenon of dg_service.phenomenonList">
-              <td (click)="dg_service.selectPhenomenon(this,phenomenon.phenomenon_no)">
-                {{phenomenon.phenomenon_from}}!
-                {{phenomenon.phenomenon_name}}
+              <td (click)="dg_service.selectPhenomenon(this,phenomenon.no)">
+                {{phenomenon.from}}!
+                {{phenomenon.name}}
                 &nbsp;
-                {{phenomenon.phenomenon_type}}
+                {{phenomenon.type}}
               </td>
             </tr>
           </table>
@@ -221,8 +221,8 @@
       <input class= 'name inputLeft' name="name" id="namecon" ng-model="a" type="text" required>
       <select class="phes inputRight" onchange="document.getElementById('namecon').value = this.options[this.selectedIndex].value">
         <option value=""></option>
-        <option value={{phenomenon.phenomenon_name}} *ngFor="let phenomenon of dg_service.interface_ontologyPhes">
-          {{phenomenon.phenomenon_name}}
+        <option value={{phenomenon.name}} *ngFor="let phenomenon of dg_service.interface_ontologyPhes">
+          {{phenomenon.name}}
         </option>
       </select>
 
@@ -244,16 +244,16 @@
           <!-- {{dg_service.description}} -->
           <table class="phenomenonList">
             <tr *ngFor="let phenomenon of dg_service.phenomenonList">
-              <td (click)="dg_service.selectPhenomenon(this,phenomenon.phenomenon_no)">
+              <td (click)="dg_service.selectPhenomenon(this,phenomenon.no)">
 
-                <!-- int{{phenomenon.phenomenon_no}}:
-            {{phenomenon.phenomenon_name}},
-            {{phenomenon.phenomenon_from}},
-            {{phenomenon.phenomenon_to}},
-            {{phenomenon.phenomenon_type}} -->
-                {{phenomenon.phenomenon_from}}!
-                {{phenomenon.phenomenon_name}}&nbsp;
-                {{phenomenon.phenomenon_type}}               
+                <!-- int{{phenomenon.no}}:
+            {{phenomenon.name}},
+            {{phenomenon.from}},
+            {{phenomenon.to}},
+            {{phenomenon.type}} -->
+                {{phenomenon.from}}!
+                {{phenomenon.name}}&nbsp;
+                {{phenomenon.type}}               
 
               </td>
             </tr>

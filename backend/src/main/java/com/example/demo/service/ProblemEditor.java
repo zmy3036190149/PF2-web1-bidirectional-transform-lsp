@@ -218,9 +218,9 @@ public class ProblemEditor{
 					 
 					 boolean exit = false;
 					 for(Phenomenon phe : pheList) {
-						 if(phe.getPhenomenon_name()!=null && 
-								 phe.getPhenomenon_name().equals(pheName) &&
-								 phe.getPhenomenon_type().equals(pheType)) {
+						 if(phe.getName()!=null && 
+								 phe.getName().equals(pheName) &&
+								 phe.getType().equals(pheType)) {
 							 exit = true;
 							 break;
 						 }
@@ -229,11 +229,11 @@ public class ProblemEditor{
 						 pheNum = pheNum + 1;
 					 }
 					 Phenomenon phenomenon = new Phenomenon();
-					 phenomenon.setPhenomenon_name(pheName);
-					 phenomenon.setPhenomenon_type(pheType);
-					 phenomenon.setPhenomenon_no(pheNum);
-					 phenomenon.setPhenomenon_from(from);
-					 phenomenon.setPhenomenon_to(to);
+					 phenomenon.setName(pheName);
+					 phenomenon.setType(pheType);
+					 phenomenon.setNo(pheNum);
+					 phenomenon.setFrom(from);
+					 phenomenon.setTo(to);
 					 phenomenonList.add(phenomenon);
 					 pheList.add(phenomenon);
 				 }
@@ -241,9 +241,9 @@ public class ProblemEditor{
 				 String pheStr = "";
 				 for(Phenomenon phenomenon: phenomenonList) {
 					 if(pheStr.equals("")) {
-						 pheStr = pheStr + phenomenon.getPhenomenon_name();
+						 pheStr = pheStr + phenomenon.getName();
 					 }else {
-						 pheStr = pheStr + ", " + phenomenon.getPhenomenon_name();
+						 pheStr = pheStr + ", " + phenomenon.getName();
 					 }
 				}
 				if(!pheStr.equals("")) {
@@ -270,16 +270,16 @@ public class ProblemEditor{
 					 List<RequirementPhenomenon> reqPheList = new ArrayList<RequirementPhenomenon>();
 					 for(Phenomenon phe: phenomenonList) {
 						 RequirementPhenomenon reqPhe = new RequirementPhenomenon();
-						 reqPhe.setPhenomenon_no(phe.getPhenomenon_no());
-						 reqPhe.setPhenomenon_name(phe.getPhenomenon_name());
-						 reqPhe.setPhenomenon_type(phe.getPhenomenon_type());
-						 reqPhe.setPhenomenon_from(phe.getPhenomenon_from());
-						 reqPhe.setPhenomenon_to(phe.getPhenomenon_to());
-						 reqPhe.setPhenomenon_constraint("false");
+						 reqPhe.setNo(phe.getNo());
+						 reqPhe.setName(phe.getName());
+						 reqPhe.setType(phe.getType());
+						 reqPhe.setFrom(phe.getFrom());
+						 reqPhe.setTo(phe.getTo());
+						 reqPhe.setConstraint("false");
 						 for(Requirement req: requirementList) {
 							 if(req.getName().equals(from) || 
 									 req.getName().equals(to)) {
-								 reqPhe.setPhenomenon_requirement(req.getNo());
+								 reqPhe.setRequirement(req.getNo());
 							 }
 						 }
 						 reqPheList.add(reqPhe);
@@ -297,18 +297,18 @@ public class ProblemEditor{
 					 List<RequirementPhenomenon> reqPheList = new ArrayList<RequirementPhenomenon>();
 					 for(Phenomenon phe: phenomenonList) {
 						 RequirementPhenomenon reqPhe = new RequirementPhenomenon();
-						 reqPhe.setPhenomenon_no(phe.getPhenomenon_no());
-						 reqPhe.setPhenomenon_name(phe.getPhenomenon_name());
-						 reqPhe.setPhenomenon_type(phe.getPhenomenon_type());
-						 reqPhe.setPhenomenon_from(phe.getPhenomenon_from());
-						 reqPhe.setPhenomenon_to(phe.getPhenomenon_to());
-						 reqPhe.setPhenomenon_constraint("true");
+						 reqPhe.setNo(phe.getNo());
+						 reqPhe.setName(phe.getName());
+						 reqPhe.setType(phe.getType());
+						 reqPhe.setFrom(phe.getFrom());
+						 reqPhe.setTo(phe.getTo());
+						 reqPhe.setConstraint("true");
 						 for(Requirement req: requirementList) {
 //							 System.out.println(from);
 //							 System.out.println(to);
 							 if(req.getName().equals(from) || 
 									 req.getName().equals(to)) {
-								 reqPhe.setPhenomenon_requirement(req.getNo());
+								 reqPhe.setRequirement(req.getNo());
 							 }
 						 }
 						 reqPheList.add(reqPhe);
@@ -379,9 +379,9 @@ public class ProblemEditor{
 	 public static void changeRefPhe(List<Interface> interfaces,RequirementPhenomenon refPhe){
 		 for(Interface inter:interfaces) {
 			 for(Phenomenon intPhe:inter.getPhenomenonList()) {
-				 if(intPhe.getPhenomenon_name().contentEquals(refPhe.getPhenomenon_name())) {
-					 refPhe.setPhenomenon_from(intPhe.getPhenomenon_from());
-					 refPhe.setPhenomenon_to(intPhe.getPhenomenon_to());
+				 if(intPhe.getName().contentEquals(refPhe.getName())) {
+					 refPhe.setFrom(intPhe.getFrom());
+					 refPhe.setTo(intPhe.getTo());
 				 }
 			 }
 		 }
@@ -573,8 +573,8 @@ public class ProblemEditor{
 					 
 					 boolean exit = false;
 					 for(Phenomenon phe : pheList) {
-						 if(phe.getPhenomenon_name().equals(pheName) &&
-								 phe.getPhenomenon_type().equals(pheType)) {
+						 if(phe.getName().equals(pheName) &&
+								 phe.getType().equals(pheType)) {
 							 exit = true;
 							 break;
 						 }
@@ -583,11 +583,11 @@ public class ProblemEditor{
 						 pheNum = pheNum + 1;
 					 }
 					 Phenomenon phenomenon = new Phenomenon();
-					 phenomenon.setPhenomenon_name(pheName);
-					 phenomenon.setPhenomenon_type(pheType);
-					 phenomenon.setPhenomenon_no(pheNum);
-					 phenomenon.setPhenomenon_from(from);
-					 phenomenon.setPhenomenon_to(to);
+					 phenomenon.setName(pheName);
+					 phenomenon.setType(pheType);
+					 phenomenon.setNo(pheNum);
+					 phenomenon.setFrom(from);
+					 phenomenon.setTo(to);
 					 phenomenonList.add(phenomenon);
 					 pheList.add(phenomenon);
 				 }
@@ -595,9 +595,9 @@ public class ProblemEditor{
 				 String pheStr = "";
 				 for(Phenomenon phenomenon: phenomenonList) {
 					 if(pheStr.equals("")) {
-						 pheStr = pheStr + phenomenon.getPhenomenon_name();
+						 pheStr = pheStr + phenomenon.getName();
 					 }else {
-						 pheStr = pheStr + ", " + phenomenon.getPhenomenon_name();
+						 pheStr = pheStr + ", " + phenomenon.getName();
 					 }
 				}
 				if(!pheStr.equals("")) {
@@ -640,17 +640,17 @@ public class ProblemEditor{
 					 List<RequirementPhenomenon> reqPheList = new ArrayList<RequirementPhenomenon>();
 					 for(Phenomenon phe: phenomenonList) {
 						 RequirementPhenomenon reqPhe = new RequirementPhenomenon();
-						 reqPhe.setPhenomenon_no(phe.getPhenomenon_no());
-						 reqPhe.setPhenomenon_name(phe.getPhenomenon_name());
-						 reqPhe.setPhenomenon_type(phe.getPhenomenon_type());
-						 reqPhe.setPhenomenon_from(phe.getPhenomenon_from());
-						 reqPhe.setPhenomenon_to(phe.getPhenomenon_to());
-						 reqPhe.setPhenomenon_constraint("false");
+						 reqPhe.setNo(phe.getNo());
+						 reqPhe.setName(phe.getName());
+						 reqPhe.setType(phe.getType());
+						 reqPhe.setFrom(phe.getFrom());
+						 reqPhe.setTo(phe.getTo());
+						 reqPhe.setConstraint("false");
 						 //???
 						 for(Requirement req: reqList) {
 							 if(req.getName().equals(from) || 
 									 req.getName().equals(to)) {
-								 reqPhe.setPhenomenon_requirement(req.getNo());
+								 reqPhe.setRequirement(req.getNo());
 							 }
 						 }	
 						 reqPheList.add(reqPhe);
@@ -687,18 +687,18 @@ public class ProblemEditor{
 					 List<Requirement> reqList = project.getProblemDiagram().getRequirementList();
 					 for(Phenomenon phe: phenomenonList) {
 						 RequirementPhenomenon reqPhe = new RequirementPhenomenon();
-						 reqPhe.setPhenomenon_no(phe.getPhenomenon_no());
-						 reqPhe.setPhenomenon_name(phe.getPhenomenon_name());
-						 reqPhe.setPhenomenon_type(phe.getPhenomenon_type());
-						 reqPhe.setPhenomenon_from(phe.getPhenomenon_from());
-						 reqPhe.setPhenomenon_to(phe.getPhenomenon_to());
-						 reqPhe.setPhenomenon_constraint("true");
+						 reqPhe.setNo(phe.getNo());
+						 reqPhe.setName(phe.getName());
+						 reqPhe.setType(phe.getType());
+						 reqPhe.setFrom(phe.getFrom());
+						 reqPhe.setTo(phe.getTo());
+						 reqPhe.setConstraint("true");
 						 for(Requirement req: reqList) {
 //							 System.out.println(from);
 //							 System.out.println(to);
 							 if(req.getName().equals(from) || 
 									 req.getName().equals(to)) {
-								 reqPhe.setPhenomenon_requirement(req.getNo());
+								 reqPhe.setRequirement(req.getNo());
 							 }
 						 }
 						 reqPheList.add(reqPhe);
@@ -836,10 +836,10 @@ public class ProblemEditor{
 			String pheList2 = " {";
 							
 			for(Phenomenon phe: pheList) {
-				if(phe.getPhenomenon_from().contentEquals(int_from))
-					pheList1 += " " + phe.getPhenomenon_type() + " " + phe.getPhenomenon_name() + ",";
+				if(phe.getFrom().contentEquals(int_from))
+					pheList1 += " " + phe.getType() + " " + phe.getName() + ",";
 				else 
-					pheList2 += " " + phe.getPhenomenon_type() + " " + phe.getPhenomenon_name() + ",";
+					pheList2 += " " + phe.getType() + " " + phe.getName() + ",";
 			}
 			
 			if(pheList1.length()>2) {
@@ -883,7 +883,7 @@ public class ProblemEditor{
 			if(pheList.size()>0) {
 				buffer.append(" { ");
 				for(RequirementPhenomenon phe: pheList) {
-					buffer.append(phe.getPhenomenon_type()+ " " + phe.getPhenomenon_name() + ",");
+					buffer.append(phe.getType()+ " " + phe.getName() + ",");
 				}
 				buffer.deleteCharAt(buffer.length() - 1);
 				buffer.append(" }");
@@ -904,7 +904,7 @@ public class ProblemEditor{
 			if(pheList.size()>0) {
 				buffer.append(" { ");
 				for(RequirementPhenomenon phe: pheList) {
-					buffer.append(phe.getPhenomenon_type()+ " " + phe.getPhenomenon_name() + ",");
+					buffer.append(phe.getType()+ " " + phe.getName() + ",");
 				}
 				buffer.deleteCharAt(buffer.length() - 1);
 				buffer.append(" }");
@@ -1103,9 +1103,9 @@ public class ProblemEditor{
 					String phename = phe.getName();
 					Boolean flag=false;
 					for(Phenomenon intphe:intf.getPhenomenonList()) {
-						if(phe.getName().contentEquals(intphe.getPhenomenon_name())
-								&& intf_from.contentEquals(intphe.getPhenomenon_from())) {
-							phe.setType(intphe.getPhenomenon_type());
+						if(phe.getName().contentEquals(intphe.getName())
+								&& intf_from.contentEquals(intphe.getFrom())) {
+							phe.setType(intphe.getType());
 							flag = true;
 						}
 					}
@@ -1116,15 +1116,15 @@ public class ProblemEditor{
 				//遍历project中的phe,增加phe
 				for(Phenomenon intphe:intf.getPhenomenonList()) {
 					Boolean flag = false;
-					if(intphe.getPhenomenon_from().contentEquals(intf_from)) {
+					if(intphe.getFrom().contentEquals(intf_from)) {
 						for(PfPhenomenon phe:pfPheList) {
-							if(phe.getName().contentEquals(intphe.getPhenomenon_name())) {
+							if(phe.getName().contentEquals(intphe.getName())) {
 								flag=true;			
 							}
 						}
 						//add phe	
 						if(!flag) {								
-							pfPheList.add(new PfPhenomenon(intphe.getPhenomenon_type(),intphe.getPhenomenon_name(),""));
+							pfPheList.add(new PfPhenomenon(intphe.getType(),intphe.getName(),""));
 						}
 					}					
 				}
@@ -1177,8 +1177,8 @@ public class ProblemEditor{
 				String phename = s2[1].trim();
 				Boolean flag=false;
 				for(RequirementPhenomenon refphe:ref.get(i).getPhenomenonList()) {
-					if(phename.contentEquals(refphe.getPhenomenon_name())) {
-						phetype=refphe.getPhenomenon_type();
+					if(phename.contentEquals(refphe.getName())) {
+						phetype=refphe.getType();
 						flag = true;
 					}
 				}
@@ -1198,15 +1198,15 @@ public class ProblemEditor{
 					String[] s2 = s1[0].split(" ");
 					String phetype = s2[0].trim();
 					String phename = s2[1].trim();
-					if(phename.contentEquals(refphe.getPhenomenon_name())) {
+					if(phename.contentEquals(refphe.getName())) {
 						flag=true;						
 					}
 				}
 				//add phe	
 				if(!flag) {
-					String phe = refphe.getPhenomenon_type();
+					String phe = refphe.getType();
 					phe += " ";
-					phe += refphe.getPhenomenon_name();
+					phe += refphe.getName();
 					arrList.add(phe);
 				}
 			}
@@ -1257,8 +1257,8 @@ public class ProblemEditor{
 					String phename = s2[1].trim();
 					Boolean flag=false;
 					for(RequirementPhenomenon conphe:con.get(i).getPhenomenonList()) {
-						if(phename.contentEquals(conphe.getPhenomenon_name())) {
-							phetype=conphe.getPhenomenon_type();
+						if(phename.contentEquals(conphe.getName())) {
+							phetype=conphe.getType();
 							flag = true;
 						}
 					}
@@ -1278,15 +1278,15 @@ public class ProblemEditor{
 						String[] s2 = s1[0].split(" ");
 						String phetype = s2[0].trim();
 						String phename = s2[1].trim();
-						if(phename.contentEquals(conphe.getPhenomenon_name())) {
+						if(phename.contentEquals(conphe.getName())) {
 							flag=true;						
 						}
 					}
 					//add phe	
 					if(!flag) {
-						String phe = conphe.getPhenomenon_type();
+						String phe = conphe.getType();
 						phe += " ";
-						phe += conphe.getPhenomenon_name();
+						phe += conphe.getName();
 						arrList.add(phe);
 					}
 				}				
@@ -1553,11 +1553,11 @@ public class ProblemEditor{
 		String pheList1 = " {";
 		Boolean flag = false;//另一个方向没有现象
 		for(Phenomenon phe:pheList) {
-			if(phe.getPhenomenon_from().contentEquals(from)
-				&& phe.getPhenomenon_to().contentEquals(to)) {							
-				pheList1 += phe.getPhenomenon_type() + " " + phe.getPhenomenon_name() + ",";
-			}else if(phe.getPhenomenon_from().contentEquals(to)
-					&& phe.getPhenomenon_to().contentEquals(from)) {
+			if(phe.getFrom().contentEquals(from)
+				&& phe.getTo().contentEquals(to)) {							
+				pheList1 += phe.getType() + " " + phe.getName() + ",";
+			}else if(phe.getFrom().contentEquals(to)
+					&& phe.getTo().contentEquals(from)) {
 				flag = true;//另一个方向没有现象
 			}
 		}
@@ -1724,7 +1724,7 @@ public class ProblemEditor{
 		List<RequirementPhenomenon> pheList = ref.getPhenomenonList();
 		String pheList1 = " { ";
 		for(Phenomenon phe:pheList) {
-			pheList1 += phe.getPhenomenon_type() + " " + phe.getPhenomenon_name() + ",";
+			pheList1 += phe.getType() + " " + phe.getName() + ",";
 		}
 		pheList1= pheList1.substring(0,pheList1.length()-1);
 		if(pheList1.length()>2) {					
@@ -1753,7 +1753,7 @@ public class ProblemEditor{
 		List<RequirementPhenomenon> pheList = con.getPhenomenonList();
 		String pheList1 = " { ";
 		for(Phenomenon phe:pheList) {
-			pheList1 += phe.getPhenomenon_type() + " " + phe.getPhenomenon_name() + ",";
+			pheList1 += phe.getType() + " " + phe.getName() + ",";
 		}
 		pheList1= pheList1.substring(0,pheList1.length()-2);
 //		System.out.println("======" + pheList1 +"======");

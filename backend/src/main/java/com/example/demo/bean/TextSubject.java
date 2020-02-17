@@ -256,8 +256,8 @@ public class TextSubject extends Subject{
 		String str=" {";
 		for(int i =0; i<pheList.size();i++) {
 			JSONObject phe = pheList.getJSONObject(i);
-			String type = phe.getString("phenomenon_type");
-			String name = phe.getString("phenomenon_name");
+			String type = phe.getString("type");
+			String name = phe.getString("name");
 			str += type + " " + name + ", ";
 		}
 		str = str.substring(0,str.length()-2);

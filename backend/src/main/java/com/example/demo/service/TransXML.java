@@ -270,18 +270,18 @@ public class TransXML {
 		for(Object object : phenomenonElementList) {
 			Element phenomenonElement = (Element)object;
 			
-			int phenomenon_no = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_no"));
-			String phenomenon_name = phenomenonElement.attributeValue("phenomenon_name");
-			String phenomentn_type = phenomenonElement.attributeValue("phenomenon_type");
-			String phenomenon_from = phenomenonElement.attributeValue("phenomenon_from");
-			String phenomenon_to = phenomenonElement.attributeValue("phenomenon_to");
+			int phe_no = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_no"));
+			String phe_name = phenomenonElement.attributeValue("phenomenon_name");
+			String phe_type = phenomenonElement.attributeValue("phenomenon_type");
+			String phe_from = phenomenonElement.attributeValue("phenomenon_from");
+			String phe_to = phenomenonElement.attributeValue("phenomenon_to");
 			
 			Phenomenon phenomenon = new Phenomenon();
-			phenomenon.setPhenomenon_no(phenomenon_no);
-			phenomenon.setPhenomenon_name(phenomenon_name);
-			phenomenon.setPhenomenon_type(phenomentn_type);
-			phenomenon.setPhenomenon_from(phenomenon_from);
-			phenomenon.setPhenomenon_to(phenomenon_to);
+			phenomenon.setNo(phe_no);
+			phenomenon.setName(phe_name);
+			phenomenon.setType(phe_type);
+			phenomenon.setFrom(phe_from);
+			phenomenon.setTo(phe_to);
 			
 			phenomenonList.add(phenomenon);
 		}
@@ -370,22 +370,22 @@ public class TransXML {
 		for(Object object : phenomenonElementList) {
 			Element phenomenonElement = (Element)object;
 			
-			int phenomenon_no = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_no"));
-			String phenomenon_name = phenomenonElement.attributeValue("phenomenon_name");
-			String phenomentn_type = phenomenonElement.attributeValue("phenomentn_type");
-			String phenomenon_from = phenomenonElement.attributeValue("phenomenon_from");
-			String phenomenon_to = phenomenonElement.attributeValue("phenomenon_to");
-			String phenomenon_constraint = phenomenonElement.attributeValue("phenomenon_constraint");
-			int phenomenon_requirement = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_requirement"));
+			int phe_no = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_no"));
+			String phe_name = phenomenonElement.attributeValue("phenomenon_name");
+			String phe_type = phenomenonElement.attributeValue("phenomentn_type");
+			String phe_from = phenomenonElement.attributeValue("phenomenon_from");
+			String phe_to = phenomenonElement.attributeValue("phenomenon_to");
+			String phe_constraint = phenomenonElement.attributeValue("phenomenon_constraint");
+			int phe_requirement = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_requirement"));
 			
 			RequirementPhenomenon phenomenon = new RequirementPhenomenon();
-			phenomenon.setPhenomenon_no(phenomenon_no);
-			phenomenon.setPhenomenon_name(phenomenon_name);
-			phenomenon.setPhenomenon_type(phenomentn_type);
-			phenomenon.setPhenomenon_constraint(phenomenon_constraint);
-			phenomenon.setPhenomenon_requirement(phenomenon_requirement);
-			phenomenon.setPhenomenon_from(phenomenon_from);
-			phenomenon.setPhenomenon_to(phenomenon_to);
+			phenomenon.setNo(phe_no);
+			phenomenon.setName(phe_name);
+			phenomenon.setType(phe_type);
+			phenomenon.setConstraint(phe_constraint);
+			phenomenon.setRequirement(phe_requirement);
+			phenomenon.setFrom(phe_from);
+			phenomenon.setTo(phe_to);
 			
 			phenomenonList.add(phenomenon);
 		}
@@ -536,15 +536,15 @@ public class TransXML {
 					set = false;
 					for(String des: desList) {
 						int j = desList.indexOf(des);
-						if(phenomenon.getPhenomenon_from().equals(des.split("!")[0])) {
-							des = des + "," + phenomenon.getPhenomenon_name();
+						if(phenomenon.getFrom().equals(des.split("!")[0])) {
+							des = des + "," + phenomenon.getName();
 							desList.set(j, des);
 							set = true;
 							break;
 						}
 					}
 					if(set == false) {
-						String des = phenomenon.getPhenomenon_from() + "!{" + phenomenon.getPhenomenon_name();
+						String des = phenomenon.getFrom() + "!{" + phenomenon.getName();
 						desList.add(des);
 					}
 					
@@ -611,15 +611,15 @@ public class TransXML {
 					set = false;
 					for(String des: desList) {
 						int j = desList.indexOf(des);
-						if(phenomenon.getPhenomenon_from().equals(des.split("!")[0])) {
-							des = des + "," + phenomenon.getPhenomenon_name();
+						if(phenomenon.getFrom().equals(des.split("!")[0])) {
+							des = des + "," + phenomenon.getName();
 							desList.set(j, des);
 							set = true;
 							break;
 						}
 					}
 					if(set == false) {
-						String des = phenomenon.getPhenomenon_from() + "!{" + phenomenon.getPhenomenon_name();
+						String des = phenomenon.getFrom() + "!{" + phenomenon.getName();
 						desList.add(des);
 					}
 					
@@ -687,15 +687,15 @@ public class TransXML {
 					set = false;
 					for(String des: desList) {
 						int j = desList.indexOf(des);
-						if(phenomenon.getPhenomenon_from().equals(des.split("!")[0])) {
-							des = des + "," + phenomenon.getPhenomenon_name();
+						if(phenomenon.getFrom().equals(des.split("!")[0])) {
+							des = des + "," + phenomenon.getName();
 							desList.set(j, des);
 							set = true;
 							break;
 						}
 					}
 					if(set == false) {
-						String des = phenomenon.getPhenomenon_from() + "!{" + phenomenon.getPhenomenon_name();
+						String des = phenomenon.getFrom() + "!{" + phenomenon.getName();
 						desList.add(des);
 					}
 					

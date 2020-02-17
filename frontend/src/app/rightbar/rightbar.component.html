@@ -55,9 +55,9 @@
             <th>PheType</th>
           </tr>
           <tr *ngFor="let phe of pheList">
-            <td>phe{{phe.phenomenon_no}}</td>
-            <td>{{phe.phenomenon_name}}</td>
-            <td>{{phe.phenomenon_type}}</td>
+            <td>phe{{phe.no}}</td>
+            <td>{{phe.name}}</td>
+            <td>{{phe.type}}</td>
           </tr>
         </table>
       </div>
@@ -74,10 +74,10 @@
             <th>Content</th>
           </tr>
           <tr *ngFor="let phe of pheList">
-            <td>int{{phe.phenomenon_no}}</td>
-            <td>{{phe.phenomenon_from}}</td>
-            <td>{{phe.phenomenon_to}}</td>
-            <td>{{phe.phenomenon_name}}</td>
+            <td>int{{phe.no}}</td>
+            <td>{{phe.from}}</td>
+            <td>{{phe.to}}</td>
+            <td>{{phe.name}}</td>
           </tr>
         </table>
       </div>
@@ -95,11 +95,11 @@
             <th>Constraint</th>
           </tr>
           <tr *ngFor="let phe of reqPheList">
-            <td>req{{phe.phenomenon_requirement}}</td>
-            <td>{{phe.phenomenon_from}}</td>
-            <td>{{phe.phenomenon_to}}</td>
-            <td>{{phe.phenomenon_name}}</td>
-            <td>{{phe.phenomenon_constraint}}</td>
+            <td>req{{phe.requirement}}</td>
+            <td>{{phe.from}}</td>
+            <td>{{phe.to}}</td>
+            <td>{{phe.name}}</td>
+            <td>{{phe.constraint}}</td>
           </tr>
         </table>
       </div>

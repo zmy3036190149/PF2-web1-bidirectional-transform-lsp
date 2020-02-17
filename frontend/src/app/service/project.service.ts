@@ -96,7 +96,7 @@ export class ProjectService {
 		this.getPhenomenon1(res,project.problemDiagram.constraintList)
 		for  ( let  i  =   0 ; i  <  res.length; i ++ )  {       
 			for  ( let  j  =  res.length  -   1 ; j  >  i; j -- )  {       
-				if  (res[j].phenomenon_no == res[i].phenomenon_no)  {       
+				if  (res[j].no == res[i].no)  {       
 				res.splice(j,1);       
 				}        
 			}        
@@ -128,7 +128,7 @@ export class ProjectService {
 		}
 		for  ( let  i  =   0 ; i  <  res.length; i ++ )  {       
 			for  ( let  j  =  res.length  -   1 ; j  >  i; j -- )  {       
-				if  (res[i].phenomenon_no == res[j].phenomenon_no)  {       
+				if  (res[i].no == res[j].no)  {       
 				res.splice(j,1);       
 				}        
 			}        

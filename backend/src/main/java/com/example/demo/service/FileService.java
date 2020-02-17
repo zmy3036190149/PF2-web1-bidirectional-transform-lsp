@@ -556,18 +556,18 @@ public class FileService {
 		for(Object object : phenomenonElementList) {
 			Element phenomenonElement = (Element)object;
 			
-			int phenomenon_no = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_no"));
-			String phenomenon_name = phenomenonElement.attributeValue("phenomenon_name");
-			String phenomenon_type = phenomenonElement.attributeValue("phenomenon_type");
-			String phenomenon_from = phenomenonElement.attributeValue("phenomenon_from").replaceAll("&#x000A", "\n");;
-			String phenomenon_to = phenomenonElement.attributeValue("phenomenon_to").replaceAll("&#x000A", "\n");;
+			int phe_no = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_no"));
+			String phe_name = phenomenonElement.attributeValue("phenomenon_name");
+			String phe_type = phenomenonElement.attributeValue("phenomenon_type");
+			String phe_from = phenomenonElement.attributeValue("phenomenon_from").replaceAll("&#x000A", "\n");;
+			String phe_to = phenomenonElement.attributeValue("phenomenon_to").replaceAll("&#x000A", "\n");;
 			
 			Phenomenon phenomenon = new Phenomenon();
-			phenomenon.setPhenomenon_no(phenomenon_no);
-			phenomenon.setPhenomenon_name(phenomenon_name);
-			phenomenon.setPhenomenon_type(phenomenon_type);
-			phenomenon.setPhenomenon_from(phenomenon_from);
-			phenomenon.setPhenomenon_to(phenomenon_to);
+			phenomenon.setNo(phe_no);
+			phenomenon.setName(phe_name);
+			phenomenon.setType(phe_type);
+			phenomenon.setFrom(phe_from);
+			phenomenon.setTo(phe_to);
 			
 			phenomenonList.add(phenomenon);
 		}
@@ -661,22 +661,22 @@ public class FileService {
 		for(Object object : phenomenonElementList) {
 			Element phenomenonElement = (Element)object;
 			
-			int phenomenon_no = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_no"));
-			String phenomenon_name = phenomenonElement.attributeValue("phenomenon_name");
-			String phenomenon_type = phenomenonElement.attributeValue("phenomenon_type");
-			String phenomenon_from = phenomenonElement.attributeValue("phenomenon_from").replaceAll("&#x000A", "\n");;
-			String phenomenon_to = phenomenonElement.attributeValue("phenomenon_to").replaceAll("&#x000A", "\n");;
-			String phenomenon_constraint = phenomenonElement.attributeValue("phenomenon_constraint");
-			int phenomenon_requirement = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_requirement"));
+			int phe_no = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_no"));
+			String phe_name = phenomenonElement.attributeValue("phenomenon_name");
+			String phe_type = phenomenonElement.attributeValue("phenomenon_type");
+			String phe_from = phenomenonElement.attributeValue("phenomenon_from").replaceAll("&#x000A", "\n");;
+			String phe_to = phenomenonElement.attributeValue("phenomenon_to").replaceAll("&#x000A", "\n");;
+			String phe_constraint = phenomenonElement.attributeValue("phenomenon_constraint");
+			int phe_requirement = Integer.parseInt(phenomenonElement.attributeValue("phenomenon_requirement"));
 			
 			RequirementPhenomenon phenomenon = new RequirementPhenomenon();
-			phenomenon.setPhenomenon_no(phenomenon_no);
-			phenomenon.setPhenomenon_name(phenomenon_name);
-			phenomenon.setPhenomenon_type(phenomenon_type);
-			phenomenon.setPhenomenon_constraint(phenomenon_constraint);
-			phenomenon.setPhenomenon_requirement(phenomenon_requirement);
-			phenomenon.setPhenomenon_from(phenomenon_from);
-			phenomenon.setPhenomenon_to(phenomenon_to);
+			phenomenon.setNo(phe_no);
+			phenomenon.setName(phe_name);
+			phenomenon.setType(phe_type);
+			phenomenon.setConstraint(phe_constraint);
+			phenomenon.setRequirement(phe_requirement);
+			phenomenon.setFrom(phe_from);
+			phenomenon.setTo(phe_to);
 			
 			phenomenonList.add(phenomenon);
 		}
@@ -961,7 +961,7 @@ public class FileService {
 				re.append(",");
 				re.append(tmp_i.getY1());
 				
-				String interface_locality = re.toString();
+				String locality = re.toString();
 				
 				Element interfaceElement=interfaceListElement.addElement("Element");
 				interfaceElement.addAttribute("interface_description", description);
@@ -975,17 +975,17 @@ public class FileService {
 
 					Phenomenon tmp_p=phenomenonElementList.get(j);
 					
-					String phenomenon_no = String.valueOf(tmp_p.getPhenomenon_no());
-					String phenomenon_name = tmp_p.getPhenomenon_name();
-					String phenomenon_type = tmp_p.getPhenomenon_type();
-					String phenomenon_from = tmp_p.getPhenomenon_from();
-					String phenomenon_to = tmp_p.getPhenomenon_to();
+					String phe_no = String.valueOf(tmp_p.getNo());
+					String phe_name = tmp_p.getName();
+					String phe_type = tmp_p.getType();
+					String phe_from = tmp_p.getFrom();
+					String phe_to = tmp_p.getTo();
 					Element phenomenonElement=interfaceElement.addElement("Phenomenon");
-					phenomenonElement.addAttribute("phenomenon_no", phenomenon_no);
-					phenomenonElement.addAttribute("phenomenon_name", phenomenon_name);
-					phenomenonElement.addAttribute("phenomenon_type", phenomenon_type);
-					phenomenonElement.addAttribute("phenomenon_from", phenomenon_from);
-					phenomenonElement.addAttribute("phenomenon_to", phenomenon_to);
+					phenomenonElement.addAttribute("phenomenon_no", phe_no);
+					phenomenonElement.addAttribute("phenomenon_name", phe_name);
+					phenomenonElement.addAttribute("phenomenon_type", phe_type);
+					phenomenonElement.addAttribute("phenomenon_from", phe_from);
+					phenomenonElement.addAttribute("phenomenon_to", phe_to);
 					
 				}
 			}
@@ -1087,21 +1087,21 @@ public class FileService {
 
 					RequirementPhenomenon tmp_p=phenomenonElementList.get(j);
 					
-					String phenomenon_no = String.valueOf(tmp_p.getPhenomenon_no());
-					String phenomenon_name = tmp_p.getPhenomenon_name();
-					String phenomenon_type = tmp_p.getPhenomenon_type();
-					String phenomenon_from = tmp_p.getPhenomenon_from().replaceAll("\n", "&#x000A");
-					String phenomenon_to = tmp_p.getPhenomenon_to().replaceAll("\n", "&#x000A");
-					String phenomenon_constraint = tmp_p.getPhenomenon_constraint();
-					String phenomenon_requirement = String.valueOf(tmp_p.getPhenomenon_requirement());
+					String phe_no = String.valueOf(tmp_p.getNo());
+					String phe_name = tmp_p.getName();
+					String phe_type = tmp_p.getType();
+					String phe_from = tmp_p.getFrom().replaceAll("\n", "&#x000A");
+					String phe_to = tmp_p.getTo().replaceAll("\n", "&#x000A");
+					String phe_constraint = tmp_p.getConstraint();
+					String phe_requirement = String.valueOf(tmp_p.getRequirement());
 					Element phenomenonElement=constraintElement.addElement("Phenomenon");
-					phenomenonElement.addAttribute("phenomenon_no", phenomenon_no);
-					phenomenonElement.addAttribute("phenomenon_name", phenomenon_name);
-					phenomenonElement.addAttribute("phenomenon_type", phenomenon_type);
-					phenomenonElement.addAttribute("phenomenon_from", phenomenon_from);
-					phenomenonElement.addAttribute("phenomenon_to", phenomenon_to);
-					phenomenonElement.addAttribute("phenomenon_constraint", phenomenon_constraint);
-					phenomenonElement.addAttribute("phenomenon_requirement", phenomenon_requirement);
+					phenomenonElement.addAttribute("phenomenon_no", phe_no);
+					phenomenonElement.addAttribute("phenomenon_name", phe_name);
+					phenomenonElement.addAttribute("phenomenon_type", phe_type);
+					phenomenonElement.addAttribute("phenomenon_from", phe_from);
+					phenomenonElement.addAttribute("phenomenon_to", phe_to);
+					phenomenonElement.addAttribute("phenomenon_constraint", phe_constraint);
+					phenomenonElement.addAttribute("phenomenon_requirement", phe_requirement);
 					
 				}
 			}
@@ -1139,21 +1139,21 @@ public class FileService {
 
 					RequirementPhenomenon tmp_p=phenomenonElementList.get(j);
 					
-					String phenomenon_no = String.valueOf(tmp_p.getPhenomenon_no());
-					String phenomenon_name = tmp_p.getPhenomenon_name();
-					String phenomenon_type = tmp_p.getPhenomenon_type();
-					String phenomenon_from = tmp_p.getPhenomenon_from().replaceAll("\n", "&#x000A");
-					String phenomenon_to = tmp_p.getPhenomenon_to().replaceAll("\n", "&#x000A");
-					String phenomenon_constraint = tmp_p.getPhenomenon_constraint();
-					String phenomenon_requirement = String.valueOf(tmp_p.getPhenomenon_requirement());
+					String phe_no = String.valueOf(tmp_p.getNo());
+					String phe_name = tmp_p.getName();
+					String phe_type = tmp_p.getType();
+					String phe_from = tmp_p.getFrom().replaceAll("\n", "&#x000A");
+					String phe_to = tmp_p.getTo().replaceAll("\n", "&#x000A");
+					String phe_constraint = tmp_p.getConstraint();
+					String phe_requirement = String.valueOf(tmp_p.getRequirement());
 					Element phenomenonElement=ReferenceElement.addElement("Phenomenon");
-					phenomenonElement.addAttribute("phenomenon_no", phenomenon_no);
-					phenomenonElement.addAttribute("phenomenon_name", phenomenon_name);
-					phenomenonElement.addAttribute("phenomenon_type", phenomenon_type);
-					phenomenonElement.addAttribute("phenomenon_from", phenomenon_from);
-					phenomenonElement.addAttribute("phenomenon_to", phenomenon_to);
-					phenomenonElement.addAttribute("phenomenon_constraint", phenomenon_constraint);
-					phenomenonElement.addAttribute("phenomenon_requirement", phenomenon_requirement);
+					phenomenonElement.addAttribute("phenomenon_no", phe_no);
+					phenomenonElement.addAttribute("phenomenon_name", phe_name);
+					phenomenonElement.addAttribute("phenomenon_type", phe_type);
+					phenomenonElement.addAttribute("phenomenon_from", phe_from);
+					phenomenonElement.addAttribute("phenomenon_to", phe_to);
+					phenomenonElement.addAttribute("phenomenon_constraint", phe_constraint);
+					phenomenonElement.addAttribute("phenomenon_requirement", phe_requirement);
 					
 				}
 			}

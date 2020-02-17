@@ -47,7 +47,7 @@ public class ProjectService {
 		}
 		for  ( int  i  =   0 ; i  <  phenomenonList.size()  -   1 ; i ++ )  {       
 		      for  ( int  j  =  phenomenonList.size()  -   1 ; j  >  i; j -- )  {       
-		           if  (phenomenonList.get(j).getPhenomenon_no() == phenomenonList.get(i).getPhenomenon_no())  {       
+		           if  (phenomenonList.get(j).getNo() == phenomenonList.get(i).getNo())  {       
 		        	   phenomenonList.remove(j);       
 		            }        
 		        }        
@@ -57,7 +57,7 @@ public class ProjectService {
 	   		 {
 	   			 Phenomenon phe1 = phenomenonList.get(j);
 	   			 Phenomenon phe2 = phenomenonList.get(j+1);
-	   			 if(phe1.getPhenomenon_no() > phe2.getPhenomenon_no()) {
+	   			 if(phe1.getNo() > phe2.getNo()) {
 	   				 Phenomenon phe;
 	   				 phe = phe1;
 	   				 phenomenonList.set(j, phe2);
@@ -89,7 +89,7 @@ public class ProjectService {
 			}
 			for  ( int  i  =   0 ; i  <  phenomenonList.size()  -   1 ; i ++ )  {       
 			      for  ( int  j  =  phenomenonList.size()  -   1 ; j  >  i; j -- )  {       
-			           if  (phenomenonList.get(j).getPhenomenon_no() == phenomenonList.get(i).getPhenomenon_no())  {       
+			           if  (phenomenonList.get(j).getNo() == phenomenonList.get(i).getNo())  {       
 			        	   phenomenonList.remove(j);       
 			            }        
 			        }        
@@ -99,7 +99,7 @@ public class ProjectService {
 		   		 {
 		   			 Phenomenon phe1 = phenomenonList.get(j);
 		   			 Phenomenon phe2 = phenomenonList.get(j+1);
-		   			 if(phe1.getPhenomenon_no() > phe2.getPhenomenon_no()) {
+		   			 if(phe1.getNo() > phe2.getNo()) {
 		   				 Phenomenon phe;
 		   				 phe = phe1;
 		   				 phenomenonList.set(j, phe2);
@@ -126,8 +126,8 @@ public class ProjectService {
 		}
 		for (int  i  =  0; i < phenomenonList.size() - 1; i ++ )  {
 			for (int j = phenomenonList.size() - 1 ;j > i; j -- )  {       
-				if(phenomenonList.get(j).getPhenomenon_no() == phenomenonList.get(i).getPhenomenon_no()
-						&& phenomenonList.get(j).getPhenomenon_requirement() == phenomenonList.get(i).getPhenomenon_requirement()){       
+				if(phenomenonList.get(j).getNo() == phenomenonList.get(i).getNo()
+						&& phenomenonList.get(j).getRequirement() == phenomenonList.get(i).getRequirement()){       
 					phenomenonList.remove(j);       
 				}        
 			}        
@@ -137,7 +137,7 @@ public class ProjectService {
 	   		 {
 	   			RequirementPhenomenon phe1 = phenomenonList.get(j);
 	   			RequirementPhenomenon phe2 = phenomenonList.get(j+1);
-	   			 if(phe1.getPhenomenon_requirement() > phe2.getPhenomenon_requirement()) {
+	   			 if(phe1.getRequirement() > phe2.getRequirement()) {
 	   				RequirementPhenomenon phe = phe1;
 	   				 phenomenonList.set(j, phe2);
 	   				 phenomenonList.set(j+1, phe);

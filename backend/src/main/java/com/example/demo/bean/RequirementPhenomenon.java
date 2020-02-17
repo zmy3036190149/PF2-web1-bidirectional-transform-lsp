@@ -1,20 +1,20 @@
 package com.example.demo.bean;
 
 public class RequirementPhenomenon extends Phenomenon{
-	private int phenomenon_requirement;
-	private String phenomenon_constraint;
+	private int requirement;
+	private String constraint;
 	
-	public int getPhenomenon_requirement() {
-		return phenomenon_requirement;
+	public int getRequirement() {
+		return requirement;
 	}
-	public void setPhenomenon_requirement(int phenomenon_requirement) {
-		this.phenomenon_requirement = phenomenon_requirement;
+	public void setRequirement(int requirement) {
+		this.requirement = requirement;
 	}
-	public String getPhenomenon_constraint() {
-		return phenomenon_constraint;
+	public String getConstraint() {
+		return constraint;
 	}
-	public void setPhenomenon_constraint(String phenomenon_constraint) {
-		this.phenomenon_constraint = phenomenon_constraint;
+	public void setConstraint(String constraint) {
+		this.constraint = constraint;
 	}
 	
 }

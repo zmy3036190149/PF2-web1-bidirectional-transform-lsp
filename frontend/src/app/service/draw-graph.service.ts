@@ -328,10 +328,8 @@ export class DrawGraphService {
   searchMaxPheNo1(no,linkList){
      for(let link of linkList){
        for( let phe of link.phenomenonList){
-         if(phe.phenomenon_no>no){
-           //console.log(phe.phenomenon_no + '>' + no);
-           //console.log( )
-           no = phe.phenomenon_no;
+         if(phe.no>no){
+           no = phe.no;
          }         
        }
      }     
@@ -669,25 +667,25 @@ export class DrawGraphService {
       pro.phes = new Array<Phenomenon>();
       for(let opt of ont.opts){
         let phe = new Phenomenon();
-        phe.phenomenon_no = this.phenomenon_no;
-        phe.phenomenon_type = 'event';
-        phe.phenomenon_name = opt;
+        phe.no = this.phenomenon_no;
+        phe.type = 'event';
+        phe.name = opt;
         pro.phes.push(phe);
       }
       // pro.values = new Array<Phenomenon>();
       for(let val of ont.values){
         let phe = new Phenomenon();
-        phe.phenomenon_no = this.phenomenon_no;
-        phe.phenomenon_type = 'value';
-        phe.phenomenon_name = val;
+        phe.no = this.phenomenon_no;
+        phe.type = 'value';
+        phe.name = val;
         pro.phes.push(phe);
       }
       // pro.states = new Array<Phenomenon>();
       for(let opt of ont.states){
         let phe = new Phenomenon();
-        phe.phenomenon_no = this.phenomenon_no;
-        phe.phenomenon_type = 'state';
-        phe.phenomenon_name = opt;
+        phe.no = this.phenomenon_no;
+        phe.type = 'state';
+        phe.name = opt;
         pro.phes.push(phe);
       }
       pro.x= x;
@@ -788,17 +786,17 @@ export class DrawGraphService {
   dealConstraint(project){
     for(let temp of project.problemDiagram.referenceList){
       for(let phe of temp.phenomenonList){
-        if(phe.phenomenon_constraint==null){
+        if(phe.constraint==null){
           //console.log('null-------')
-          phe.phenomenon_constraint = false
+          phe.constraint = false
         }
       }
     }
     for(let temp of project.problemDiagram.constraintList){
       for(let phe of temp.phenomenonList){
-        if(phe.phenomenon_constraint==null){
+        if(phe.constraint==null){
           //console.log('null-------')
-          phe.phenomenon_constraint = false
+          phe.constraint = false
         }
       }
     }
@@ -2202,7 +2200,7 @@ export class DrawGraphService {
   }
   exist(phe,pheList){
     for(let temp of pheList){
-      if (phe.phenomenon_name==temp.phenomenon_name){
+      if (phe.name==temp.name){
         return true
       }
     }
@@ -2221,7 +2219,7 @@ export class DrawGraphService {
   }
   getRelatedPhes1(name,pheList,phes,unRelatedPhes){
     for(let item of pheList){
-      if(name == item.phenomenon_from || name == item.phenomenon_to){
+      if(name == item.from || name == item.to){
         phes.push(item)
       }else{
         unRelatedPhes.push(item)
@@ -2607,7 +2605,7 @@ export class DrawGraphService {
     }
     for  ( let  i  =   0 ; i  <  res.length; i ++ )  {       
 			for  ( let  j  =  res.length  -   1 ; j  >  i; j -- )  {       
-				if  (res[i].phenomenon_no == res[j].phenomenon_no)  {       
+				if  (res[i].no == res[j].no)  {       
 				res.splice(j,1);       
 				}        
 			}        
@@ -2654,7 +2652,7 @@ export class DrawGraphService {
     } else {
       reqno = this.getReqNo(target.attr('root').title);
     }
-    phenomenon.phenomenon_requirement = reqno;
+    phenomenon.requirement = reqno;
     let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
     this.change("change", "ref", this.reference, ref)
   }
@@ -2670,7 +2668,7 @@ export class DrawGraphService {
       } else {
         reqno=this.getReqNo(target.attr('root').title);
       }   
-      phenomenon.phenomenon_requirement = reqno;  
+      phenomenon.requirement = reqno;  
     this.description = this.project.getDescription(this.selectedElement.attr('root').title, this.constraintPhenomenonList)
     let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
     this.change("change", "con", this.constraint, con)
@@ -2680,18 +2678,18 @@ export class DrawGraphService {
     //name
     let phenomenonName = (selectedDiv.getElementsByClassName("name")[0] as any).value;    
     for (let existPhenomenon of phenomenonList) {
-      if (existPhenomenon.phenomenon_name == phenomenonName) {
+      if (existPhenomenon.name == phenomenonName) {
         alert(phenomenonName + 'already exists');
         return;
       }
     }
-    phenomenon.phenomenon_name = phenomenonName;
+    phenomenon.name = phenomenonName;
     let flag = false;
     if(this.ontologyPhes != undefined){
       for(let phe of this.ontologyPhes){
-        if(phe.phenomenon_name==phenomenonName){
+        if(phe.name==phenomenonName){
           //type        
-          phenomenon.phenomenon_type = phe.phenomenon_type
+          phenomenon.type = phe.type
           flag = true;
           break;
         }
@@ -2703,13 +2701,11 @@ export class DrawGraphService {
       let selectElement = selectedDiv.getElementsByClassName("phenomenonType")[0];
       let selectedIndex = (selectElement as any).selectedIndex;
       let phenomenonType = (selectElement as any).options[selectedIndex].text;
-      phenomenon.phenomenon_type = phenomenonType;
+      phenomenon.type = phenomenonType;
     }
     //no
-    phenomenon.phenomenon_no = this.phenomenon_no
+    phenomenon.no = this.phenomenon_no
     this.phenomenon_no += 1
-    //console.log('changePhenomenon')
-    //console.log(phenomenon.phenomenon_no)
 
     //from & to
     let selectElement = selectedDiv.getElementsByClassName("initiator")[0];
@@ -2717,8 +2713,8 @@ export class DrawGraphService {
     let selectedIndex = (selectElement as any).selectedIndex;
     let initiator = (selectElement as any).options[selectedIndex].text;
     let receiver = (selectElement as any).options[1 - selectedIndex].text;
-    phenomenon.phenomenon_to = receiver;    
-    phenomenon.phenomenon_from = initiator;
+    phenomenon.to = receiver;    
+    phenomenon.from = initiator;
  
     //console.log('index:' + selectedIndex + ", initiator:" + initiator + ', receiver: ' + receiver);
     //console.log('index:' + selectedIndex + ", type:" + phenomenonType);
@@ -2756,86 +2752,80 @@ export class DrawGraphService {
     // let unRelatedOntologyPhes = []
     // this.getRelatedOntologyPhes(this.initiator,relatedOntologyPhes,unRelatedOntologyPhes)
     for (let existPhenomenon of phenomenonList) {
-      if (existPhenomenon.phenomenon_name == phenomenonName) {
+      if (existPhenomenon.name == phenomenonName) {
         alert(phenomenonName + 'already exists');
         return;
       }
     }
-    // for (let existPhenomenon of unRelatedPhes) {
-    //   if (existPhenomenon.phenomenon_name == phenomenonName) {
-    //     alert(phenomenonName + 'already exists');
-    //     return;
-    //   }
-    // }
          
 
     //phe exist in related link
     let flag = false;
     for(let phe of relatedPhes){
-      if(phe.phenomenon_name==phenomenonName){
-        phenomenon.phenomenon_no = phe.phenomenon_no
-        phenomenon.phenomenon_name = phe.phenomenon_name   
-        phenomenon.phenomenon_from = phe.phenomenon_from     
-        phenomenon.phenomenon_to = phe.phenomenon_to    
-        phenomenon.phenomenon_type = phe.phenomenon_type
-        phenomenon.phenomenon_constraint = phe.phenomenon_constraint
+      if(phe.name==phenomenonName){
+        phenomenon.no = phe.no
+        phenomenon.name = phe.name   
+        phenomenon.from = phe.from     
+        phenomenon.to = phe.to    
+        phenomenon.type = phe.type
+        phenomenon.constraint = phe.constraint
         flag = true
       }
     }
 
     //phe doesn't exist in related link
     if(!flag){
-      phenomenon.phenomenon_no = this.phenomenon_no
+      phenomenon.no = this.phenomenon_no
       this.phenomenon_no += 1  
-      phenomenon.phenomenon_name = phenomenonName
-      phenomenon.phenomenon_from = initiator
-      phenomenon.phenomenon_to = receiver    
+      phenomenon.name = phenomenonName
+      phenomenon.from = initiator
+      phenomenon.to = receiver    
       
       //type 
       flag = false;
       if(this.ontologyPhes != undefined){
         for(let phe of this.ontologyPhes){
-          if(phe.phenomenon_name==phenomenonName){               
-            phenomenon.phenomenon_type = phe.phenomenon_type
+          if(phe.name==phenomenonName){               
+            phenomenon.type = phe.type
             flag = true;
             break;
           }
         } 
       }    
       if(!flag){        
-        phenomenon.phenomenon_type = phenomenonType;
+        phenomenon.type = phenomenonType;
       }
     } 
     console.log('addphe: constraint=',constraint)     
-    phenomenon.phenomenon_constraint = constraint
+    phenomenon.constraint = constraint
     phenomenonList.push(phenomenon)  
     console.log(phenomenonList)
   }  
 
   //select phenomenon from phenomenon list
   pre = null;
-  selectPhenomenon(sObject, phenomenon_no) {    
+  selectPhenomenon(sObject, no) {    
     $(sObject).attr("style", "BACKGROUND-COLOR: #e6f0fc");
-    this.selectedPhenomenonNo=phenomenon_no
+    this.selectedPhenomenonNo=no
   }
 
   //从interface,reference,和constraint的现象列表中找
   getPheByName(pheName) {
     for (let int of this.project.contextDiagram.interfaceList) {      
         for (let phe of int.phenomenonList) {
-          if(pheName==phe.phenomenon_name)
+          if(pheName==phe.name)
             return phe
         }      
     }
     for (let ref of this.project.problemDiagram.referenceList) {      
       for (let phe of ref.phenomenonList) {
-        if(pheName==phe.phenomenon_name)
+        if(pheName==phe.name)
           return phe
       }    
     }
     for (let ref of this.project.problemDiagram.constraintList) {      
       for (let phe of ref.phenomenonList) {
-        if(pheName==phe.phenomenon_name)
+        if(pheName==phe.name)
           return phe
       }    
     }
@@ -2855,21 +2845,15 @@ export class DrawGraphService {
     console.log(this.interface_ontologyPhes)
     console.log(index)
     console.log(phe)
-    let phenomenon_name = phe.phenomenon_name as any
+    let phe_name = phe.name as any
 
     //name
-    (document.getElementById('nameref') as any).value = phenomenon_name
-
-    // let phe = this.getPheByName(phenomenon_name)
-    // if(phe==null) {
-    //   console.log('phe==null')
-    //   return
-    // }
+    (document.getElementById('nameref') as any).value = phe_name
     
     //initiator
     let initiatorIndex=0
     for(let ini of this.initiator_receiverList){
-      if(phe.phenomenon_from==ini){
+      if(phe.from==ini){
         console.log("initiator i=",initiatorIndex)
         break
       }
@@ -2885,7 +2869,7 @@ export class DrawGraphService {
     this.changereceiver()
     let receiverIndex=0
     for(let rev of this.initiator_or_receiverList){
-      if(phe.phenomenon_to==rev){
+      if(phe.to==rev){
         console.log("receiver i=",receiverIndex)
         break
       }
@@ -2901,7 +2885,7 @@ export class DrawGraphService {
     //type
     let typeIndex=0
     for(let type of this.phenomenonTypes){
-      if(type==phe.phenomenon_type){
+      if(type==phe.type){
         console.log('type i=',typeIndex)
         break
       }
@@ -2918,20 +2902,13 @@ export class DrawGraphService {
       //   },
       //   15);      
       
-      $("#referencePopBox .name").val(phe.phenomenon_name); 
+      $("#referencePopBox .name").val(phe.name); 
       ($("#referencePopBox .phenomenonType").get(0) as any).selectedIndex=typeIndex  
     }else if(this.selectedType=='constraint'){ 
       
-      $("#constraintPopBox .name").val(phe.phenomenon_name); 
+      $("#constraintPopBox .name").val(phe.name); 
       ($("#constraintPopBox .phenomenonType").get(0) as any).selectedIndex=typeIndex  
     }     
-
-    //constraint
-    // let constraint = phe.phenomenon_constraint
-    // let selectedDiv = document.getElementById(this.selectedType + 'PopBox');
-    // let checkbox = selectedDiv.getElementsByClassName("checkbox")[0] as any
-    // console.log(constraint)
-    // checkbox.checked = constraint
   }
 
   //deletePhenomenon
@@ -2957,7 +2934,7 @@ export class DrawGraphService {
   deletePhenomenonByNo(phenomenonNo, phenomenonList) {
     let i = 0;
     for (let phenomenon of phenomenonList) {
-      if (phenomenon.phenomenon_no == phenomenonNo) {
+      if (phenomenon.no == phenomenonNo) {
         phenomenonList.splice(i, 1);
       }
       i += 1;

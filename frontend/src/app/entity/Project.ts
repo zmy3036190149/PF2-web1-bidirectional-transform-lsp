@@ -358,8 +358,8 @@ export class Project{
 		for(let newItem of newList){
 			let isFind = false
 			for(let item of oldList){
-				if(newItem.phenomenon_name==item.phenomenon_name){
-					item.phenomenon_type = newItem.phenomenon_type
+				if(newItem.name==item.name){
+					item.type = newItem.type
 					isFind = true									
 				}
 			}
@@ -374,7 +374,7 @@ export class Project{
 			let item = oldList[i]
 			let isFind = false
 			for(let newItem of newList){
-				if(newItem.phenomenon_name==item.phenomenon_name){
+				if(newItem.name==item.name){
 					isFind = true
 					break									
 				}
@@ -510,14 +510,14 @@ export class Project{
 		for (let phe of pheList) {
 		  let flag = false;
 		  for (let des of desList) {
-			if (phe.phenomenon_from == des[0]) {
-			  des.push(phe.phenomenon_name);
+			if (phe.from == des[0]) {
+			  des.push(phe.name);
 			  flag = true;
 			  break;
 			}
 		  }
 		  if (!flag) {
-			desList.push([phe.phenomenon_from, phe.phenomenon_name]);
+			desList.push([phe.from, phe.name]);
 		  }
 		}
 		//console.log(desList);
