@@ -1,7 +1,7 @@
 export class Machine{
-	name: string;	//��������
-	shortname: string;	//������д
-	x: number;	//λ����Ϣ
+	name: string;	
+	shortname: string;	
+	x: number;	
 	y: number;
 	h: number;
 	w: number;

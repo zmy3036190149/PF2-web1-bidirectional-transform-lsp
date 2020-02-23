@@ -1,13 +1,13 @@
 import { Phenomenon } from './Phenomenon';
 import { Line } from './Line'
 export class Interface extends Line{
-	no: number;	//�������
-	name: string;	//��������
-	description: string;	//��������
+	no: number;	
+	name: string;	
+	description: string;	
 	from: string;
 	to: string;
-	phenomenonList: Phenomenon[];	//�����б�
-	x1: number;	//λ����Ϣ
+	phenomenonList: Phenomenon[];	
+	x1: number;	
 	y1: number;
 	x2: number;
 	y2: number;

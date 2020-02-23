@@ -18,6 +18,14 @@ public class Machine extends Node{
 		this.w = w;
 		this.h = h;
 	}
+	public Machine(Machine old){
+		this.name = old.name;
+		this.shortname = old.shortname;
+		this.x = old.x;
+		this.y = old.y;
+		this.w = old.w;
+		this.h = old.h;
+	}
 	public String getShortname() {
 		return shortname;
 	}

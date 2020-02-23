@@ -67,6 +67,8 @@ public class LSP {
 		LSPSet.remove(this);  
 		for(Forward lsp: forwardSet) {
 			if(this.session==lsp.getSession()) {
+				lsp.getP().destroy();
+				lsp.getThread().destroy();
 				forwardSet.remove(lsp);
 			}
 		}

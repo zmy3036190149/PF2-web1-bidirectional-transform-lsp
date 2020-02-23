@@ -768,7 +768,7 @@ public class ProblemEditor{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}			
-		}				
+		}
 		return true;
 	 }	
 	 /*新建pf*/

@@ -356,9 +356,10 @@ export class AppComponent {
           }
           if(!flag){
             //diagram
-            this.dg_service.register(description,"undefined",null);
             this.dg_service.initProject(description);
             this.dg_service.initPapers();
+            this.dg_service.register(description,"undefined",this.dg_service.project);
+
             //text
             var that = this
             this.interval = setInterval(function () {

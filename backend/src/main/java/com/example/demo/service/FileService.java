@@ -63,6 +63,7 @@ public class FileService {
 	private File projectFolder;	//项目目录
 	/* private File versionFolder; */
 	private String rootAddress = AddressService.rootAddress;
+	private String lastestProjectAddress = AddressService.lastestProjectAddress;
 
 	private String pfrootAddress = AddressService.pfRootAddress;
 	public void addFile(MultipartFile file, String projectAddress, String branch) {
@@ -171,7 +172,7 @@ public class FileService {
         	 if(!file.exists()){
         		 file.createNewFile();
         	 }
-             FileWriter fileWritter = new FileWriter(filename); 
+             FileWriter fileWritter = new FileWriter(filename);
              System.out.println(file.getName());
              System.out.println(pf);
              fileWritter.write(pf);
@@ -252,6 +253,37 @@ public class FileService {
 		}
 		return project;
 	}
+	
+	//获取最新的project
+	public Project getLastestProject(String projectAddress, String version, String branch) {
+		Project project = new Project();
+		SAXReader saxReader = new SAXReader();
+		try {
+			File xmlFile = new File(lastestProjectAddress + projectAddress + version + "/Project.xml");
+			Document document = saxReader.read(xmlFile);			
+			Element projectElement = document.getRootElement();
+			Element titleElement = projectElement.element("title");
+			Element fileListElement = projectElement.element("fileList");
+			Element contextDiagramElement = fileListElement.element("ContextDiagram");
+			Element problemDiagramElement = fileListElement.element("ProblemDiagram");
+			System.out.println("ProblemDiagram");
+			String title = titleElement.getText();
+			System.out.println(title);
+			String contextDiagramName = contextDiagramElement.getText();
+			String problemDiagramName = problemDiagramElement.getText();
+			System.out.println(problemDiagramName);
+			ContextDiagram contextDiagram = getContextDiagram(projectAddress, contextDiagramName);
+			ProblemDiagram problemDiagram = getProblemDiagram(projectAddress, problemDiagramName);											
+			project.setTitle(title);
+			project.setContextDiagram(contextDiagram);
+			project.setProblemDiagram(problemDiagram);
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return project;
+	}
+	
 	//从项目文件夹下获取pf文本
 	public String getNotNullPf(String projectAddress, String version, String branch) {
 		//get pf text if pf file exist
@@ -720,41 +752,28 @@ public class FileService {
 		}
 		return referenceList;
 	}
-	
-
-	
-	
-	
-
-
-
-	
-
-
-
-
-
+	//保存在PF/Project目录下，并设置分支
 	public boolean saveProject(String projectAddress, Project project, String branch) {
 		try {
 			GitUtil.gitCheckout(branch, rootAddress);  //切换分支
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			//e1.printStackTrace();
+			e1.printStackTrace();
 		}
-		
-		Document document = DocumentHelper.createDocument();
 		setProject(projectAddress, branch);
+		saveProject(rootAddress,projectAddress,project);
+		try {
+			GitUtil.RecordUploadProjAt("save", rootAddress, ".");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	//只保存文件，不涉及git操作,保存在rootAddress目录下（传参确定rootAddress）
+	public boolean saveProject(String rootAddress, String projectAddress, Project project) {		
+		Document document = DocumentHelper.createDocument();		
 		File temp_PD=  new File(rootAddress + "ProblemDiagram.xml");
 		SAXReader saxReader = new SAXReader();
 		File xmlFile = new File(rootAddress + "Project.xml");	
-		
-		
-		//if(xmlFile.exists()) {
-			//Project temp_project=getProject(projectAddress);
-			//temp_PD=temp_project.getProblemDiagram();
-			//File xmlPDFile = new File(root + projectAddress + "/ProblemDomain.xml");
-		//}	
-
 		if(!temp_PD.exists()) {
 			Element projectElement = document.addElement("project");
 			Element titleElement = projectElement.addElement("title");
@@ -768,11 +787,11 @@ public class FileService {
 			ProblemDiagram tmp_PD=project.getProblemDiagram();
 			if(tmp_CD!=null) {
 				contextDiagramElement.setText("ContextDiagram");
-				ContextDiagram tmp_save=saveContextDiagram(projectAddress,tmp_CD);
+				ContextDiagram tmp_save=saveContextDiagram(rootAddress,projectAddress,tmp_CD);
 			}
 			if(tmp_PD!=null) {
 				problemDiagramElement.setText("ProblemDiagram");
-				ProblemDiagram problemDiagram = saveProblemDiagram(projectAddress,tmp_PD);
+				ProblemDiagram problemDiagram = saveProblemDiagram(rootAddress,projectAddress,tmp_PD);
 			}
 			StringWriter strWtr = new StringWriter();
 			OutputFormat format = OutputFormat.createPrettyPrint();
@@ -804,18 +823,13 @@ public class FileService {
 			ContextDiagram tmp_CD=project.getContextDiagram();
 			ProblemDiagram tmp_PD=project.getProblemDiagram();
 			if(tmp_CD!=null) {
-				ContextDiagram tmp_save=saveContextDiagram(projectAddress,tmp_CD);
+				ContextDiagram tmp_save=saveContextDiagram(rootAddress,projectAddress,tmp_CD);
 			}
 			if(tmp_PD!=null) {
-				ProblemDiagram problemDiagram = saveProblemDiagram(projectAddress,tmp_PD);
+				ProblemDiagram problemDiagram = saveProblemDiagram(rootAddress,projectAddress,tmp_PD);
 			}
 		}
-		try {
-			GitUtil.RecordUploadProjAt("save", rootAddress, ".");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-		}
+
 		return true;
 	}
 	
@@ -829,6 +843,13 @@ public class FileService {
 		
 		this.setProject(projectAddress, branch);
 		TransXML.saveProject(project, projectAddress);
+		
+		try {
+			GitUtil.RecordUploadProjAt("save", rootAddress, ".");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return true;
 	}
 	
@@ -865,7 +886,7 @@ public class FileService {
         input.close();  
     } 
 	
-	private ContextDiagram saveContextDiagram(String projectAddress,ContextDiagram contextDiagram) {
+	private ContextDiagram saveContextDiagram(String rootAddress,String projectAddress,ContextDiagram contextDiagram) {
 		// TODO Auto-generated method stub
 		SAXReader saxReader = new SAXReader();
 		Document document = DocumentHelper.createDocument();
@@ -1017,7 +1038,7 @@ public class FileService {
 		return contextDiagram;
 	}
 	
-	private ProblemDiagram saveProblemDiagram(String projectAddress,ProblemDiagram problemDiagram) {
+	private ProblemDiagram saveProblemDiagram(String rootAddress,String projectAddress,ProblemDiagram problemDiagram) {
 		
 		SAXReader saxReader = new SAXReader();
 		Document document = DocumentHelper.createDocument();
@@ -1186,11 +1207,6 @@ public class FileService {
 		
 		return problemDiagram;
 	}
-
-
-
-
-
 
 	public void download(String projectAddress, String fileName, HttpServletResponse resp, String branch) {
 //		String proAdd = rootAddress + projectAddress + "/";

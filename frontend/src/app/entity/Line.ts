@@ -1,11 +1,14 @@
 import { ILine } from './ILine';
 import { IShape } from './IShape';
-export class Line implements ILine{
+export abstract class Line implements ILine,IShape{	
 	getNo(){}
-    getName(){}
-    getDescription(){}
-	getFrom(){}
-	getTo(){}
+    getName(){return ""}
+	getShortname() {
+		throw new Error("Method not implemented.");
+	}
+    getDescription(){return ""}
+	getFrom(){return ""}
+	getTo(){return ""}
 	getX1(){}
 	getY1(){}
 	getX2(){}

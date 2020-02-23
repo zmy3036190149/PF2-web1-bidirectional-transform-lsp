@@ -336,8 +336,7 @@ export class TopbarComponent implements OnInit {
             }
           }
           that.dg_service.projectAddress=title
-          that.dg_service.project.title=title
-          that.dg_service.register(title,"undefined",null)                        
+          that.dg_service.project.title=title                      
         }) 
     }    
     this.fileService.uploadOwlFile(this.uploader,this.type, this.owlAdd);
@@ -347,7 +346,8 @@ export class TopbarComponent implements OnInit {
                 that.fileService.getProblemDomains(that.owlAdd,that.eowlName).subscribe(
                   nodes=>{
                     that.dg_service.ontologyEntities = nodes;
-                    that.dg_service.initProjectWithOntology(that.dg_service.project.title)                       
+                    that.dg_service.initProjectWithOntology(that.dg_service.project.title)  
+                    that.dg_service.register(that.dg_service.projectAddress,"undefined",that.dg_service.project)                       
                 })
               }
         ,1500)

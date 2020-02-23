@@ -16,11 +16,21 @@ import { ProblemDiagram } from '../entity/ProblemDiagram';
 //import { template, element, text } from '@angular/core/src/render3';
 import * as joint from 'node_modules/jointjs/dist/joint.js';
 import { ContextDiagram } from '../entity/ContextDiagram';
-
 import { ProjectService } from './project.service';
 import { FileService } from './file.service';
 import { OntologyEntity } from '../entity/OntologyEntity';
 import { identifierModuleUrl } from '@angular/compiler';
+import { DiagramMessage} from "../LSP/DiagramMessage"
+import { DiagramMessageFactory } from '../LSP/DiagramMessageFactory';
+import { DiagramIdentifier } from '../LSP/DiagramIdentifier';
+import { VersionedDiagramIdentifier } from '../LSP/VersionedDiagramIdentifier';
+import { DiagramContentChangeEventFactory } from '../LSP/DiagramContentChangeEventFactory';
+import { LineInfo } from '../entity/LineInfo';
+import { Line } from '../entity/Line';
+import { DidChangeDiagramParams } from '../LSP/DidChangeDiagramParams.';
+import { DiagramContentChangeEvent } from '../LSP/DiagramContentChangeEvent';
+import { DiagramItem } from '../LSP/DiagramItem';
+import { DidOpenDiagramParams } from '../LSP/DidOpenDiagramParams'
 @Injectable({
   providedIn: 'root'
 })
@@ -107,12 +117,14 @@ export class DrawGraphService {
 
   //==============================WebSocket=========================
   openWebSocket(){
-    this.ws = new WebSocket('ws://localhost:8080/webSocket');
+    // this.ws = new WebSocket('ws://localhost:8080/webSocket');    
+    this.ws = new WebSocket('ws://localhost:8080/DiagramLSP');
     var that = this
     this.ws.onopen = function () {
       console.log('client: ws connection is open');
       // that.ws.send('hello');
     };
+    /*
     this.ws.onmessage = function (e) {
       // var project = JSON.parse(e.data) 
       console.log("=====dg收到了消息=======") 
@@ -126,6 +138,19 @@ export class DrawGraphService {
       // }
       // that.setProject(project, project.title)
     };
+    */
+    this.ws.onmessage = function (e) {
+      // var project = JSON.parse(e.data) 
+      console.log("=====dg收到了消息=======") 
+      var message:DiagramMessage = JSON.parse(e.data)
+      console.log(message)
+      console.log("============")
+      if(message.method =="Diagram/didChange"){
+        let params = <DidChangeDiagramParams>message.params
+        let diagramContentChangeEvent = <DiagramContentChangeEvent>params.contentChanges[0]
+        that.wsChange(diagramContentChangeEvent)
+      }
+    };
     this.ws.onerror = function (e) {
       console.log('=================================error================================', e);
     };
@@ -134,7 +159,7 @@ export class DrawGraphService {
       that.openWebSocket()
     }
   }
-  //-----------接收消息---------
+  //-----------接收消息 old ---------
 
   update(pro){
     // if(pro.title!=this.projectAddress){
@@ -257,8 +282,9 @@ export class DrawGraphService {
         break
     }
   }
-  //----------发送消息-----------
-  register(title,version,pro){
+
+  //----------发送消息  old -----------
+  register1(title,version,pro){
     if(version==undefined)
       version = "undefined"
     console.log("-------------------diagram register-----:",title,version)
@@ -281,8 +307,7 @@ export class DrawGraphService {
     console.log(message)
     this.ws.send(JSON.stringify(message))
   }
-
-  unregister(title,version){
+  unregister1(title,version){
     if(version==undefined)
       version = "undefined"
     var message = {
@@ -316,6 +341,228 @@ export class DrawGraphService {
     this.ws.send(JSON.stringify(message)) 
   }
 
+  //----------接收消息 new ---------
+  wsChange(diagramContentChangeEvent:DiagramContentChangeEvent){
+    let shapeType = diagramContentChangeEvent.shapeType
+    switch(shapeType){
+      case "mac":
+        this.wsMachine(diagramContentChangeEvent)
+        break
+      case "pro":
+        this.wsProblemDomain(diagramContentChangeEvent)
+        break
+      case "req":
+        this.wsRequirement(diagramContentChangeEvent)
+        break
+      case "int":
+        this.wsInterface(diagramContentChangeEvent)
+        break
+      case "ref":
+        this.wsReference(diagramContentChangeEvent)
+        break
+      case "con":
+        this.wsConstraint(diagramContentChangeEvent)
+        break
+      case "phe":
+        this.wsPhenomenon(diagramContentChangeEvent)
+        break
+    }
+  }
+  wsMachine(diagramContentChangeEvent){
+    let changeType = diagramContentChangeEvent.changeType
+    let oldShape = diagramContentChangeEvent.oldShape
+    let newShape = diagramContentChangeEvent.newShape
+    switch(changeType){
+      case "add":
+          this.drawMachinews(newShape)
+          break
+      case "delete":
+          this.deleteMachinews(oldShape)
+          break
+      case "change":
+          this.changeMachinews(oldShape,newShape)
+          break
+    }
+  }
+  wsProblemDomain(diagramContentChangeEvent){
+    let changeType = diagramContentChangeEvent.changeType
+    let oldShape = diagramContentChangeEvent.oldShape
+    let newShape = diagramContentChangeEvent.newShape
+    switch(changeType){
+      case "add":
+          this.drawProblemDomainws(newShape)
+          break
+      case "delete":
+          this.deleteProblemDomainws(oldShape)
+          break
+      case "change":
+          this.changeProblemDomainws(oldShape,newShape)
+          break
+    }
+  }
+  wsRequirement(diagramContentChangeEvent){
+    let changeType = diagramContentChangeEvent.changeType
+    let oldShape = diagramContentChangeEvent.oldShape
+    let newShape = diagramContentChangeEvent.newShape
+    switch(changeType){
+      case "add":
+          this.drawRequirementws(newShape)
+          break
+      case "delete":
+          this.deleteRequirementws(oldShape)
+          break
+      case "change":
+          this.changeRequirementws(oldShape,newShape)
+          break
+    }
+  }
+  wsInterface(diagramContentChangeEvent){
+    let changeType = diagramContentChangeEvent.changeType
+    let oldShape = diagramContentChangeEvent.oldShape
+    let newShape = diagramContentChangeEvent.newShape
+    switch(changeType){
+      case "add":
+          this.drawInterfacews(newShape)
+          break
+      case "delete":
+          this.deleteInterfacews(oldShape)
+          break
+      case "change":
+          this.changeInterfacews(oldShape,newShape)
+          break
+    }
+  }
+  wsReference(diagramContentChangeEvent){
+    let changeType = diagramContentChangeEvent.changeType
+    let oldShape = diagramContentChangeEvent.oldShape
+    let newShape = diagramContentChangeEvent.newShape
+    switch(changeType){
+      case "add":
+          this.drawReferencews(newShape)
+          break
+      case "delete":
+          this.deleteReferencews(oldShape)
+          break
+      case "change":
+          this.changeReferencews(oldShape,newShape)
+          break
+    }
+  }
+  wsConstraint(diagramContentChangeEvent){
+    let changeType = diagramContentChangeEvent.changeType
+    let oldShape = diagramContentChangeEvent.oldShape
+    let newShape = diagramContentChangeEvent.newShape
+    switch(changeType){
+      case "add":
+          this.drawConstraintws(newShape)
+          break
+      case "delete":
+          this.deleteConstraintws(oldShape)
+          break
+      case "change":
+          this.changeConstraintws(oldShape,newShape)
+          break
+    }
+  }
+  wsPhenomenon(diagramContentChangeEvent:DiagramContentChangeEvent){
+    let changeType = diagramContentChangeEvent.changeType
+    let lineInfo = diagramContentChangeEvent.lineInfo
+    let oldPhenomenon = diagramContentChangeEvent.oldPhenomenon
+    let newPhenomenon = diagramContentChangeEvent.newPhenomenon
+    switch(changeType){
+      case "add":
+          this.addPhenomenonws(lineInfo,newPhenomenon)
+          break
+      case "delete":
+          this.deletePhenomenonws(lineInfo,oldPhenomenon)
+          break
+      case "change":
+          this.changePhenomenonws(lineInfo,oldPhenomenon,newPhenomenon)
+          break
+    }
+  }
+  addPhenomenonws(lineInfo,newShape){
+
+  }
+  deletePhenomenonws(lineInfo,oldShape){
+
+  }
+  changePhenomenonws(lineInfo,oldShape,newShape){
+
+  }
+
+  //----------发送消息  new -----------
+  register(title,version,pro){
+    if(version==undefined)
+      version = "undefined"
+    console.log("-------------------diagram register-----:",title,version)
+    //取消注册之前的project
+    if(this.projectAddress && this.projectAddress != title){
+      this.unregister(this.projectAddress,this.version)
+    }
+    let diagram : DiagramItem = {uri:title+version,pro:pro}
+    let params : DidOpenDiagramParams = {diagram:diagram}
+    let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen",params)
+    this.projectAddress = title
+    this.version = version
+    console.log("============diagram send message=============")
+    console.log(message)
+    this.ws.send(JSON.stringify(message))
+  }
+  unregister(title,version){
+    if(version==undefined)
+      version = "undefined"
+    let diagram : DiagramIdentifier = {uri:title+version}
+    let params= {diagram:diagram}
+    let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didClose",params)
+    console.log("================send message=================")
+    console.log(message)
+    this.ws.send(JSON.stringify(message));
+  }
+  sendChangeShapeMessage(changeType:string,shapeType:string,oldShape,newShape){
+    let version = this.version
+    if(version==undefined)
+        version = "undefined"
+    console.log("this.messageId=",this.messageId)   
+    // let params : DiagramIdentifier = {uri:this.projectAddress+version}
+    let diagram: VersionedDiagramIdentifier={
+      uri: this.projectAddress+version,
+      version: 0      
+    }
+    let contentChanges = [new DiagramContentChangeEventFactory().
+      getShapeChangeEvent(shapeType,changeType,oldShape,newShape)]
+    let params:DidChangeDiagramParams = {
+      diagram:diagram,
+      contentChanges: contentChanges
+    }
+    let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didChange",params)
+    console.log("============send message============")
+    console.log(message)
+    this.ws.send(JSON.stringify(message)) 
+  }
+  sendChangePhenomenonMessage(changeType:string,linetype:string,line:Line,oldPhenomenon,newPhenomenon){
+    let version = this.version == undefined ? "undefined" : this.version
+    let diagram: VersionedDiagramIdentifier={
+      uri: this.projectAddress + version,
+      version: 0      
+    }
+    let lineInfo : LineInfo = {
+      type:linetype,
+      name:line.getName(),
+      from:line.getFrom(),
+      to:line.getTo()
+    }
+    let contentChanges = [new DiagramContentChangeEventFactory().
+      getPhenomenonChangeEvent(changeType,lineInfo,oldPhenomenon,newPhenomenon)]
+    let params = {
+      diagram:diagram,
+      contentChanges: contentChanges
+    }
+    let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didChange",params)
+    console.log("============send message============")
+    console.log(message)
+    this.ws.send(JSON.stringify(message)) 
+  }
   //==========================编号==============================
   searchMaxPheNo(project) {
     let no = this.searchMaxPheNo1(0,project.contextDiagram.interfaceList)
@@ -916,7 +1163,7 @@ export class DrawGraphService {
       // let element = this.drawMachineOnGraph(machine, graph);
       // this.projectService.sendProject(this.project);
       let machine = Machine.newMachine('machine', 'M1', x, y,100,50)
-      this.change("add","mac",null,machine)
+      this.sendChangeShapeMessage("add","mac",null,machine)
       // return element;
     } else {
       alert('machine already exist!');
@@ -1031,7 +1278,7 @@ export class DrawGraphService {
     let old = this.project.contextDiagram.machine
     let machine =  Machine.newMachineWithOld(old,description,shortname)
     // this.projectService.sendProject(this.project)    
-    this.change("change","mac",old,machine)
+    this.sendChangeShapeMessage("change","mac",old,machine)
     return true;
   }
   changeMachinews(old:Machine,new1:Machine) {
@@ -1079,7 +1326,7 @@ export class DrawGraphService {
     // this.project.problemDiagram.contextDiagram.machine = undefined;
     // graph.removeCells([this.selectedElement])
     // this.projectService.sendProject(this.project)    
-    this.change("delete","mac",old,null)
+    this.sendChangeShapeMessage("delete","mac",old,null)
   }
 
   //============================================Domain===============================================
@@ -1124,7 +1371,7 @@ export class DrawGraphService {
       }
     }
     let pd = ProblemDomain.newProblemDomain(no, name, shortname, 'Causal', 'GivenDomain', x, y,100,50)  
-    this.change("add", "pro",null,pd)
+    this.sendChangeShapeMessage("add", "pro",null,pd)
     // return element;
   }
   drawDesignDomain(designDomain: ProblemDomain, graph) {
@@ -1262,7 +1509,7 @@ export class DrawGraphService {
     // this.changeProblemDomainOnGraph(this.problemDomain, this.selectedElement)
     
     // this.projectService.sendProject(this.project)    
-    this.change("change", "pro", old, pd)
+    this.sendChangeShapeMessage("change", "pro", old, pd)
     return true;
   }
   changeProblemDomainws(old:ProblemDomain,new1:ProblemDomain){
@@ -1338,7 +1585,7 @@ export class DrawGraphService {
     //console.log('name=' + name);
     // graph.removeCells([this.selectedElement])
     // this.projectService.sendProject(this.project);    
-    this.change( "delete", "pro", old, null)
+    this.sendChangeShapeMessage( "delete", "pro", old, null)
   }
   deleteProblemDomainws(pd1:ProblemDomain) {
     let pd = ProblemDomain.copyProblemDomain(pd1)
@@ -1402,7 +1649,7 @@ export class DrawGraphService {
     let req = Requirement.newRequirement(no, name, x, y,100,50)
     // let element = this.drawRequirement1(req, graph);    
     // this.projectService.sendProject(this.project);
-    this.change( "add", "req", null, req)
+    this.sendChangeShapeMessage( "add", "req", null, req)
     // return element;
   }
   drawRequirement1(requirement: Requirement, graph) {
@@ -1470,7 +1717,7 @@ export class DrawGraphService {
     // let newR = this.project.changeRequirement(old,description)    
     // this.projectService.sendProject(this.project)    
     let newR = Requirement.newRequirementWithOld(old,description,shortname)
-    this.change("change", "req", old, newR)
+    this.sendChangeShapeMessage("change", "req", old, newR)
     return true;
   }
   changeRequirementws(old1:Requirement,new2:Requirement) {
@@ -1519,7 +1766,7 @@ export class DrawGraphService {
     }
     // graph.removeCells([this.selectedElement]);
     // this.projectService.sendProject(this.project)    
-    this.change("delete", "req", old, null)
+    this.sendChangeShapeMessage("delete", "req", old, null)
   }
   deleteRequirementws(requirement:Requirement) {
     let req = Requirement.copyRequirement(requirement)
@@ -1779,7 +2026,7 @@ export class DrawGraphService {
     // let myinterface = this.addInterfaceEntity(no, name, name + '?', from, to, [], 0, 0, 0, 0);
     // let element = this.drawInterface1(myinterface, source, target, graph)
     let myinterface = Interface.newInterface(no, name, name + '?', from, to, [], 0, 0, 0, 0);    
-    this.change("add", "int", null, myinterface)
+    this.sendChangeShapeMessage("add", "int", null, myinterface)
     return myinterface
   }
   drawInterfacews(int1:Interface) {
@@ -1903,7 +2150,7 @@ export class DrawGraphService {
   }
   changeInterfaceDetail() {
     let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
-    this.change("change", "int", this.interface, int)
+    this.sendChangeShapeMessage("change", "int", this.interface, int)
     //console.log('changeInterfaceDetail');
     //console.log(this.project.contextDiagram.interfaceList);
   }
@@ -1931,7 +2178,7 @@ export class DrawGraphService {
     }
 
     // graph.removeCells([this.selectedElement])
-    this.change( "delete", "int", inter,null)
+    this.sendChangeShapeMessage( "delete", "int", inter,null)
     // this.projectService.sendProject(this.project);
   }
   deleteInterfacews(int:Interface) {
@@ -2030,7 +2277,7 @@ export class DrawGraphService {
     let from = source.attr('root').shortname;
     let to = target.attr('root').shortname;
     let ref = Reference.newReference(this.reference_no, name, '', from, to, [], 0, 0, 0, 0)
-    this.change( "add", "ref", null, ref)
+    this.sendChangeShapeMessage( "add", "ref", null, ref)
     // return element;
 
   }
@@ -2244,7 +2491,7 @@ export class DrawGraphService {
   }
   changeReferenceDetail() {
     let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
-    this.change("change", "ref", this.reference, ref)
+    this.sendChangeShapeMessage("change", "ref", this.reference, ref)
   }
   changeReferencews(old:Reference,new1:Reference) {
     old = Reference.copyReference(old)
@@ -2268,7 +2515,7 @@ export class DrawGraphService {
     }
     // graph.removeCells([this.selectedElement])
 
-    this.change("delete", "ref", ref, null)
+    this.sendChangeShapeMessage("delete", "ref", ref, null)
     // this.projectService.sendProject(this.project);
   }
   deleteReferencews(ref:Reference) {
@@ -2369,7 +2616,7 @@ export class DrawGraphService {
     let to = target.attr('root').shortname;
     let from = source.attr('root').shortname
     let con = Constraint.newConstraint(no, name, '', from, to, [], 0, 0, 0, 0)
-    this.change("add", "con", null, con)
+    this.sendChangeShapeMessage("add", "con", null, con)
 
   }
   drawConstraintws(con) {
@@ -2529,7 +2776,7 @@ export class DrawGraphService {
   changeConstraintDetail() {
     let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
     console.log(con)
-    this.change("change", "con", this.constraint, con)
+    this.sendChangeShapeMessage("change", "con", this.constraint, con)
   }
   changeConstraintws(old:Constraint,new1:Constraint) {
     this.project.changeConstraint(old, new1)    
@@ -2551,7 +2798,7 @@ export class DrawGraphService {
       i++;
     }
     // graph.removeCells([this.selectedElement])    
-    this.change( "delete", "con", con, null)
+    this.sendChangeShapeMessage( "delete", "con", con, null)
     // this.projectService.sendProject(this.project)
   }
   deleteConstraintws(con:Constraint) {
@@ -2637,7 +2884,7 @@ export class DrawGraphService {
     let phenomenon = new Phenomenon();
     this.changePhenomenon(phenomenon, this.phenomenonList);
     let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
-    this.change("change", "int", this.interface, int)
+    this.sendChangeShapeMessage("change", "int", this.interface, int)
   }
   addReferencePhenomenon() {
     let phenomenon = new RequirementPhenomenon();
@@ -2654,7 +2901,7 @@ export class DrawGraphService {
     }
     phenomenon.requirement = reqno;
     let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
-    this.change("change", "ref", this.reference, ref)
+    this.sendChangeShapeMessage("change", "ref", this.reference, ref)
   }
   addConstraintPhenomenon() {
     let phenomenon = new RequirementPhenomenon();
@@ -2671,7 +2918,7 @@ export class DrawGraphService {
       phenomenon.requirement = reqno;  
     this.description = this.project.getDescription(this.selectedElement.attr('root').title, this.constraintPhenomenonList)
     let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
-    this.change("change", "con", this.constraint, con)
+    this.sendChangeShapeMessage("change", "con", this.constraint, con)
   }
   changePhenomenon(phenomenon, phenomenonList) {
     let selectedDiv = document.getElementById(this.selectedType + 'PopBox');
@@ -2916,15 +3163,15 @@ export class DrawGraphService {
     if (this.selectedType == 'interface') {
       this.deletePhenomenon1();
       let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
-      this.change("change", "int", this.interface, int)
+      this.sendChangeShapeMessage("change", "int", this.interface, int)
     } else if (this.selectedType == 'reference') {
       this.deletePhenomenon1();
       let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
-      this.change("change", "ref", this.reference, ref)
+      this.sendChangeShapeMessage("change", "ref", this.reference, ref)
     } else if (this.selectedType == 'constraint') {
       this.deletePhenomenon1();
       let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
-      this.change("change", "con", this.constraint, con)
+      this.sendChangeShapeMessage("change", "con", this.constraint, con)
     }
   }
   deletePhenomenon1() {

@@ -49,7 +49,7 @@ public class WebSocket {
 		this.session = session;
 		webSocketSet.add(this);     //加入set中
 		addOnlineCount();           //在线数加1
-		System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+		////System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class WebSocket {
 		unregister(this.session);
 		webSocketSet.remove(this);  //从set中删除
 		subOnlineCount();           //在线数减1
-		System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
+		//System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
@@ -69,10 +69,7 @@ public class WebSocket {
 	 * @param session 可选的参数
 	 */
 	@OnMessage
-	public void onMessage(String message, Session session) {		
-		System.out.println("来自客户端的消息长度:	"+message.length());
-		if(message.length()<10000)
-			System.out.println("来自客户端的消息:	"+ message);
+	public void onMessage(String message, Session session) {
 		JSONObject json = JSONObject.parseObject(message); 
 		String from = (String) json.get("from");	
 		String type = (String) json.get("type");
@@ -87,12 +84,10 @@ public class WebSocket {
 		case "delete":		
 			change(message,title,version,from);
 			break;
-		default: System.out.println("type="+type+"==");
 		}
-
 	}
 	void register(Session session,JSONObject json ){
-		System.out.println("============register==============");
+		//System.out.println("============register==============");
 		String from = (String) json.get("from");	
 		String type = (String) json.get("type");
 		String title = (String) json.get("title");	
@@ -114,7 +109,7 @@ public class WebSocket {
 		int flag = 0;
 		boolean textFlag = false;
 		boolean diagramFlag = false;
-		System.out.println(from + " observer register");				
+		//System.out.println(from + " observer register");				
 		for(Subject subject: WebSocket.subjectSet) {
 			if(title.equals(subject.getTitle()) && version.contentEquals(subject.getVersion())) {
 				subject.attach(observer);				
@@ -125,7 +120,7 @@ public class WebSocket {
 					diagramFlag = true;
 			}
 		}
-//		System.out.println("flag = "+flag);
+//		//System.out.println("flag = "+flag);
 		//若不存在subject则新建subject并注册
 		if(flag<2) {
 			Subject subject = null;
@@ -149,12 +144,12 @@ public class WebSocket {
 			}			
 		}
 
-		System.out.println("==========================");
+		//System.out.println("==========================");
 	}
 	void attachFromOtherSubject(String title,String version,Subject subject){
 		for(Subject sub:WebSocket.subjectSet) {
 			if(sub.getTitle().contentEquals(title) && sub.getVersion().contentEquals(version)) {
-				System.out.println("attachFromOtherSubject	title = "+title+", version = "+version+", sub.getEditorType()="+sub.getEditorType());
+				//System.out.println("attachFromOtherSubject	title = "+title+", version = "+version+", sub.getEditorType()="+sub.getEditorType());
 				for(Observer ob: sub.getObserverSet()) {
 					if(ob.getSession()!= session) {
 						subject.attach(ob);
@@ -177,7 +172,7 @@ public class WebSocket {
 				lsp.detach(session,from);
 				if(lsp.getObserverSet().isEmpty()) {
 					WebSocket.subjectSet.remove(lsp);
-					System.out.println(lsp.getTitle()+"无连接,删除该元素");
+					//System.out.println(lsp.getTitle()+"无连接,删除该元素");
 				}
 			}
 		}
@@ -187,7 +182,7 @@ public class WebSocket {
 				lsp.detach(session);	
 				if(lsp.getObserverSet().isEmpty()) {
 					WebSocket.subjectSet.remove(lsp);
-					System.out.println(lsp.getTitle()+"无连接,删除该元素");
+					//System.out.println(lsp.getTitle()+"无连接,删除该元素");
 				}
 		}
 	}
@@ -215,7 +210,7 @@ public class WebSocket {
 	 */
 	@OnError
 	public void onError(Session session, Throwable error){
-		System.out.println("发生错误");
+		////System.out.println("发生错误");
 		error.printStackTrace();
 	}
 

@@ -28,6 +28,7 @@ import com.example.demo.bean.Reference;
 import com.example.demo.bean.Requirement;
 import com.example.demo.bean.RequirementPhenomenon;
 import com.example.demo.service.AddressService;
+//转为广西师大所用格式
 public class TransXML {
 	//从xml文件中读取Project
 	private static String rootAddress = AddressService.rootAddress;
@@ -302,7 +303,6 @@ public class TransXML {
 		return requirementList;
 	}
 
-	
 	private Requirement getRequirement(Element requirementElement) {
 		// TODO Auto-generated method stub
 		Requirement requirement = new Requirement();

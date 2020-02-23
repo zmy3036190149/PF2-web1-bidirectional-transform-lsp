@@ -20,6 +20,7 @@ public class Forward {
 	Process p;
 	BufferedWriter bw;
 	BufferedReader br;
+	TailLogThread thread;
 	public Forward(Session session) {
 		super();
 		this.session = session;
@@ -31,7 +32,7 @@ public class Forward {
 	        // write to child process
 	        bw = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
 	        InputStream inputStream = p.getInputStream();
-			TailLogThread thread = new TailLogThread(inputStream, session);
+			thread = new TailLogThread(inputStream, session);
 			thread.start();
 			System.out.println("thread.Id = "+thread.getId());
 //	        BufferedInputStream in = new BufferedInputStream(p.getInputStream());
@@ -60,5 +61,18 @@ public class Forward {
 	public void setSession(Session session) {
 		this.session = session;
 	}
+	public Process getP() {
+		return p;
+	}
+	public void setP(Process p) {
+		this.p = p;
+	}
+	public TailLogThread getThread() {
+		return thread;
+	}
+	public void setThread(TailLogThread thread) {
+		this.thread = thread;
+	}
+	
 	
 }

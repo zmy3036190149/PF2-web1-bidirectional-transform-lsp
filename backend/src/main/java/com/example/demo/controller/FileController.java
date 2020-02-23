@@ -163,6 +163,7 @@ public class FileController {
 		fileService.format_download(projectAddress, fileName, resp, branch);
 	}
 	
+	//获取所有project列表
 	@RequestMapping(value="/searchProject",method = RequestMethod.GET)
 	@ResponseBody
 	public List<String> searchProject() {
@@ -172,8 +173,7 @@ public class FileController {
 		System.out.println(projects.size());
 		return projects;
 	}
-	
-	
+		
 	 @RequestMapping(value="/searchVersion/{project}",method = RequestMethod.GET)
 	 @ResponseBody 
 	 public List<String> searchVersion(@PathVariable("project") String project) 
@@ -186,13 +186,13 @@ public class FileController {
 		 return versions;
 	 }
 	 
-		@RequestMapping("/getProblemDomains/{owlAdd}/{owlName}")
-		public ArrayList<MyOntClass> getProblemDomains(@PathVariable("owlAdd") String owlAdd,@PathVariable("owlName") String owlName) {
-			ArrayList<MyOntClass> re = null;
-			String branch = owlAdd;
-			re = fileService.GetProblemDomains(owlName,branch);
-		    return re;
-		}
+	@RequestMapping("/getProblemDomains/{owlAdd}/{owlName}")
+	public ArrayList<MyOntClass> getProblemDomains(@PathVariable("owlAdd") String owlAdd,@PathVariable("owlName") String owlName) {
+		ArrayList<MyOntClass> re = null;
+		String branch = owlAdd;
+		re = fileService.GetProblemDomains(owlName,branch);
+	    return re;
+	}
 		
 		@RequestMapping("/getNodes/{owlAdd}/{owlName}/{nodeName}/{type}")
 		public String[] getNodes(@PathVariable("owlAdd") String owlAdd,@PathVariable("owlName") String owlName,@PathVariable("nodeName") String nodeName,
@@ -237,6 +237,5 @@ public class FileController {
 			fileService.saveProject(projectAddress, project, branch);
 			return project;
 		}
-		
-	
+
 }

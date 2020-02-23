@@ -1,11 +1,12 @@
 package com.example.demo.service;
 
 public class AddressService {
-	public static String rootAddress = "/root/PF/Project/";
-	public static String downloadRootAddress ="/root/PF/Download/";
-	public static String pfRootAddress = "/root/PF/pf/";
-	public static String owlRootAddress = "/root/PF/owl/";
-	public static String pOwlRootAddress = "/root/PF/powl/";
-	public static String eOwlRootAddress = "/root/PF/eowl/";
-	public static String tmpRootAddress = "/root/PF/tmp/";
+	public static String rootAddress = "C:/PF/Project/";
+	public static String downloadRootAddress ="C:/PF/Download/";
+	public static String pfRootAddress = "C:/PF/pf/";
+	public static String owlRootAddress = "C:/PF/owl/";
+	public static String pOwlRootAddress = "C:/PF/powl/";
+	public static String eOwlRootAddress = "C:/PF/eowl/";
+	public static String tmpRootAddress = "C:/PF/tmp/";
+	public static String lastestProjectAddress = "C:/PF/lastestProject/";
 }
