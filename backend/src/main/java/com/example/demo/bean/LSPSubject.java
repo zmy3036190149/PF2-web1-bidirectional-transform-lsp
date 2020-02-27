@@ -5,6 +5,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 
 import javax.websocket.Session;
+
+import com.github.gumtreediff.tree.ITree;
 public abstract class LSPSubject {
 	private String uri;
 	private String editorType;	
@@ -61,5 +63,10 @@ public abstract class LSPSubject {
 	}
 	public void setObserverSet(CopyOnWriteArraySet<LSPObserver> observerSet) {
 		this.observerSet = observerSet;
+	}
+
+	public void setValue(ITree org, ITree old) {
+		// TODO Auto-generated method stub
+		
 	}
 }

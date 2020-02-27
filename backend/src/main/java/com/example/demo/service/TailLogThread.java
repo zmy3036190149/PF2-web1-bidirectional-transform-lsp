@@ -12,10 +12,12 @@ public class TailLogThread extends Thread {
 
 	private BufferedReader reader;
 	private Session session;
+	private boolean isRun;
 	
 	public TailLogThread(InputStream in, Session session) {
 		this.reader = new BufferedReader(new InputStreamReader(in));
 		this.session = session;
+		isRun = true;
 		
 	}
 	
@@ -34,7 +36,7 @@ public class TailLogThread extends Thread {
 				reader.readLine();
 			}
 			
-			while(true) {
+			while(isRun) {
 				//读取内容
 				char cbuf[] = new char[len];
 				reader.read(cbuf, 0, len);				
@@ -43,6 +45,10 @@ public class TailLogThread extends Thread {
 					try {
 						session.getBasicRemote().sendText(s);						
 					}catch (IOException e) {
+						System.out.println("error run");
+						e.printStackTrace();
+						return;
+					}catch(Exception e) {
 						System.out.println("error run");
 						e.printStackTrace();
 						return;
@@ -64,5 +70,9 @@ public class TailLogThread extends Thread {
 			System.out.println("error run");
 			e.printStackTrace();
 		}
+	}
+	
+	public void stopThread(){
+		isRun = false;
 	}
 }

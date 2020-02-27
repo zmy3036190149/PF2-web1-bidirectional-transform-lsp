@@ -47,11 +47,11 @@ export class TextService {
       monaco.Uri.parse("file://E:/test-data/"+this.filename))
     this.editor.setModel(model)
     monaco.editor.getModels().forEach(model => {
-      console.log(model)
-      console.log(model.uri.toString())      
+      //console.log(model)
+      //console.log(model.uri.toString())      
     })
     var rootUri = "file://E:/test-data/"+this.filename;
-    console.log(this.editor)
+    //console.log(this.editor)
     // install Monaco language client services    
     MonacoServices.install(this.editor,{ rootUri: rootUri });
     // create the web socket
@@ -147,9 +147,9 @@ export class TextService {
   //     this.languageClient = res[1]
   //     var that = this
   //     // this.editor.onDidChangeModelContent(function (event) { 
-  //       // console.log("====onDidChangeModelContent=======")        
-  //       // console.log(that.languageClient)        
-  //       // console.log(that.languageClient.diagnostics)
+  //       // //console.log("====onDidChangeModelContent=======")        
+  //       // //console.log(that.languageClient)        
+  //       // //console.log(that.languageClient.diagnostics)
   //     // });
   //   }
      
@@ -180,8 +180,8 @@ export class TextService {
       "text": value,
       "error":error
     }
-    console.log("============text send message=============")
-    console.log(message)    
+    //console.log("============text send message=============")
+    //console.log(message)    
     this.ws.send(JSON.stringify(message))
   }
 
@@ -198,8 +198,8 @@ export class TextService {
     this.fileService.getNotNullPf(projectAddress,version).subscribe(
       pf => {
         if(pf!=""){
-          console.log("===== getNotNullPf ==========")       
-          console.log(pf)       
+          //console.log("===== getNotNullPf ==========")       
+          // //console.log(pf)       
           that.register(projectAddress,version,pf)
         }else{ 
           that.register(projectAddress,version,"#"+projectAddress+"#\n")    
@@ -216,8 +216,8 @@ export class TextService {
     //   this.fileService.getNotNullPf(projectAddress,version).subscribe(
     //     pf => {
     //       if(pf!=""){
-    //         console.log("===== getNotNullPf ==========")       
-    //         console.log(pf)       
+    //         //console.log("===== getNotNullPf ==========")       
+    //         //console.log(pf)       
     //         that.register(projectAddress,version,pf)
     //       }else{ 
     //         that.register(projectAddress,version,"#"+projectAddress+"#\n")    
@@ -229,23 +229,23 @@ export class TextService {
     this.ws = new WebSocket('ws://localhost:8080/webSocket');
     var that = this
     this.ws.onopen = function () {
-      console.log('client: ws connection is open');
+      //console.log('client: ws connection is open');
       // that.ws.send('hello');
     };
     this.ws.onmessage = function (e) {
       // var project = JSON.parse(e.data) 
-      console.log("=====text收到了消息=======") 
+      //console.log("=====text收到了消息=======") 
       var pro = JSON.parse(e.data)
-      console.log(pro)
-      console.log("============")
+      //console.log(pro)
+      //console.log("============")
       that.update(pro)
       // that.setProject(project, project.title)
     };
     this.ws.onerror = function (e) {
-      console.log('=================================error================================', e);
+      //console.log('=================================error================================', e);
     };
     this.ws.onclose = function(e){
-      console.log("=================================close===============================",e);
+      //console.log("=================================close===============================",e);
       that.openWebSocket()      
       that.register(that.projectAddress,that.version,that.getText())   
     }
@@ -254,7 +254,7 @@ export class TextService {
   register(title,version,text){
     if(version==undefined)
       version = "undefined"
-    console.log("-------------------register-----:",title,version)
+    //console.log("-------------------register-----:",title,version)
     var message = {
       "type":"register",
       "title": title,
@@ -265,19 +265,19 @@ export class TextService {
     }
     this.projectAddress = title
     this.version = version
-    console.log("============send message=============")
-    console.log(message)
+    //console.log("============send message=============")
+    //console.log(message)
     this.ws.send(JSON.stringify(message))
   }
   //==========接收消息===========
   
   update(jsonMessage){
-    console.log(jsonMessage)
+    //console.log(jsonMessage)
     switch(jsonMessage.type){
       case "registered":
         this.registered(jsonMessage);
     }
-    console.log(jsonMessage.type)
+    //console.log(jsonMessage.type)
     this.newValue = jsonMessage.text
     
     var position = this.editor.getPosition();
@@ -291,12 +291,12 @@ export class TextService {
     if(this.messageId==id){
       this.messageId +=1
     }else{
-      console.log("this.messageId=",this.messageId)
-      console.log("id = ",id)
+      //console.log("this.messageId=",this.messageId)
+      //console.log("id = ",id)
     }
   }
   registered(jsonMessage){
-    console.log("registered, jsonMessage.text=",jsonMessage.text)
+    // //console.log("registered, jsonMessage.text=",jsonMessage.text)
     this.createEditor(this.projectAddress,this.version,jsonMessage.text)
     let that = this
     this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,

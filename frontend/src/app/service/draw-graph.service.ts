@@ -114,7 +114,7 @@ export class DrawGraphService {
   ontologyPhes
   interface_ontologyPhes
   messageId=0
-
+  interval1
   //==============================WebSocket=========================
   openWebSocket(){
     // this.ws = new WebSocket('ws://localhost:8080/webSocket');    
@@ -194,7 +194,6 @@ export class DrawGraphService {
       console.log("id = ",id)
     }
   }
-  
   updateProjectSinceTextChanged(pro){
     let newProject = new Project()
     newProject.initProject(pro)
@@ -366,6 +365,8 @@ export class DrawGraphService {
       case "phe":
         this.wsPhenomenon(diagramContentChangeEvent)
         break
+      case "project":
+        this.wsProject(diagramContentChangeEvent)
     }
   }
   wsMachine(diagramContentChangeEvent){
@@ -490,9 +491,24 @@ export class DrawGraphService {
   changePhenomenonws(lineInfo,oldShape,newShape){
 
   }
+  wsProject(diagramContentChangeEvent:DiagramContentChangeEvent){
+    let pro :Project = diagramContentChangeEvent.newProject
+    let newProject = new Project()
+    newProject.initProject(pro)
+    //若找到同名（简称）实体则修改,若找不到，则添加
+    //删除pro中不存在的实体
+    this.project.changeMachineWithNewProject(newProject)
+    this.project.changeProblemDomainWithNewProject(newProject)
+    this.project.changeRequirementWithNewProject(newProject)
+    this.project.changeInterfaceWithNewProject(newProject)
+    this.project.changeConstraintWithNewProject(newProject)
+    this.project.changeReferenceWithNewProject(newProject)
+    //画图
+    this.drawDiagram(this.project);
+  }
 
   //----------发送消息  new -----------
-  register(title,version,pro){
+  register(title,version,pro:Project){
     if(version==undefined)
       version = "undefined"
     console.log("-------------------diagram register-----:",title,version)
@@ -500,14 +516,100 @@ export class DrawGraphService {
     if(this.projectAddress && this.projectAddress != title){
       this.unregister(this.projectAddress,this.version)
     }
-    let diagram : DiagramItem = {uri:title+version,pro:pro}
+    // let diagram : DiagramItem = {uri:title+version,pro:pro}
+    // let cd = pro.contextDiagram
+    let diagram :DiagramItem= {uri:title+version, 
+      title:title, 
+      project:pro, 
+      contextDiagram:null,
+      requirementList:null,
+      constraintList: null, 
+      referenceList: null }
     let params : DidOpenDiagramParams = {diagram:diagram}
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen",params)
+    console.log("============diagram send message=============")
+    let smessage = JSON.stringify(message)
+    console.log(smessage.length)
+    console.log(message)
+    this.ws.send(smessage)
+
     this.projectAddress = title
     this.version = version
-    console.log("============diagram send message=============")
+  }
+  //分批发送project信息
+  register2(title,version,pro:Project){
+    if(version==undefined)
+      version = "undefined"
+    console.log("-------------------diagram register-----:",title,version)
+    //取消注册之前的project
+    if(this.projectAddress && this.projectAddress != title){
+      this.unregister(this.projectAddress,this.version)
+    }
+    // let diagram : DiagramItem = {uri:title+version,pro:pro}
+    let cd = pro.contextDiagram
+    let diagram :DiagramItem= {uri:title+version, 
+      title:title, 
+      contextDiagram:cd, 
+      project:null,
+      requirementList:null,
+      constraintList: null, 
+      referenceList: null }
+    let cdparams : DidOpenDiagramParams = {diagram:diagram}
+    let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen1",cdparams)
+    console.log("============diagram send message=============")    
+    let smessage = JSON.stringify(message)
+    console.log(smessage.length)
     console.log(message)
-    this.ws.send(JSON.stringify(message))
+    this.ws.send(smessage)
+    let that = this
+    this.interval1 = setInterval(function () {
+      clearInterval(that.interval1);       
+      that.setRequirementList(title,version,pro)
+      that.setConstraintList(title,version,pro)
+      that.setReferenceList(title,version,pro)
+    }, 100);
+    this.projectAddress = title
+    this.version = version
+  }
+  setRequirementList(title,version,pro){
+    let requirementList: Requirement[] = JSON.parse(JSON.stringify(pro.problemDiagram.requirementList))
+    let diagram:DiagramItem = {uri:title+version,title:title,project:null,contextDiagram:null,requirementList:requirementList,
+      constraintList: null, referenceList: null }
+    let params : DidOpenDiagramParams = {diagram:diagram}
+    let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen/requirementList",params)      
+    let smessage = JSON.stringify(message)
+    console.log(smessage.length)
+    console.log(message)
+    this.ws.send(smessage)
+  }
+  setConstraintList(title,version,pro){
+    let constraintList = pro.problemDiagram.constraintList
+    let diagram:DiagramItem = {uri:title+version,title:title,project:null,contextDiagram:null,requirementList:null,
+      constraintList: constraintList, referenceList: null }
+    let params : DidOpenDiagramParams = {diagram:diagram}
+    let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen/constraintList",params)      
+    let smessage = JSON.stringify(message)
+    console.log(smessage.length)
+    console.log(message)
+    this.ws.send(smessage)
+  }
+  setReferenceList(title,version,pro:Project){
+    let referenceList = pro.problemDiagram.referenceList
+    let diagram:DiagramItem = {
+      uri:title+version,
+      title:title,
+      project:null,
+      contextDiagram:null,
+      requirementList:null,
+      constraintList: null, 
+      referenceList: referenceList
+    }
+    let params : DidOpenDiagramParams = {diagram:diagram}
+    let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen/referenceList",params)      
+    let smessage = JSON.stringify(message)
+    console.log(smessage.length)
+    console.log(message)
+    this.ws.send(smessage)
   }
   unregister(title,version){
     if(version==undefined)
@@ -568,16 +670,17 @@ export class DrawGraphService {
     let no = this.searchMaxPheNo1(0,project.contextDiagram.interfaceList)
     no = this.searchMaxPheNo1(no,project.problemDiagram.referenceList)
     no = this.searchMaxPheNo1(no,project.problemDiagram.constraintList)
-    //console.log('searchMaxPheNo1');
-    //console.log(no)
+    console.log('searchMaxPheNo1');
+    console.log(no)
     return no
   }
   searchMaxPheNo1(no,linkList){
      for(let link of linkList){
        for( let phe of link.phenomenonList){
          if(phe.no>no){
+          //  console.log(phe.no,">",no)
            no = phe.no;
-         }         
+         }  
        }
      }     
      return no;
@@ -594,7 +697,7 @@ export class DrawGraphService {
       }
     }    
     for (let my_interface of project.contextDiagram.interfaceList) {
-      name = this.compareLinkName(name,my_interface.interface_name)
+      name = this.compareLinkName(name,my_interface.name)
       //console.log(name+'<'+my_interface.name);
     }
     //console.log(name);
@@ -976,6 +1079,7 @@ export class DrawGraphService {
     }
   }
 
+  //獲取Project
   getProject(projectAddress: string, version): void {
     // //console.log("aaa");
     // this.projectAddress = window.location.pathname.split('/')[1];
@@ -1025,11 +1129,14 @@ export class DrawGraphService {
     console.log(project)
     this.link_name_no=this.searchMaxLinkNameNo(this.project)+1
     this.phenomenon_no=this.searchMaxPheNo(this.project)+1
+    console.log("this.link_name_no = ",this.link_name_no)
+    console.log("this.phenomenon_no = ",this.phenomenon_no)
     this.dealConstraint(this.project)
     this.drawDiagram(this.project)
     this.projectService.sendProject(this.project)
   }
 
+  //處理 reference 和 constraint上的constraint標記
   dealConstraint(project){
     for(let temp of project.problemDiagram.referenceList){
       for(let phe of temp.phenomenonList){
@@ -1051,7 +1158,7 @@ export class DrawGraphService {
   //-----------------画图----------------------------
   //绘制图形
   drawDiagram(project: Project) {
-    this.initPapers();   
+    this.initPapers();
     this.drawContextDiagram(project.contextDiagram, this.graphs[0]);
     this.drawProblemDiagram(project.problemDiagram, this.graphs[1]);
   }
@@ -2883,8 +2990,8 @@ export class DrawGraphService {
   addInterfacePhenomenon() {
     let phenomenon = new Phenomenon();
     this.changePhenomenon(phenomenon, this.phenomenonList);
-    let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
-    this.sendChangeShapeMessage("change", "int", this.interface, int)
+    // let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
+    this.sendChangePhenomenonMessage("add","int",this.interface,null,phenomenon)  
   }
   addReferencePhenomenon() {
     let phenomenon = new RequirementPhenomenon();
@@ -2900,8 +3007,9 @@ export class DrawGraphService {
       reqno = this.getReqNo(target.attr('root').title);
     }
     phenomenon.requirement = reqno;
-    let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
-    this.sendChangeShapeMessage("change", "ref", this.reference, ref)
+    // let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
+    // this.sendChangeShapeMessage("change", "ref", this.reference, ref)
+    this.sendChangePhenomenonMessage("add","ref",this.reference,null,phenomenon) 
   }
   addConstraintPhenomenon() {
     let phenomenon = new RequirementPhenomenon();
@@ -2917,8 +3025,9 @@ export class DrawGraphService {
       }   
       phenomenon.requirement = reqno;  
     this.description = this.project.getDescription(this.selectedElement.attr('root').title, this.constraintPhenomenonList)
-    let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
-    this.sendChangeShapeMessage("change", "con", this.constraint, con)
+    // let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
+    // this.sendChangeShapeMessage("change", "con", this.constraint, con)
+    this.sendChangePhenomenonMessage("add","phe",this.constraint,null,phenomenon) 
   }
   changePhenomenon(phenomenon, phenomenonList) {
     let selectedDiv = document.getElementById(this.selectedType + 'PopBox');
@@ -3161,28 +3270,33 @@ export class DrawGraphService {
   //deletePhenomenon
   deletePhenomenon() {
     if (this.selectedType == 'interface') {
-      this.deletePhenomenon1();
-      let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
-      this.sendChangeShapeMessage("change", "int", this.interface, int)
+      let phenomenon = this.deletePhenomenon1();
+      // let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
+      // this.sendChangeShapeMessage("change", "int", this.interface, int)
+      this.sendChangePhenomenonMessage("delete","int",this.interface,phenomenon,null) 
     } else if (this.selectedType == 'reference') {
-      this.deletePhenomenon1();
-      let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
-      this.sendChangeShapeMessage("change", "ref", this.reference, ref)
+      let phenomenon = this.deletePhenomenon1();
+      // let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
+      // this.sendChangeShapeMessage("change", "ref", this.reference, ref)
+      this.sendChangePhenomenonMessage("delete","ref",this.reference,phenomenon,null)
     } else if (this.selectedType == 'constraint') {
-      this.deletePhenomenon1();
-      let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
-      this.sendChangeShapeMessage("change", "con", this.constraint, con)
+      let phenomenon = this.deletePhenomenon1();
+      // let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
+      // this.sendChangeShapeMessage("change", "con", this.constraint, con)
+      this.sendChangePhenomenonMessage("delete","con",this.constraint,phenomenon,null) 
     }
   }
-  deletePhenomenon1() {
-    this.deletePhenomenonByNo(this.selectedPhenomenonNo, this.phenomenonList)    
+  deletePhenomenon1():Phenomenon {
+    let phenomenon = this.deletePhenomenonByNo(this.selectedPhenomenonNo, this.phenomenonList)    
     this.projectService.sendProject(this.project);
+    return phenomenon
   }
-  deletePhenomenonByNo(phenomenonNo, phenomenonList) {
+  deletePhenomenonByNo(phenomenonNo, phenomenonList):Phenomenon {
     let i = 0;
     for (let phenomenon of phenomenonList) {
       if (phenomenon.no == phenomenonNo) {
         phenomenonList.splice(i, 1);
+        return phenomenon
       }
       i += 1;
     }
