@@ -73,4 +73,10 @@ public class Interface extends Line{
 	public void setY2(int y2) {
 		this.y2 = y2;
 	}
+	public void refreshPhenomenonList(){
+		for(Phenomenon phenomenon:phenomenonList){
+			phenomenon.setFrom(from);
+			phenomenon.setTo(to);
+		}
+	}
 }

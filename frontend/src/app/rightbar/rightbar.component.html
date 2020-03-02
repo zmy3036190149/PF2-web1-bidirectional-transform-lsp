@@ -54,7 +54,7 @@
             <th>Description</th>
             <th>PheType</th>
           </tr>
-          <tr *ngFor="let phe of pheList">
+          <tr *ngFor="let phe of dg_service.getAllPhenomenon()">
             <td>phe{{phe.no}}</td>
             <td>{{phe.name}}</td>
             <td>{{phe.type}}</td>
@@ -73,7 +73,7 @@
             <th>Receiver</th>
             <th>Content</th>
           </tr>
-          <tr *ngFor="let phe of pheList">
+          <tr *ngFor="let phe of dg_service.getAllPhenomenon()">
             <td>int{{phe.no}}</td>
             <td>{{phe.from}}</td>
             <td>{{phe.to}}</td>
@@ -94,7 +94,7 @@
             <th>Content</th>
             <th>Constraint</th>
           </tr>
-          <tr *ngFor="let phe of reqPheList">
+          <tr *ngFor="let phe of dg_service.getAllRequirementPhenomenon()">
             <td>req{{phe.requirement}}</td>
             <td>{{phe.from}}</td>
             <td>{{phe.to}}</td>

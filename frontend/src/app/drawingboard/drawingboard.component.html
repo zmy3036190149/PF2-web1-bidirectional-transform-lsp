@@ -178,18 +178,18 @@
       <!-- </div>       -->
 
       <label for="phenomenonList"> phenomenonList</label>
-      <div class="content1">
-          <table class="referencePhenomenonList">
-            <tr *ngFor="let phenomenon of dg_service.phenomenonList">
-              <td (click)="dg_service.selectPhenomenon(this,phenomenon.no)">
-                {{phenomenon.from}}!
-                {{phenomenon.name}}
-                &nbsp;
-                {{phenomenon.type}}
-              </td>
-            </tr>
-          </table>
-      </div>
+        <div class="content1">
+            <!-- {{dg_service.description}} -->
+            <table class="referencePhenomenonList">
+              <tr *ngFor="let phenomenon of dg_service.phenomenonList">
+                <td (click)="dg_service.selectPhenomenon(this,phenomenon.no)">
+                  {{phenomenon.from}}!
+                  {{phenomenon.name}}&nbsp;
+                  {{phenomenon.type}}
+                </td>
+              </tr>
+            </table>
+        </div>
       <input type="submit" class=button3_1 id="button_add" value="add" (click)="dg_service.addPhenomenon()" />
       <input type="submit" class=button3_2 id="button_delete" value="delete" (click)="dg_service.deletePhenomenon()" />
       <input type="submit" class=button3_3 id="button_confirm" value="Confirm" (click)="confirm()" />

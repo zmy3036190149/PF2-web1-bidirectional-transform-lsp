@@ -46,12 +46,12 @@ public class ASTService {
 	}
 	public ITree getProjectParent(ITree tree) {
 		for(ITree child:tree.getChildren()) {
-			if(child.getLabel()=="project")
+			if(child.getLabel().equals("project"))
 				return tree;
 		}
 		for(ITree child:tree.getChildren()) {
 			ITree res = getProjectParent(child);
-			if(res!=null) {
+			if(res != null) {
 				return res;
 			}
 		}
@@ -65,32 +65,33 @@ public class ASTService {
 //			System.out.println(tree.getParent().toShortString()+","+tree.getParent().getId());
 //		else
 //			System.out.println("root");
-		if(tree.getType()==10) {
-			for(ITree brother:tree.getParent().getChildren()) {
-				if(brother.getType()==10) {
-					if(brother==tree)
-						str += ">";
-					break;
+		try{
+			if(tree.getType()==10) {
+				for(ITree brother:tree.getParent().getChildren()) {
+					if(brother.getType()==10) {
+						if(brother==tree)
+							str += ">";
+						break;
+					}
 				}
+				str += "<";
+			}else if(tree.getType()==11) {
+				str += tree.getLabel();
+			}else if(tree.getType()==6) {//属性
+				str += " "+ tree.getLabel();
+			}else if(tree.getType()==8) {//属性值
+				str += "="+ tree.getLabel();
+			}else if(tree.getType()==15) {//String  <title  >insulin </title>
+				str += ">"+tree.getLabel();
 			}
-			str += "<";
-		}else if(tree.getType()==11) {
-			str += tree.getLabel();
-		}else if(tree.getType()==6) {//属性
-			str += " "+ tree.getLabel();
-		}else if(tree.getType()==8) {//属性值
-			str += "="+ tree.getLabel();
-		}else if(tree.getType()==15) {//String  <title  >insulin </title>
-			str += ">"+tree.getLabel();
-		}
-		//遍历子节点
-		for(ITree child: tree.getChildren()) {
-			str += parseAST(child);
-		}
-		//输出 />
-		//<Machine machine_name="controller" machine_shortname="controller" machine_locality="100,250,50,100"/>
-        
-		if(tree.getType()==10) {			
+			//遍历子节点
+			for(ITree child: tree.getChildren()) {
+				str += parseAST(child);
+			}
+			//输出 />
+			//<Machine machine_name="controller" machine_shortname="controller" machine_locality="100,250,50,100"/>
+
+			if(tree.getType()==10) {
 				boolean isFind = false;
 				for(ITree child:tree.getChildren()) {
 					if(child.getType()==10 || child.getType()==15)
@@ -102,11 +103,11 @@ public class ASTService {
 					 * <Element 2
 					 * 		interface_description="b:LC!{OffPulse,Onpulse}" >3
 					 * 4
-					 * 		<Phenomenon phenomenon_no="1" /> 
+					 * 		<Phenomenon phenomenon_no="1" />
 					 * 5
 					 * 		<Phenomenon phenomenon_no="2" />
 					 * </Element>
-		            */
+					 */
 					// <title>ContextDiagram</title>
 //					System.out.println("find child.getType()==10 || child.getType()==15");
 					str += "</"+tree.getChild(0).getLabel()+">\n";
@@ -116,9 +117,13 @@ public class ASTService {
 					str += "/>\n";
 				}
 				//	<title>insulin    </title>
-				
-		}
+
+			}
 //		System.out.println(str);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 		return str;
 	}
 

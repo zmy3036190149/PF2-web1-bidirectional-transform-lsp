@@ -1351,9 +1351,9 @@ public class FileService {
 				re.append(tmp_i.getY1());
 				re.append(",");
 				re.append(tmp_i.getY1());
-				
+
 				String locality = re.toString();
-				
+
 				Element interfaceElement=interfaceListElement.addElement("Element");
 				interfaceElement.addAttribute("interface_description", description);
 				interfaceElement.addAttribute("interface_no", no);
@@ -1361,11 +1361,11 @@ public class FileService {
 				interfaceElement.addAttribute("interface_from", from);
 				interfaceElement.addAttribute("interface_to", to);
 				interfaceElement.addAttribute("interface_name", name);
-				
+
 				for(int j=0;j<phenomenonElementList.size();j++) {
 
 					Phenomenon tmp_p=phenomenonElementList.get(j);
-					
+
 					String phe_no = String.valueOf(tmp_p.getNo());
 					String phe_name = tmp_p.getName();
 					String phe_type = tmp_p.getType();
@@ -1377,7 +1377,7 @@ public class FileService {
 					phenomenonElement.addAttribute("phenomenon_type", phe_type);
 					phenomenonElement.addAttribute("phenomenon_from", phe_from);
 					phenomenonElement.addAttribute("phenomenon_to", phe_to);
-					
+
 				}
 			}
 		}
