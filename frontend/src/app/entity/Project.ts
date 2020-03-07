@@ -188,7 +188,7 @@ export class Project{
 		for(let item of this.getProblemDomainList()){
 			if(item.name==old.getName()){
 				this.getProblemDomainList()[i] = new1
-				console.log(this.problemDiagram)
+				// console.log(this.problemDiagram)
 				return
 			}	
 			i += 1 			
@@ -212,8 +212,8 @@ export class Project{
 		  if (item.name == name) {
 			item.x = position.x;
 			item.y = position.y;
-			console.log("changeProblemDomainPosition")
-			console.log(item)
+			// console.log("changeProblemDomainPosition")
+			// console.log(item)
 			return true
 		  }
 		}
@@ -311,33 +311,75 @@ export class Project{
 	}
 
 	//link
+	// deleteRelatedLink(shortname) {
+	// 	console.log('deleteRelatedLink,shortname=' + shortname);
+	// 	let i = this.getReferenceList().length - 1;
+	// 	for (; i >= 0; i--) {
+	// 	  let reference = this.problemDiagram.referenceList[i];
+	// 	  if (reference.from == shortname || reference.to == shortname) {
+	// 		console.log(reference)
+	// 		let name = reference.name;
+	// 		this.problemDiagram.referenceList.splice(i, 1);
+	// 	  }
+	// 	}
+	// 	i = this.problemDiagram.constraintList.length - 1;
+	// 	for (; i >= 0; i--) {
+	// 	  let constraint = this.problemDiagram.constraintList[i];
+	// 	  if (constraint.from == shortname || constraint.to == shortname) {
+	// 		console.log(constraint)
+	// 		this.problemDiagram.constraintList.splice(i, 1);
+	// 	  }
+	// 	}
+	// 	i = this.contextDiagram.interfaceList.length - 1;
+	// 	for (; i >= 0; i--) {
+	// 	  let my_interface = this.contextDiagram.interfaceList[i];
+	// 	  if (my_interface.from == shortname || my_interface.to == shortname) {
+	// 		console.log(my_interface)
+	// 		this.contextDiagram.interfaceList.splice(i, 1);
+	// 	  }
+	// 	}
+	// }
+	
 	deleteRelatedLink(shortname) {
-		console.log('deleteRelatedLink,shortname=' + shortname);
-		let i = this.getReferenceList().length - 1;
-		for (; i >= 0; i--) {
-		  let reference = this.problemDiagram.referenceList[i];
-		  if (reference.from == shortname || reference.to == shortname) {
-			console.log(reference)
-			let name = reference.name;
-			this.problemDiagram.referenceList.splice(i, 1);
-		  }
+		let interfaceList = this.contextDiagram.interfaceList
+		let referenceList = this.problemDiagram.referenceList
+		let constraintList = this.problemDiagram.constraintList
+		let deleteInterfaceList = new Array<Interface>();
+		let deleteReferenceList = new Array<Reference>();
+		let deleteConstraintList = new Array<Constraint>();
+
+		//delete interface
+		let i = 0;
+		for(let item of interfaceList){
+			if(item.from === shortname || item.to === shortname){
+				interfaceList[i].clearPhenomenonList();
+				deleteInterfaceList.push(interfaceList[i]);
+			}
+			i++
 		}
-		i = this.problemDiagram.constraintList.length - 1;
-		for (; i >= 0; i--) {
-		  let constraint = this.problemDiagram.constraintList[i];
-		  if (constraint.from == shortname || constraint.to == shortname) {
-			console.log(constraint)
-			this.problemDiagram.constraintList.splice(i, 1);
-		  }
+		interfaceList = interfaceList.filter(item => !deleteInterfaceList.includes(item))
+
+		//delete references
+		i = 0;
+		for(let item of referenceList){
+			if(item.from === shortname || item.to === shortname){
+				referenceList[i].clearPhenomenonList();
+				deleteReferenceList.push(referenceList[i]);
+			}
+			i++
 		}
-		i = this.contextDiagram.interfaceList.length - 1;
-		for (; i >= 0; i--) {
-		  let my_interface = this.contextDiagram.interfaceList[i];
-		  if (my_interface.from == shortname || my_interface.to == shortname) {
-			console.log(my_interface)
-			this.contextDiagram.interfaceList.splice(i, 1);
-		  }
+		referenceList = referenceList.filter(item => !deleteReferenceList.includes(item))
+
+		//delete constraints
+		i = 0;
+		for(let item of constraintList){
+			if(item.from === shortname || item.to === shortname){
+				constraintList[i].clearPhenomenonList();
+				deleteConstraintList.push(constraintList[i]);
+			}
+			i++
 		}
+		constraintList = constraintList.filter(item => !deleteConstraintList.includes(item))
 	}
 
 	//Interface
@@ -500,7 +542,9 @@ export class Project{
 			}
 		  }
 	}
-	getDescription(name, pheList) {
+	getDescription(line) {
+		let name = line.getName()
+		let pheList = line.getPhenomenonList()
 		//a:M!{on},P!{off}
 		let s = "";
 		s = s + name + ":";
@@ -531,6 +575,7 @@ export class Project{
 		}
 		s = s.slice(0, -1);
 		console.log(s);
+		line.setDescription(s);
 		return s;
 	}
 	deleteReference(ref:Reference){

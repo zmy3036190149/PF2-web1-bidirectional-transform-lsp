@@ -28,7 +28,7 @@ export class Interface extends Line{
 		int.y2=y2
 		return int
 	}
-	static newInterfaceWithOld(old, phenomenonList, description){
+	static newInterfaceWithOld(old, description){
 		let int = new Interface()
 		int.no=old.no
 		int.name=old.name
@@ -90,4 +90,5 @@ export class Interface extends Line{
 	setY2(y2){ this.y2=y2}
 	getPhenomenonList(){return this.phenomenonList}
 	setPhenomenonList(phenomenonList){ this.phenomenonList=phenomenonList}
+	clearPhenomenonList(){	this.phenomenonList.length = 0	}
 }

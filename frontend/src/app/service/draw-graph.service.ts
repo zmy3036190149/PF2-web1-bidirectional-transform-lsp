@@ -121,7 +121,7 @@ export class DrawGraphService {
     this.ws = new WebSocket('ws://localhost:8080/DiagramLSP');
     var that = this
     this.ws.onopen = function () {
-      console.log('client: ws connection is open');
+      //console.log('client: ws connection is open');
       // that.ws.send('hello');
     };
     /*
@@ -141,10 +141,10 @@ export class DrawGraphService {
     */
     this.ws.onmessage = function (e) {
       // var project = JSON.parse(e.data) 
-      console.log("=====dg收到了消息=======") 
+      //console.log("=====dg收到了消息=======") 
       var message:DiagramMessage = JSON.parse(e.data)
-      console.log(message)
-      console.log("============")
+      //console.log(message)
+      //console.log("============")
       if(message.method =="Diagram/didChange"){
         let params = <DidChangeDiagramParams>message.params
         let diagramContentChangeEvent = <DiagramContentChangeEvent>params.contentChanges[0]
@@ -152,10 +152,10 @@ export class DrawGraphService {
       }
     };
     this.ws.onerror = function (e) {
-      console.log('=================================error================================', e);
+      //console.log('=================================error================================', e);
     };
     this.ws.onclose = function(e){
-      console.log("=================================close===============================",e);
+      //console.log("=================================close===============================",e);
       that.openWebSocket()
     }
   }
@@ -163,13 +163,13 @@ export class DrawGraphService {
 
   update(pro){
     // if(pro.title!=this.projectAddress){
-    //   console.log(pro.title,"!=", this.projectAddress)
+    //   //console.log(pro.title,"!=", this.projectAddress)
     //   return
     // }
     this.wsdealId(pro.id)
     if(pro.from=="text"){
-      console.log("=============updateProjectSinceTextChanged=========" )
-      console.log(pro)
+      //console.log("=============updateProjectSinceTextChanged=========" )
+      //console.log(pro)
       this.updateProjectSinceTextChanged(pro.pro)
       return
     }
@@ -188,17 +188,17 @@ export class DrawGraphService {
   wsdealId(id){
     if(this.messageId==id){
       this.messageId +=1
-      console.log("this.messageId=",this.messageId)
+      //console.log("this.messageId=",this.messageId)
     }else{
-      console.log("this.messageId=",this.messageId)
-      console.log("id = ",id)
+      //console.log("this.messageId=",this.messageId)
+      //console.log("id = ",id)
     }
   }
   updateProjectSinceTextChanged(pro){
     let newProject = new Project()
     newProject.initProject(pro)
-    console.log("newProject")
-    console.log(newProject)
+    //console.log("newProject")
+    //console.log(newProject)
     //若找到同名（简称）实体则修改,若找不到，则添加
     //删除pro中不存在的实体
     this.project.changeMachineWithNewProject(newProject)
@@ -210,9 +210,8 @@ export class DrawGraphService {
     //画图
     this.drawDiagram(this.project);
   }
-
   wsadd(shape,new1){
-    console.log("==========wsadd",shape,new1)
+    //console.log("==========wsadd",shape,new1)
     switch(shape){
       case "mac":
         this.drawMachinews(new1)
@@ -246,7 +245,7 @@ export class DrawGraphService {
         this.deleteRequirementws(old)
         break
       case "int":        
-        console.log(old)
+        //console.log(old)
         this.deleteInterfacews(old)
         break
       case "ref":
@@ -258,7 +257,7 @@ export class DrawGraphService {
     }
   }
   wschange(shape,old,new1){
-    console.log(this.project)
+    //console.log(this.project)
     switch(shape){
       case "mac":
         this.changeMachinews(old,new1)
@@ -270,7 +269,7 @@ export class DrawGraphService {
         this.changeRequirementws(old,new1)
         break
       case "int":        
-        console.log(old,new1)
+        //console.log(old,new1)
         this.changeInterfacews(old,new1)
         break
       case "ref":
@@ -286,7 +285,7 @@ export class DrawGraphService {
   register1(title,version,pro){
     if(version==undefined)
       version = "undefined"
-    console.log("-------------------diagram register-----:",title,version)
+    //console.log("-------------------diagram register-----:",title,version)
     //取消注册之前的project
     if(this.projectAddress && this.projectAddress != title){
       this.unregister(this.projectAddress,this.version)
@@ -302,8 +301,8 @@ export class DrawGraphService {
     }
     this.projectAddress = title
     this.version = version
-    console.log("============diagram send message=============")
-    console.log(message)
+    //console.log("============diagram send message=============")
+    //console.log(message)
     this.ws.send(JSON.stringify(message))
   }
   unregister1(title,version){
@@ -315,15 +314,15 @@ export class DrawGraphService {
       "version": version,
       "id" : this.messageId      
     }
-    console.log("================send message=================")
-    console.log(message)
+    //console.log("================send message=================")
+    //console.log(message)
     this.ws.send(JSON.stringify(message));
   }
   change(type:string,shape:string,old,new1){
     let version = this.version
     if(version==undefined)
         version = "undefined"
-    console.log("this.messageId=",this.messageId)
+    //console.log("this.messageId=",this.messageId)
     var message = {
            "type": type,
            "title": this.projectAddress,
@@ -335,8 +334,8 @@ export class DrawGraphService {
            "from":"diagram",
            
     }
-    console.log("============send message============")
-    console.log(message)
+    //console.log("============send message============")
+    //console.log(message)
     this.ws.send(JSON.stringify(message)) 
   }
 
@@ -495,14 +494,7 @@ export class DrawGraphService {
     let pro :Project = diagramContentChangeEvent.newProject
     let newProject = new Project()
     newProject.initProject(pro)
-    //若找到同名（简称）实体则修改,若找不到，则添加
-    //删除pro中不存在的实体
-    this.project.changeMachineWithNewProject(newProject)
-    this.project.changeProblemDomainWithNewProject(newProject)
-    this.project.changeRequirementWithNewProject(newProject)
-    this.project.changeInterfaceWithNewProject(newProject)
-    this.project.changeConstraintWithNewProject(newProject)
-    this.project.changeReferenceWithNewProject(newProject)
+    this.project = newProject
     //画图
     this.drawDiagram(this.project);
   }
@@ -511,7 +503,7 @@ export class DrawGraphService {
   register(title,version,pro:Project){
     if(version==undefined)
       version = "undefined"
-    console.log("-------------------diagram register-----:",title,version)
+    //console.log("-------------------diagram register-----:",title,version)
     //取消注册之前的project
     if(this.projectAddress && this.projectAddress != title){
       this.unregister(this.projectAddress,this.version)
@@ -527,12 +519,11 @@ export class DrawGraphService {
       referenceList: null }
     let params : DidOpenDiagramParams = {diagram:diagram}
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen",params)
-    console.log("============diagram send message=============")
+    // console.log("============diagram send message=============")
     let smessage = JSON.stringify(message)
-    console.log(smessage.length)
-    console.log(message)
+    //console.log(smessage.length)
+    //console.log(message)
     this.ws.send(smessage)
-
     this.projectAddress = title
     this.version = version
   }
@@ -540,7 +531,7 @@ export class DrawGraphService {
   register2(title,version,pro:Project){
     if(version==undefined)
       version = "undefined"
-    console.log("-------------------diagram register-----:",title,version)
+    // console.log("-------------------diagram register-----:",title,version)
     //取消注册之前的project
     if(this.projectAddress && this.projectAddress != title){
       this.unregister(this.projectAddress,this.version)
@@ -556,10 +547,10 @@ export class DrawGraphService {
       referenceList: null }
     let cdparams : DidOpenDiagramParams = {diagram:diagram}
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen1",cdparams)
-    console.log("============diagram send message=============")    
+    //console.log("============diagram send message=============")    
     let smessage = JSON.stringify(message)
-    console.log(smessage.length)
-    console.log(message)
+    //console.log(smessage.length)
+    //console.log(message)
     this.ws.send(smessage)
     let that = this
     this.interval1 = setInterval(function () {
@@ -578,8 +569,8 @@ export class DrawGraphService {
     let params : DidOpenDiagramParams = {diagram:diagram}
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen/requirementList",params)      
     let smessage = JSON.stringify(message)
-    console.log(smessage.length)
-    console.log(message)
+    //console.log(smessage.length)
+    //console.log(message)
     this.ws.send(smessage)
   }
   setConstraintList(title,version,pro){
@@ -589,8 +580,8 @@ export class DrawGraphService {
     let params : DidOpenDiagramParams = {diagram:diagram}
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen/constraintList",params)      
     let smessage = JSON.stringify(message)
-    console.log(smessage.length)
-    console.log(message)
+    //console.log(smessage.length)
+    //console.log(message)
     this.ws.send(smessage)
   }
   setReferenceList(title,version,pro:Project){
@@ -607,8 +598,8 @@ export class DrawGraphService {
     let params : DidOpenDiagramParams = {diagram:diagram}
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen/referenceList",params)      
     let smessage = JSON.stringify(message)
-    console.log(smessage.length)
-    console.log(message)
+    //console.log(smessage.length)
+    //console.log(message)
     this.ws.send(smessage)
   }
   unregister(title,version){
@@ -617,15 +608,15 @@ export class DrawGraphService {
     let diagram : DiagramIdentifier = {uri:title+version}
     let params= {diagram:diagram}
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didClose",params)
-    console.log("================send message=================")
-    console.log(message)
+    //console.log("================send message=================")
+    //console.log(message)
     this.ws.send(JSON.stringify(message));
   }
   sendChangeShapeMessage(changeType:string,shapeType:string,oldShape,newShape){
     let version = this.version
     if(version==undefined)
         version = "undefined"
-    console.log("this.messageId=",this.messageId)   
+    //console.log("this.messageId=",this.messageId)   
     // let params : DiagramIdentifier = {uri:this.projectAddress+version}
     let diagram: VersionedDiagramIdentifier={
       uri: this.projectAddress+version,
@@ -638,8 +629,8 @@ export class DrawGraphService {
       contentChanges: contentChanges
     }
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didChange",params)
-    console.log("============send message============")
-    console.log(message)
+    //console.log("============send message============")
+    //console.log(message)
     this.ws.send(JSON.stringify(message)) 
   }
   sendChangePhenomenonMessage(changeType:string,linetype:string,line:Line,oldPhenomenon,newPhenomenon){
@@ -661,8 +652,8 @@ export class DrawGraphService {
       contentChanges: contentChanges
     }
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didChange",params)
-    console.log("============send message============")
-    console.log(message)
+    //console.log("============send message============")
+    //console.log(message)
     this.ws.send(JSON.stringify(message)) 
   }
   //==========================编号==============================
@@ -670,15 +661,15 @@ export class DrawGraphService {
     let no = this.searchMaxPheNo1(0,project.contextDiagram.interfaceList)
     no = this.searchMaxPheNo1(no,project.problemDiagram.referenceList)
     no = this.searchMaxPheNo1(no,project.problemDiagram.constraintList)
-    console.log('searchMaxPheNo1');
-    console.log(no)
+    //console.log('searchMaxPheNo1');
+    //console.log(no)
     return no
   }
   searchMaxPheNo1(no,linkList){
      for(let link of linkList){
        for( let phe of link.phenomenonList){
          if(phe.no>no){
-          //  console.log(phe.no,">",no)
+          //  //console.log(phe.no,">",no)
            no = phe.no;
          }  
        }
@@ -753,19 +744,19 @@ export class DrawGraphService {
     for(let i=0;i<len;i++){      
       if(flag && (name.charAt(i) > 'a' && name.charAt(i)<'z'||name.charAt(i)>'A'&& name.charAt(i)<'Z')){
         res += name.charAt(i)
-        console.log(res)
+        //console.log(res)
         flag = false
       }
       if(name.charAt(i)=='_' || name.charAt(i)==' '){
-        console.log('flag=true')
+        //console.log('flag=true')
         flag=true
       }      
     }
-    console.log(name,res.toUpperCase())
+    //console.log(name,res.toUpperCase())
     return res.toUpperCase()
   }
 
-  //==================初始化========================
+  //====================================初始化=================================
   initPapers(): void {
     this.tab1 = 'Context Diagram';
     this.tab2 = 'Problem Diagram';
@@ -774,8 +765,8 @@ export class DrawGraphService {
       let d = $('#content' + (i + 1));
       let wid = d.width();
       let hei = d.height();      
-      console.log(wid);
-      console.log(hei);
+      // console.log(wid);
+      // console.log(hei);
       this.papers[i] = new joint.dia.Paper({
         el: $('#content' + (i + 1)),
         width: wid,
@@ -799,7 +790,7 @@ export class DrawGraphService {
       this.papers[i].on('blank:pointerclick', function (event, x, y) {
         //var currentElement = elementView.model;
         //that.tab1 = x + '  ' + y;
-        console.log('blank:pointerclick');
+        //console.log('blank:pointerclick');
         that.drawElement(that.graphs[i], event, x, y);
       });
 
@@ -810,13 +801,13 @@ export class DrawGraphService {
           ////console.log('element:pointerclick');
           if (that.link_source == undefined) {
             that.link_source = elementView.model;
-            console.log('that.link_source=',that.link_source.attr('root').title)
+            //console.log('that.link_source=',that.link_source.attr('root').title)
           } else if (that.link_target == undefined) {
             that.link_target = elementView.model;
-            console.log('that.link_target=',that.link_target.attr('root').title)
+            //console.log('that.link_target=',that.link_target.attr('root').title)
             if(that.link_source==that.link_target){
               // that.link_target = undefined;
-              console.log('link_source==link_target=',that.link_source.attr('root').title )
+              //console.log('link_source==link_target=',that.link_source.attr('root').title )
               alert('The starting point and the ending point are the same, please redraw!')
               that.link_source = undefined;
               that.link_target = undefined;
@@ -862,12 +853,12 @@ export class DrawGraphService {
       // 双击事件
       this.papers[i].on('cell:pointerdblclick', function (elementView, evt, x, y) {
         that.deleteListen = false;
-        console.log('element:pointerdblclick');
-        console.log('elementView'+elementView);
+        //console.log('element:pointerdblclick');
+        //console.log('elementView'+elementView);
         that.selectedElement = elementView.model;
         that.selectedType = that.selectedElement.attr('root').name;
         that.selectedId = that.selectedElement.id;
-        console.log('type:' + that.selectedType);
+        //console.log('type:' + that.selectedType);
         if (that.selectedElement.isLink()) {
           //console.log('当前选中元素Id�?' + that.selectedElement.id);
           let source = that.selectedElement.source();
@@ -923,7 +914,7 @@ export class DrawGraphService {
     this.drawConstraint(pd2, req, graph);
   }
   initPopBox() {
-    console.log('initPopBox')
+    //console.log('initPopBox')
     if (this.selectedType == 'machine') {
       this.initMachinePopBox();
     } else if (this.selectedType == 'problemDomain') {
@@ -970,7 +961,7 @@ export class DrawGraphService {
       for(let int of this.project.contextDiagram.interfaceList){
         int.name= this.getlink_name(this.link_name_no);
         this.link_name_no += 1;
-        int.description = this.project.getDescription(int.name,int.phenomenonList);
+        int.description = this.project.getDescription(int);
         // change interface link on graph
         let links = this.graphs[0].getLinks();
         for(let link of links){
@@ -1010,8 +1001,8 @@ export class DrawGraphService {
       pro.name = ont.name
       pro.shortname = this.getShortname(ont.name)
       pro.type = ont.type.slice(0,-6)
-      console.log("=================")
-      console.log(pro)
+      //console.log("=================")
+      //console.log(pro)
       
       // pro.property
       pro.phes = new Array<Phenomenon>();
@@ -1043,7 +1034,7 @@ export class DrawGraphService {
       y+=100;
       pro.h = 50;
       pro.w = 100;      
-      console.log(pro);
+      //console.log(pro);
       this.project.contextDiagram.problemDomainList.push(pro);
 
       //link
@@ -1089,8 +1080,9 @@ export class DrawGraphService {
       version = "undefined"
     this.version = version
     this.fileService.getProject(projectAddress,version).subscribe(
-      project => {
-        that.setProject(project)       
+      project => {        
+        that.setProject(project)  
+        //console.log(this.project)     
         that.register(projectAddress,version,project)   
       });
   }
@@ -1126,11 +1118,11 @@ export class DrawGraphService {
   
   setProject(project){
     this.project.initProject(project)
-    console.log(project)
+    //console.log(project)
     this.link_name_no=this.searchMaxLinkNameNo(this.project)+1
     this.phenomenon_no=this.searchMaxPheNo(this.project)+1
-    console.log("this.link_name_no = ",this.link_name_no)
-    console.log("this.phenomenon_no = ",this.phenomenon_no)
+    //console.log("this.link_name_no = ",this.link_name_no)
+    //console.log("this.phenomenon_no = ",this.phenomenon_no)
     this.dealConstraint(this.project)
     this.drawDiagram(this.project)
     this.projectService.sendProject(this.project)
@@ -1204,7 +1196,7 @@ export class DrawGraphService {
         this.drawRequirement(x, y, graph);
         this.component_choice_service.req = false;
       }else{
-        console.log(this.component_choice_service)
+        //console.log(this.component_choice_service)
       }
       this.component_choice_service.element = false;
     }
@@ -1264,7 +1256,7 @@ export class DrawGraphService {
   }
   //鼠标点击画图，画图并添加machine
   drawMachine(x, y, graph) {
-    console.log("drawMachine")
+    //console.log("drawMachine")
     if (this.project.contextDiagram.machine == undefined) {
       // let machine = this.project.addMachine('machine', 'M', x, y,100,50)
       // let element = this.drawMachineOnGraph(machine, graph);
@@ -1393,7 +1385,7 @@ export class DrawGraphService {
     for(let graph of this.graphs)
       for(let ele of graph.getElements()){
         if(ele.attr("root").title == old.name){
-          console.log(ele.attr("root").title ,"== ",old.name)
+          //console.log(ele.attr("root").title ,"== ",old.name)
           this.changeMachineOnGraph(ele, new1.name, new1.shortname) 
         }             
       }
@@ -1426,8 +1418,8 @@ export class DrawGraphService {
     }
   }
   deleteMachine(graph) {
-    console.log("==========deleteRelatedLink========")
-    console.log(this.project)
+    //console.log("==========deleteRelatedLink========")
+    //console.log(this.project)
     let old = this.project.contextDiagram.machine
     // this.project.contextDiagram.machine = undefined;
     // this.project.problemDiagram.contextDiagram.machine = undefined;
@@ -1555,17 +1547,17 @@ export class DrawGraphService {
   }
 
   initDomainPopBox() {
-    console.log('initDomainPopBox:');
+    //console.log('initDomainPopBox:');
     for (let item of this.project.contextDiagram.problemDomainList) {     
       let name = this.selectedElement.attr('root').title;
       if (item.name == name) {
-        console.log(item.name+'=='+name);
+        //console.log(item.name+'=='+name);
         this.problemDomain = item;
         break;
       }
-      console.log(item.name+'---!='+name+'---');        
+      //console.log(item.name+'---!='+name+'---');        
     }
-    console.log(this.problemDomain);
+    //console.log(this.problemDomain);
     let selectedDiv = document.getElementById('problemDomainPopBox');
     (selectedDiv.getElementsByClassName("description")[0] as any).value = this.problemDomain.name;
     (selectedDiv.getElementsByClassName("shortName")[0] as any).value = this.problemDomain.shortname;
@@ -1639,8 +1631,8 @@ export class DrawGraphService {
     }
   }
   changeProblemDomainOnGraph(domainEntity:ProblemDomain, domainElement) {
-    console.log("=======changeProblemDomainOnGraph=========")
-    console.log(domainEntity,domainEntity.shortname)
+    //console.log("=======changeProblemDomainOnGraph=========")
+    //console.log(domainEntity,domainEntity.shortname)
     domainElement.attr({
       label: {
         text: domainEntity.name + '\n(' + domainEntity.shortname + ')',
@@ -1887,7 +1879,7 @@ export class DrawGraphService {
       for(let element of graph.getCells() ){
         if (reqName == element.attr('root').title){
           graph.removeCells([element])  
-          console.log("delete req ",reqName," ",element) 
+          //console.log("delete req ",reqName," ",element) 
         }       
       }      
     }
@@ -2003,17 +1995,17 @@ export class DrawGraphService {
     }
   }
   drawLink(source, target, graph) {
-    console.log('drawLink')    
+    //console.log('drawLink')    
     if (this.component_choice_service.interface == true) {
-      console.log('this.component_choice_service.interface == true')
+      //console.log('this.component_choice_service.interface == true')
       this.drawInterface(source, target, graph);
       this.component_choice_service.interface = false;
     } else if (this.component_choice_service.reference == true) {
-      console.log('this.component_choice_service.reference == true')
+      //console.log('this.component_choice_service.reference == true')
       this.drawReference(source, target, graph);
       this.component_choice_service.reference = false;
     } else if (this.component_choice_service.constraint == true) {
-      console.log('this.component_choice_service.constraint == true')
+      //console.log('this.component_choice_service.constraint == true')
       this.drawConstraint(source, target, graph);
       this.component_choice_service.constraint = false;
     }
@@ -2151,15 +2143,15 @@ export class DrawGraphService {
       for (var j = 0; j < elementList.length; j++) {        
         if (from == elementList[j].attr('root').shortname) {
           elefrom = elementList[j];
-          console.log('elefrom');
-          console.log(elefrom);
-          console.log(from);
+          //console.log('elefrom');
+          //console.log(elefrom);
+          //console.log(from);
         }
         else if (to === elementList[j].attr('root').shortname) {
           eleto = elementList[j];
-          console.log('eleto');
-          console.log(eleto);
-          console.log(to);
+          //console.log('eleto');
+          //console.log(eleto);
+          //console.log(to);
         }
       }
       this.drawInterface1(int, elefrom, eleto, graph)
@@ -2252,11 +2244,11 @@ export class DrawGraphService {
       if(pro.shortname==shortname)
         return pro; 
     }
-    console.log(shortname,this.project.contextDiagram.problemDomainList)
+    //console.log(shortname,this.project.contextDiagram.problemDomainList)
     return null;
   }
   changeInterfaceDetail() {
-    let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
+    let int = Interface.newInterfaceWithOld(this.interface, this.project.getDescription(this.interface))
     this.sendChangeShapeMessage("change", "int", this.interface, int)
     //console.log('changeInterfaceDetail');
     //console.log(this.project.contextDiagram.interfaceList);
@@ -2345,22 +2337,22 @@ export class DrawGraphService {
     var eleto: joint.dia.Element
     let elementList = this.graphs[1].getElements()
     
-    console.log("elementList.length=",elementList.length)
-    console.log("elementList.length=",elementList.length)
+    //console.log("elementList.length=",elementList.length)
+    //console.log("elementList.length=",elementList.length)
     for (var j = 0; j < elementList.length; j++) {
       if (from == elementList[j].attr('root').shortname) {
         elefrom = elementList[j];
-        console.log('elefrom');
-        console.log(elefrom);
-        console.log(from);
+        //console.log('elefrom');
+        //console.log(elefrom);
+        //console.log(from);
       }
       else if (to === elementList[j].attr('root').shortname) {
         eleto = elementList[j];
-        console.log('eleto');
-        console.log(eleto);
-        console.log(to);
+        //console.log('eleto');
+        //console.log(eleto);
+        //console.log(to);
       }
-      console.log(elementList[j].attr('root').shortname)
+      //console.log(elementList[j].attr('root').shortname)
     }
     this.drawReference1(ref, elefrom, eleto, this.graphs[1])
 
@@ -2454,11 +2446,10 @@ export class DrawGraphService {
       if (item.name == this.selectedElement.attr('root').title) {
         this.reference = item;
         this.phenomenonList = item.phenomenonList;   
-        console.log(item)     
+        //console.log(item)
         break;
       }
     }
- 
 
     //initiator and receiverList
     this.receiverList = []  //link to initiator
@@ -2531,7 +2522,7 @@ export class DrawGraphService {
     //phe name and initiator
     let selectedDiv = document.getElementById('referencePopBox') as any
     (selectedDiv.getElementsByClassName("name")[0] as any).value='';
-    console.log(this.phenomenonList);
+    //console.log(this.phenomenonList);
     // console.log(selectedDiv.getElementsByClassName("initiator")[0]);
     // let selectElement = (selectedDiv.getElementsByClassName("initiator")[0] as any)
     // console.log(selectElement)
@@ -2592,12 +2583,12 @@ export class DrawGraphService {
         this.initiator_or_receiverList.push(rec)
       }
     }else{      
-      this.initiator_or_receiverList.push(this.initiator)      
+      this.initiator_or_receiverList.push(this.initiator)   
     }
     //console.log(this.initiator_or_receiverList)
   }
   changeReferenceDetail() {
-    let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
+    let ref = Reference.newReferenceWithOld(this.reference, this.project.getDescription(this.reference))
     this.sendChangeShapeMessage("change", "ref", this.reference, ref)
   }
   changeReferencews(old:Reference,new1:Reference) {
@@ -2727,7 +2718,7 @@ export class DrawGraphService {
 
   }
   drawConstraintws(con) {
-    console.log(con)
+    //console.log(con)
     con = Constraint.copyConstraint(con)
     this.project.addConstraint(con)
     this.projectService.sendProject(this.project)
@@ -2739,21 +2730,21 @@ export class DrawGraphService {
     var elefrom: joint.dia.Element
     var eleto: joint.dia.Element
     let elementList = this.graphs[1].getElements() 
-    console.log(elementList.length)
+    //console.log(elementList.length)
     for (var j = 0; j < elementList.length; j++) {
       if (from == elementList[j].attr('root').shortname) {
         elefrom = elementList[j];
-        console.log('elefrom');
-        console.log(elefrom);
-        console.log(from);
+        //console.log('elefrom');
+        //console.log(elefrom);
+        //console.log(from);
       }
       else if (to === elementList[j].attr('root').shortname) {
         eleto = elementList[j];
-        console.log('eleto');
-        console.log(eleto);
-        console.log(to);
+        //console.log('eleto');
+        //console.log(eleto);
+        //console.log(to);
       }else{
-        console.log(from,"  ",to,"  ",elementList[j].attr('root').shortname)
+        //console.log(from,"  ",to,"  ",elementList[j].attr('root').shortname)
       }
     }
     this.drawConstraint1(constraint, elefrom, eleto, this.graphs[1])
@@ -2881,8 +2872,8 @@ export class DrawGraphService {
         
   }
   changeConstraintDetail() {
-    let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
-    console.log(con)
+    let con = Constraint.newConstraintWithOld(this.constraint, this.project.getDescription(this.constraint))
+    //console.log(con)
     this.sendChangeShapeMessage("change", "con", this.constraint, con)
   }
   changeConstraintws(old:Constraint,new1:Constraint) {
@@ -2990,7 +2981,6 @@ export class DrawGraphService {
   addInterfacePhenomenon() {
     let phenomenon = new Phenomenon();
     this.changePhenomenon(phenomenon, this.phenomenonList);
-    // let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
     this.sendChangePhenomenonMessage("add","int",this.interface,null,phenomenon)  
   }
   addReferencePhenomenon() {
@@ -3007,8 +2997,7 @@ export class DrawGraphService {
       reqno = this.getReqNo(target.attr('root').title);
     }
     phenomenon.requirement = reqno;
-    // let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
-    // this.sendChangeShapeMessage("change", "ref", this.reference, ref)
+    this.project.getDescription(this.reference)
     this.sendChangePhenomenonMessage("add","ref",this.reference,null,phenomenon) 
   }
   addConstraintPhenomenon() {
@@ -3023,11 +3012,9 @@ export class DrawGraphService {
       } else {
         reqno=this.getReqNo(target.attr('root').title);
       }   
-      phenomenon.requirement = reqno;  
-    this.description = this.project.getDescription(this.selectedElement.attr('root').title, this.constraintPhenomenonList)
-    // let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
-    // this.sendChangeShapeMessage("change", "con", this.constraint, con)
-    this.sendChangePhenomenonMessage("add","phe",this.constraint,null,phenomenon) 
+      phenomenon.requirement = reqno;      
+    this.project.getDescription(this.constraint)
+    this.sendChangePhenomenonMessage("add","con",this.constraint,null,phenomenon) 
   }
   changePhenomenon(phenomenon, phenomenonList) {
     let selectedDiv = document.getElementById(this.selectedType + 'PopBox');
@@ -3100,7 +3087,6 @@ export class DrawGraphService {
     let checkbox = selectedDiv.getElementsByClassName("checkbox")[0] as any
     let constraint = checkbox.checked
     
-    
     let relatedPhes =[]
     let unRelatedPhes = []
     this.getRelatedPhes(this.initiator,relatedPhes,unRelatedPhes)
@@ -3113,7 +3099,6 @@ export class DrawGraphService {
         return;
       }
     }
-         
 
     //phe exist in related link
     let flag = false;
@@ -3152,10 +3137,10 @@ export class DrawGraphService {
         phenomenon.type = phenomenonType;
       }
     } 
-    console.log('addphe: constraint=',constraint)     
+    //console.log('addphe: constraint=',constraint)     
     phenomenon.constraint = constraint
     phenomenonList.push(phenomenon)  
-    console.log(phenomenonList)
+    //console.log(phenomenonList)
   }  
 
   //select phenomenon from phenomenon list
@@ -3198,9 +3183,9 @@ export class DrawGraphService {
     if(index==0) 
       return
     let phe = this.interface_ontologyPhes[index-1]    
-    console.log(this.interface_ontologyPhes)
-    console.log(index)
-    console.log(phe)
+    //console.log(this.interface_ontologyPhes)
+    //console.log(index)
+    //console.log(phe)
     let phe_name = phe.name as any
 
     //name
@@ -3210,7 +3195,7 @@ export class DrawGraphService {
     let initiatorIndex=0
     for(let ini of this.initiator_receiverList){
       if(phe.from==ini){
-        console.log("initiator i=",initiatorIndex)
+        //console.log("initiator i=",initiatorIndex)
         break
       }
       initiatorIndex++
@@ -3226,7 +3211,7 @@ export class DrawGraphService {
     let receiverIndex=0
     for(let rev of this.initiator_or_receiverList){
       if(phe.to==rev){
-        console.log("receiver i=",receiverIndex)
+        //console.log("receiver i=",receiverIndex)
         break
       }
       receiverIndex++
@@ -3242,7 +3227,7 @@ export class DrawGraphService {
     let typeIndex=0
     for(let type of this.phenomenonTypes){
       if(type==phe.type){
-        console.log('type i=',typeIndex)
+        //console.log('type i=',typeIndex)
         break
       }
       typeIndex++
@@ -3271,18 +3256,12 @@ export class DrawGraphService {
   deletePhenomenon() {
     if (this.selectedType == 'interface') {
       let phenomenon = this.deletePhenomenon1();
-      // let int = Interface.newInterfaceWithOld(this.interface, this.phenomenonList, this.project.getDescription(this.interface.name, this.phenomenonList))
-      // this.sendChangeShapeMessage("change", "int", this.interface, int)
       this.sendChangePhenomenonMessage("delete","int",this.interface,phenomenon,null) 
     } else if (this.selectedType == 'reference') {
       let phenomenon = this.deletePhenomenon1();
-      // let ref = Reference.newReferenceWithOld(this.reference, this.phenomenonList, this.project.getDescription(this.reference.name, this.phenomenonList))
-      // this.sendChangeShapeMessage("change", "ref", this.reference, ref)
       this.sendChangePhenomenonMessage("delete","ref",this.reference,phenomenon,null)
     } else if (this.selectedType == 'constraint') {
       let phenomenon = this.deletePhenomenon1();
-      // let con = Constraint.newConstraintWithOld(this.constraint, this.phenomenonList, this.project.getDescription(this.constraint.name, this.phenomenonList))
-      // this.sendChangeShapeMessage("change", "con", this.constraint, con)
       this.sendChangePhenomenonMessage("delete","con",this.constraint,phenomenon,null) 
     }
   }

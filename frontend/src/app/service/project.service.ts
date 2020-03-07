@@ -7,6 +7,7 @@ import { Phenomenon } from '../entity/Phenomenon';
 import { RequirementPhenomenon } from '../entity/RequirementPhenomenon';
 import { IntInfo } from '../entity/IntInfo';
 import { Error } from '../entity/Error';
+import { deprecate } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -88,30 +89,79 @@ export class ProjectService {
 	httpOptions = {
 		headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 	};
+	
+	// getPhenomenon(project: Project){
+	// 	let res = [];
+	// 	this.getPhenomenon1(res,project.contextDiagram.interfaceList)
+	// 	this.getPhenomenon1(res,project.problemDiagram.referenceList)
+	// 	this.getPhenomenon1(res,project.problemDiagram.constraintList)
+	// 	for  ( let  i  =   0 ; i  <  res.length; i ++ )  {       
+	// 		for  ( let  j  =  res.length  -   1 ; j  >  i; j -- )  {       
+	// 			if  (res[j].no == res[i].no)  {       
+	// 			res.splice(j,1);       
+	// 			}        
+	// 		}        
+	// 	}
+	// 	return res;
+	// }
+	
+	// getPhenomenon1(res,linkList){
+	// 	for(let link of linkList){
+	// 	  for( let phe of link.phenomenonList){
+	// 		res.push(phe);
+	// 	  }
+	// 	}
+	// 	return res;
+	// }
 
-	getPhenomenon(project: Project){
-		let res = [];
-		this.getPhenomenon1(res,project.contextDiagram.interfaceList)
-		this.getPhenomenon1(res,project.problemDiagram.referenceList)
-		this.getPhenomenon1(res,project.problemDiagram.constraintList)
+	getAllPhenomenon(){
+		let res = new Array<Phenomenon>();
+		for(let interfacee of this.project.contextDiagram.interfaceList){
+			for(let phenomenon of interfacee.phenomenonList){
+			res.push(phenomenon);
+			}
+		}
+		for(let reference of this.project.problemDiagram.referenceList){
+			for(let phenomenon of reference.phenomenonList){
+			res.push(phenomenon);
+			}
+		}
+		for(let constraint of this.project.problemDiagram.constraintList){
+			for(let phenomenon of constraint.phenomenonList){
+			res.push(phenomenon);
+			}
+		}
 		for  ( let  i  =   0 ; i  <  res.length; i ++ )  {       
+				for  ( let  j  =  res.length  -   1 ; j  >  i; j -- )  {       
+					if  (res[i].no == res[j].no)  {       
+					res.splice(j,1);       
+					}        
+				}        
+			}
+		return res;
+	}
+	
+	getAllRequirementPhenomenon(){
+	let res = new Array<Phenomenon>();
+	for(let reference of this.project.problemDiagram.referenceList){
+		for(let phenomenon of reference.phenomenonList){
+		res.push(phenomenon);
+		}
+	}
+	for(let constraint of this.project.problemDiagram.constraintList){
+		for(let phenomenon of constraint.phenomenonList){
+		res.push(phenomenon);
+		}
+	}
+	for  ( let  i  =   0 ; i  <  res.length; i ++ )  {       
 			for  ( let  j  =  res.length  -   1 ; j  >  i; j -- )  {       
-				if  (res[j].no == res[i].no)  {       
+				if  (res[i].no == res[j].no)  {       
 				res.splice(j,1);       
 				}        
 			}        
 		}
-		return res;
+	return res;
 	}
-	
-	getPhenomenon1(res,linkList){
-		for(let link of linkList){
-		  for( let phe of link.phenomenonList){
-			res.push(phe);
-		  }
-		}
-		return res;
-	  }
 
 	getReference(project: Project){
 		let res=[];

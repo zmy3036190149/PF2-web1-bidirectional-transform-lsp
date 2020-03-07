@@ -73,4 +73,11 @@ public class Interface extends Line{
 	public void setY2(int y2) {
 		this.y2 = y2;
 	}
+	public void refreshPhenomenonList(String oldShortName,String newShortName){
+		for(Phenomenon phenomenon:phenomenonList){
+			if(phenomenon.getFrom().equals(oldShortName)) phenomenon.setFrom(newShortName);
+    		else if(phenomenon.getTo().equals(oldShortName)) phenomenon.setTo(newShortName);
+		}
+	}
+
 }

@@ -82,7 +82,7 @@ export class RightbarComponent implements OnInit {
     }
   }
   check() {
-    //console.log(this.step);
+    //console.log(this.step);       
     switch (this.step) {
       case 1:
         // var next = confirm('Have you finished drawing Machine?');
@@ -90,7 +90,7 @@ export class RightbarComponent implements OnInit {
         //   this.step = 2;
         // }
         this.step = 2;
-        this.projectService.stepChange(this.step);
+        this.projectService.stepChange(this.step);    
         break;
       case 2:
         // var next = confirm('Have you finished drawing Problem Domain?');
@@ -98,7 +98,7 @@ export class RightbarComponent implements OnInit {
         //   this.step = 3;
         // }
         this.step = 3;
-        this.projectService.stepChange(this.step);
+        this.projectService.stepChange(this.step);    
         break;
 
       case 3:
@@ -107,7 +107,7 @@ export class RightbarComponent implements OnInit {
         //   this.step = 4;
         // }
         this.step = 4;
-        this.projectService.stepChange(this.step);
+        this.projectService.stepChange(this.step);       
         break;
 
       case 4:
@@ -126,7 +126,7 @@ export class RightbarComponent implements OnInit {
             }
             this.projectService.stepChange(this.step);
           }
-        );
+        );       
         break;
 
       case 5:
@@ -135,7 +135,7 @@ export class RightbarComponent implements OnInit {
         //   this.step = 6;
         // }
         this.step = 6;
-        this.projectService.stepChange(this.step);
+        this.projectService.stepChange(this.step);       
         break;
 
       case 6:
@@ -158,7 +158,8 @@ export class RightbarComponent implements OnInit {
               alert('The diagram is correct.')
               this.step = 8;
             } else {
-
+              console.log(project_to)
+              console.log(errorList)
               this.step = 5;
             }
             this.projectService.stepChange(this.step);
@@ -195,8 +196,8 @@ export class RightbarComponent implements OnInit {
       project => {
         this.project = project;
         //this.step = 1;
-        this.pheList = this.projectService.getPhenomenon(project);
-        this.reqPheList = this.projectService.getReference(project);
+        // this.pheList = this.projectService.getPhenomenon(project);
+        // this.reqPheList = this.projectService.getReference(project);
       });
 
     fileService.newProEmmited$.subscribe(

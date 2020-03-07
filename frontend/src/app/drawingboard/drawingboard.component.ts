@@ -74,8 +74,8 @@ export class DrawingboardComponent implements OnInit {
     // this.test()
   }
   onResize(event){
-      console.log(event.target.innerWidth);
-      console.log(event.target.innerHeight);
+      // console.log(event.target.innerWidth);
+      // console.log(event.target.innerHeight);
       let width = event.target.innerWidth*0.8;
       let height = event.target.innerHeight*0.8;
       this.dg_service.papers[0].setDimensions(width, height); 

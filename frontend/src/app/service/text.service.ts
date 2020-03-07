@@ -17,6 +17,7 @@ import {
   DidChangeWatchedFilesNotification, DidChangeWatchedFilesParams,
   PublishDiagnosticsNotification, PublishDiagnosticsParams,
 } from 'vscode-languageserver-protocol/lib/main';
+import { DiagramMessageFactory } from '../LSP/DiagramMessageFactory';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class TextService {
   noError
   connection: MessageConnection
   languageClient: MonacoLanguageClient
-  filename: String
+  filename: string
   constructor(
     private fileService: FileService) { 
     this.messageId=0    
@@ -75,10 +76,12 @@ export class TextService {
     this.editor.setValue(code)  
     //listen when the editor's value changed
     this.interval = setInterval(function(){
-      that.save()
+      that.didSave()
       }
-    ,100)
+    ,1000)
   }
+
+  //old
   public  save():void{
     let markers = monaco.editor.getModelMarkers({})
       let error = false
@@ -107,6 +110,7 @@ export class TextService {
         this.send(error,value)
       }
   }
+
   public createLanguageClient(connection: MessageConnection): MonacoLanguageClient {
     return new MonacoLanguageClient({
       name: `ProblemFrame Client`,
@@ -170,6 +174,7 @@ export class TextService {
   //   }, 1000)    
   // }
   timeFlag = 0
+  //old 
   send(error,value){
     var message = {
       "type":"change",
@@ -181,10 +186,9 @@ export class TextService {
       "error":error
     }
     //console.log("============text send message=============")
-    //console.log(message)    
+    //console.log(message) 
     this.ws.send(JSON.stringify(message))
   }
-
   getText(){
     return this.editor.getValue()
   }
@@ -206,26 +210,10 @@ export class TextService {
         }
       })
   }
-    // //uploadpf时调用
-    // getPf(projectAddress,version){
-    //   var that = this
-    //   this.projectAddress = projectAddress
-    //   if(version==undefined)
-    //     version = "undefined"
-    //   this.version = version
-    //   this.fileService.getNotNullPf(projectAddress,version).subscribe(
-    //     pf => {
-    //       if(pf!=""){
-    //         //console.log("===== getNotNullPf ==========")       
-    //         //console.log(pf)       
-    //         that.register(projectAddress,version,pf)
-    //       }else{ 
-    //         that.register(projectAddress,version,"#"+projectAddress+"#\n")    
-    //       }
-    //     })
-    // }
+
   //=============websocket============
-  openWebSocket(){
+  //old
+  openWebSocket_old(){
     this.ws = new WebSocket('ws://localhost:8080/webSocket');
     var that = this
     this.ws.onopen = function () {
@@ -250,8 +238,8 @@ export class TextService {
       that.register(that.projectAddress,that.version,that.getText())   
     }
   }
-  //===========发送消息===========
-  register(title,version,text){
+  //===========发送消息old===========
+  register_old(title,version,text){
     if(version==undefined)
       version = "undefined"
     //console.log("-------------------register-----:",title,version)
@@ -269,14 +257,14 @@ export class TextService {
     //console.log(message)
     this.ws.send(JSON.stringify(message))
   }
-  //==========接收消息===========
-  
-  update(jsonMessage){
+
+  //==========接收消息old===========  
+  update_old(jsonMessage){
     //console.log(jsonMessage)
-    switch(jsonMessage.type){
-      case "registered":
-        this.registered(jsonMessage);
-    }
+    // switch(jsonMessage.type){
+    //   case "registered":
+    //     this.registered(jsonMessage);
+    // }
     //console.log(jsonMessage.type)
     this.newValue = jsonMessage.text
     
@@ -287,7 +275,7 @@ export class TextService {
     this.editor.setValue(jsonMessage.text);
     this.editor.setPosition(position);
   }
-  wsdealId(id){
+  wsdealId_old(id){
     if(this.messageId==id){
       this.messageId +=1
     }else{
@@ -295,11 +283,99 @@ export class TextService {
       //console.log("id = ",id)
     }
   }
-  registered(jsonMessage){
+  registered_old(jsonMessage){
     // //console.log("registered, jsonMessage.text=",jsonMessage.text)
     this.createEditor(this.projectAddress,this.version,jsonMessage.text)
     let that = this
     this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
       function(){that.save()},"");
+  }
+  //==================================== new ===========================
+
+  //======== websocket new =========
+  openWebSocket(){
+    this.ws = new WebSocket('ws://localhost:8080/TextLSP');
+    var that = this
+    this.ws.onopen = function () {
+      //console.log('client: ws connection is open');
+      // that.ws.send('hello');
+    };
+    this.ws.onmessage = function (e) {
+      // var project = JSON.parse(e.data) 
+      //console.log("=====text收到了消息=======") 
+      var message = JSON.parse(e.data)
+      //console.log(pro)
+      //console.log("============")
+      that.update(message)
+      // that.setProject(project, project.title)
+    };
+    this.ws.onerror = function (e) {
+      //console.log('=================================error================================', e);
+    };
+    this.ws.onclose = function(e){
+      //console.log("=================================close===============================",e);
+      // that.openWebSocket()      
+      // that.register(that.projectAddress,that.version,that.getText())   
+    }
+  }
+
+  //===========发送消息 new ===========
+  register(title,version,text){
+    version = version==undefined?"undefined":version
+    let params:DidOpenTextDocumentParams = {
+      textDocument: {
+        uri: title + version,
+        languageId: "pf",
+        version: 0,
+        text: text
+      }
+    }
+    let message = new DiagramMessageFactory().getDiagramMessage("TextDocument/didOpen",params)
+    this.ws.send(JSON.stringify(message))
+    this.projectAddress = title
+    this.version = version
+
+    //createEditor
+    this.createEditor(this.projectAddress,this.version,text)
+    let that = this
+    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
+      function(){that.didSave()},"");
+
+    this.newValue = text
+  }
+
+  //new
+  public didSave():void{
+    let markers = monaco.editor.getModelMarkers({})
+      let error = false
+      if(markers.length>0)
+        error = true
+      let value  =  this.editor.getValue()
+      if(value!= this.newValue && ! error){
+        // console.log("this.editor.getValue()\n"+value)
+        // console.log("last version Value\n"+this.newValue)
+        let params:DidSaveTextDocumentParams = {
+          textDocument: {
+            uri: this.filename.split(".")[0],
+            version: null,
+          },
+          text:value
+        }
+      //向服务器发送最新版
+      let message = new DiagramMessageFactory().getDiagramMessage("TextDocument/didSave",params)
+      this.ws.send(JSON.stringify(message))      
+      this.newValue = value
+    }
+  }
+
+  //==========接收消息 new===========
+  update(jsonMessage){
+    console.log(" jsonMessage \n")
+    console.log(jsonMessage)
+    let params = jsonMessage.params
+    this.newValue = params.text
+    var position = this.editor.getPosition();
+    this.editor.setValue(this.newValue);
+    this.editor.setPosition(position);
   }
 }

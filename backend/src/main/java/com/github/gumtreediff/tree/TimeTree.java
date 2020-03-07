@@ -50,7 +50,19 @@ public class TimeTree extends Tree{
             copy.addChild(deepCopy((Tree)child,time));
         return copy;
     }
+    @Override
+    public String toString() {
+        return toShortString();
+    }
     public String toShortString() {
-    	return super.toShortString() + ", " + getId() + ", " + getTime()%10000+"  ";
+    	return super.toShortString() + ",    " + getId() + ",    " + getTime()%1000+"  ";
+    }
+
+    @Override
+    public String toPrettyString(TreeContext ctx) {
+        if (hasLabel())
+            return ctx.getTypeLabel(this) + ": " + getLabel() + ",    " + getId() + ",    " + getTime()%1000+"  ";
+        else
+            return ctx.getTypeLabel(this) + ",    " + getId() + ",    " + getTime()%1000+"  ";
     }
 }

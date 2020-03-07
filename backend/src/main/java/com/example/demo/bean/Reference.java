@@ -73,4 +73,10 @@ public class Reference extends ProblemDiagramLine {
 	public void setPhenomenonList(List<RequirementPhenomenon> phenomenonList) {
 		this.phenomenonList = phenomenonList;
 	}
+	public void refreshPhenomenonList(String oldShortName,String newShortName){
+		for(RequirementPhenomenon phenomenon:phenomenonList){
+			if(phenomenon.getFrom().equals(oldShortName)) phenomenon.setFrom(newShortName);
+    		else if(phenomenon.getTo().equals(oldShortName)) phenomenon.setTo(newShortName);
+		}
+	}
 }

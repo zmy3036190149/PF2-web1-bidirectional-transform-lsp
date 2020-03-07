@@ -29,23 +29,40 @@ export class Reference extends Line{
 		ref.y2=y2
 		return ref
 	}
-	static newReferenceWithOld(old:Reference, phenomenonList, description){
+	
+	// static newReferenceWithOld(old:Reference, phenomenonList, description){
+	// 	let ref = new Reference()
+	// 	ref.no=old.no
+	// 	ref.name=old.name
+	// 	ref.description=description
+	// 	ref.from=old.from
+	// 	ref.to=old.to
+	// 	if(phenomenonList)
+	// 		ref.phenomenonList=phenomenonList
+	// 	else 
+	// 		ref.phenomenonList = []
+	// 	ref.x1=old.x1
+	// 	ref.y1=old.y1
+	// 	ref.x2=old.x2
+	// 	ref.y2=old.y2
+	// 	return ref
+	// }
+
+	static newReferenceWithOld(old:Reference, description){
 		let ref = new Reference()
 		ref.no=old.no
 		ref.name=old.name
-		ref.description=description
 		ref.from=old.from
 		ref.to=old.to
-		if(phenomenonList)
-			ref.phenomenonList=phenomenonList
-		else 
-			ref.phenomenonList = []
+		ref.phenomenonList = old.phenomenonList		
+		ref.description=description
 		ref.x1=old.x1
 		ref.y1=old.y1
 		ref.x2=old.x2
 		ref.y2=old.y2
 		return ref
 	}
+
 	static copyReference(old:Reference){
 		let ref = new Reference()
 		ref.no=old.no
@@ -53,8 +70,8 @@ export class Reference extends Line{
 		ref.description=old.description
 		ref.from=old.from
 		ref.to=old.to
-		if(ref.phenomenonList)
-			ref.phenomenonList=ref.phenomenonList
+		if(old.phenomenonList)
+			ref.phenomenonList=old.phenomenonList
 		else 
 			ref.phenomenonList = []
 		ref.x1=old.x1
@@ -91,4 +108,5 @@ export class Reference extends Line{
 	setY2(y2){ this.y2=y2}
 	getPhenomenonList(){return this.phenomenonList}
 	setPhenomenonList(phenomenonList){ this.phenomenonList=phenomenonList}
+	clearPhenomenonList(){	this.phenomenonList.length = 0;	}
 }

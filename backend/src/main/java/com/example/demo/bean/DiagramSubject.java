@@ -22,14 +22,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.service.AddressService;
 //import com.example.demo.service.AddressService;
 import com.example.demo.service.FileService;
-import com.example.demo.service.GitUtil;
 import com.example.demo.service.ProblemEditor;
-import com.example.demo.service.ProjectService;
 
-import pf.PfStandaloneSetup;
-
-import com.alibaba.fastjson.JSONArray; 
-import com.alibaba.fastjson.JSONObject;
 public class DiagramSubject extends Subject{	
 
 	@Autowired	//自动装配

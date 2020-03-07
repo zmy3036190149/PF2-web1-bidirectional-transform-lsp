@@ -26,7 +26,7 @@ public class TextSubject extends Subject{
 	public TextSubject(String title, String version, String text, Observer observer) {
 		super(title, version, "text", observer);
 		System.out.println("new TextSubject,title=:	"+title);
-		String filename = "E:/test-data/"+title+version+".pf";
+		String filename = "E:/JavaProject/PF2-web1-bidirectional-transform-lsp/test-data/"+title+version+".pf";
 		File testFile = new File(filename);
         if (!testFile.exists()) {
             try {

@@ -53,7 +53,7 @@ final class GumTreeDataFetcher {
             } else if (action instanceof Delete) {
                 deletedSourceNodes.add(action.getNode());
             }
-        }
+        }        
         sourceNode = buildNode(sourceRoot, sourceMap);
         destNode = buildNode(destRoot, destMap);
     }
@@ -88,6 +88,7 @@ final class GumTreeDataFetcher {
     private MutableTreeNode buildNode(final ITree node, final HashMap<ITree, DefaultMutableTreeNode> hashMap) {
         final DefaultMutableTreeNode mutableNode = new DefaultMutableTreeNode(node);
         hashMap.put(node, mutableNode);
+        if(node != null)
         for (final ITree childNote : node.getChildren()) {
             mutableNode.add(buildNode(childNote, hashMap));
         }
@@ -104,10 +105,15 @@ final class GumTreeDataFetcher {
 
     String getSourcePrettyName(ITree node) {
         return node.toPrettyString(sourceContext);
+//    	 return node.toShortString();
     }
 
     String getDestPrettyName(ITree node) {
+    	if(node !=null)
         return node.toPrettyString(destContext);
+    	else
+    		return "";
+//        return node.toShortString();
     }
 
     boolean isDeletedSource(ITree node) {

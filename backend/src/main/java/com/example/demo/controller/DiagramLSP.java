@@ -68,7 +68,7 @@ public class DiagramLSP {
 		this.session = session;
 		webSocketSet.add(this);     //加入set中
 		addOnlineCount();           //在线数加1
-		System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+		//System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class DiagramLSP {
 		unregister(this.session);
 		webSocketSet.remove(this);  //从set中删除
 		subOnlineCount();           //在线数减1
-		System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
+		//System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class DiagramLSP {
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {		
-		System.out.println(session.getId() + " onMessage	"+ message);
+		//System.out.println(session.getId() + " onMessage	"+ message);
 		JSONObject json = JSONObject.parseObject(message); 
 		String method = (String) json.get("method");
 		switch(method) {
@@ -108,11 +108,11 @@ public class DiagramLSP {
 
 	}
 	void register(Session session,JSONObject json ){
-		System.out.println("============register==============");
+		//System.out.println("============register==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
-		System.out.println(json.toJSONString());
-		System.out.println(diagram.toJSONString());		
+		//System.out.println(json.toJSONString());
+		//System.out.println(diagram.toJSONString());		
 		String uri = (String) diagram.get("uri");	
 		
 		// Project
@@ -168,7 +168,7 @@ public class DiagramLSP {
 		//若存在subject则注册		
 		boolean isFind = false;
 		for(LSPSubject subject: LSPSubjects.getSubjectSet()) {
-			if(uri.equals(subject.getUri())) {
+			if(uri.equals(subject.getUri()) && subject.getEditorType().contentEquals("diagram")) {
 				subject.attach(observer);	
 				isFind = true;
 			}
@@ -180,10 +180,10 @@ public class DiagramLSP {
 			LSPSubjects.getSubjectSet().add(subject);					
 		}
 
-		System.out.println("==========================");
+		//System.out.println("==========================");
 	}
 	void register1(Session session,JSONObject json ){
-		System.out.println("============register1==============");
+		//System.out.println("============register1==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
 		String uri = (String) diagram.get("uri");	
@@ -230,14 +230,14 @@ public class DiagramLSP {
 			LSPSubjects.getSubjectSet().add(subject);					
 		}
 
-		System.out.println("==========================");
+		//System.out.println("==========================");
 	}
 	void register2(Session session,JSONObject json ){
-		System.out.println("============register2==============");
+		//System.out.println("============register2==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
-		System.out.println(json.toJSONString());
-		System.out.println(diagram.toJSONString());		
+		//System.out.println(json.toJSONString());
+		//System.out.println(diagram.toJSONString());		
 			
 		//problemDiagram
 		ProblemDiagram problemDiagram = new ProblemDiagram();
@@ -261,14 +261,14 @@ public class DiagramLSP {
 				observer.setProject(problemDiagram);
 			}
 		}
-		System.out.println("==========================");
+		//System.out.println("==========================");
 	}
 	void setRequirementList(Session session,JSONObject json ){
-		System.out.println("============setRequirementList==============");
+		//System.out.println("============setRequirementList==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
-		System.out.println(json.toJSONString());
-		System.out.println(diagram.toJSONString());		
+		//System.out.println(json.toJSONString());
+		//System.out.println(diagram.toJSONString());		
 		String sreqList = diagram.getString("requirementList");
 		List<Requirement> requirementList = (List<Requirement>) JSONObject.parseArray(sreqList, Requirement.class);	
 		
@@ -277,10 +277,10 @@ public class DiagramLSP {
 				observer.setRequirementList(requirementList);
 			}
 		}
-		System.out.println("==========================");
+		//System.out.println("==========================");
 	}
 	void setReferenceList(Session session,JSONObject json ){
-		System.out.println("============setReferenceList==============");
+		//System.out.println("============setReferenceList==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
 			
@@ -294,13 +294,13 @@ public class DiagramLSP {
 				observer.setReferenceList(referenceList);
 			}
 		}
-		System.out.println("==========================");
+		//System.out.println("==========================");
 	}
 	void setConstraintList(Session session,JSONObject json ){
-		System.out.println("============setConstraintList==============");
+		//System.out.println("============setConstraintList==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
-		System.out.println(json.toJSONString());
+		//System.out.println(json.toJSONString());
 			
 		String sconList = diagram.getString("constraintList");
 		List<Constraint> constraintList = (List<Constraint>) JSONObject.parseArray(sconList, Constraint.class);
@@ -312,7 +312,7 @@ public class DiagramLSP {
 				observer.setConstraintList(constraintList);
 			}
 		}
-		System.out.println("==========================");
+		//System.out.println("==========================");
 	}
 	
 	/**
@@ -329,7 +329,7 @@ public class DiagramLSP {
 				lsp.detach(session);
 				if(lsp.getObserverSet().isEmpty()) {
 					LSPSubjects.getSubjectSet().remove(lsp);
-					System.out.println(lsp.getUri()+"无连接,删除该元素");
+					//System.out.println(lsp.getUri()+"无连接,删除该元素");
 				}
 			}
 		}
@@ -338,19 +338,26 @@ public class DiagramLSP {
 		for(LSPSubject lsp: LSPSubjects.getSubjectSet()) {			
 				lsp.detach(session);	
 				if(lsp.getObserverSet().isEmpty()) {
+					lsp.deleteFile();
 					LSPSubjects.getSubjectSet().remove(lsp);
-					System.out.println(lsp.getUri()+"无连接,删除该元素");
+					//System.out.println(lsp.getUri()+"无连接,删除该元素");
 				}
 		}
+		for(LSPObserver lsp: LSPObservers.getObserverSet()) {	
+			if(lsp.getSession()==session) {
+				lsp.deleteFile();
+				LSPObservers.getObserverSet().remove(lsp);
+			}
+	}
 	}
 	//old 修改subject
-	void change(String uri,String message){
-		for(LSPSubject lsp: LSPSubjects.getSubjectSet()) {
-			if(uri.equals(lsp.getUri())) {
-				lsp.setValue(message);
-			}
-		}
-	}
+//	void change(String uri,String message){
+//		for(LSPSubject lsp: LSPSubjects.getSubjectSet()) {
+//			if(uri.equals(lsp.getUri())) {
+//				lsp.setValue(message);
+//			}
+//		}
+//	}
 	
 	//修改observer
 	void change(Session session,String message){
@@ -368,7 +375,7 @@ public class DiagramLSP {
 	 */
 	@OnError
 	public void onError(Session session, Throwable error){
-		System.out.println("发生错误");
+		//System.out.println("发生错误");
 		error.printStackTrace();
 	}
 

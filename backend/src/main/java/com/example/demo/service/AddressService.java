@@ -8,5 +8,5 @@ public class AddressService {
 	public static String pOwlRootAddress = "C:/PF/powl/";
 	public static String eOwlRootAddress = "C:/PF/eowl/";
 	public static String tmpRootAddress = "C:/PF/tmp/";
-	public static String lastestProjectAddress = "C:/PF/lastestProject/";
+	public static String lastestProjectAddress = "PF/lastestProject/";
 }

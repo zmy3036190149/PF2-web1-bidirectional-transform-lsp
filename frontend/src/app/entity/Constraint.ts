@@ -28,7 +28,7 @@ export class Constraint extends Line{
 		con.y2=y2
 		return con
 	}
-	static newConstraintWithOld(old, phenomenonList, description){
+	static newConstraintWithOld(old, description){
 		let con = new Constraint()
 		con.no = old.no
 		con.name = old.name
@@ -39,10 +39,7 @@ export class Constraint extends Line{
 		con.x2 = old.x2
 		con.y2 = old.y2
 		con.description=description
-		if(phenomenonList)
-			con.phenomenonList=phenomenonList
-		else 
-			con.phenomenonList = []
+		con.phenomenonList=old.phenomenonList
 		return con
 	}
 	static copyConstraint(old){
@@ -91,4 +88,5 @@ export class Constraint extends Line{
 	setY2(y2){ this.y2=y2}
 	getPhenomenonList(){return this.phenomenonList}
 	setPhenomenonList(phenomenonList){ this.phenomenonList=phenomenonList}
+	clearPhenomenonList(){	this.phenomenonList.length = 0 }
 }

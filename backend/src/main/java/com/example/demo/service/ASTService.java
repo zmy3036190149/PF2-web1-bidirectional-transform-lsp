@@ -2,14 +2,29 @@ package com.example.demo.service;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.impl.CompositeNode;
+import org.eclipse.xtext.nodemodel.impl.CompositeNodeWithSemanticElement;
+import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
+import org.eclipse.xtext.nodemodel.impl.LeafNode;
+import org.eclipse.xtext.nodemodel.impl.RootNode;
+import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.example.demo.bean.Constraint;
 import com.example.demo.bean.ContextDiagram;
@@ -23,9 +38,20 @@ import com.example.demo.bean.Reference;
 import com.example.demo.bean.Requirement;
 import com.example.demo.bean.RequirementPhenomenon;
 import com.github.gumtreediff.tree.ITree;
+import com.github.gumtreediff.tree.TreeContext;
+
+import pf.PfStandaloneSetup;
 
 public class ASTService {
-	//根据AST生成 old.xml 
+	// reset id of AST
+	public static int resetId(ITree tree,int id) {
+		tree.setId(id++);
+		for(ITree child : tree.getChildren()) {
+			id = resetId(child,id);
+		}
+		return id;
+	}
+	//根据AST生成 xml文件
 	public void generateXml(ITree tree,String path){
 		ITree root = getProjectParent(tree);
 		String str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?";
@@ -44,9 +70,10 @@ public class ASTService {
 			e.printStackTrace();
 		}
 	}
+	
 	public ITree getProjectParent(ITree tree) {
 		for(ITree child:tree.getChildren()) {
-			if(child.getLabel()=="project")
+			if(child.getLabel().contentEquals("project"))
 				return tree;
 		}
 		for(ITree child:tree.getChildren()) {
@@ -57,6 +84,8 @@ public class ASTService {
 		}
 		return null;
 	}
+	
+	//遍历xml AST
 	public String parseAST(ITree tree){
 		String str="";
 		//输出
@@ -482,5 +511,155 @@ public class ASTService {
 		}
 		return referenceList;
 	}
+
+	//===================== pf =======================
+    private static  Deque<ITree> trees = new ArrayDeque<>();
+    static int Root_Node = 0;
+    static int Composite_Node_With_Semantic_Element =1;
+    static int Composite_Node = 2;
+    static int Hidden_Leaf_Node = 3;
+    static int Leaf_Node = 4;
+    static int id = 0;
+    
+	//根据AST生成pf文件
+	public void generatePf(ITree tree,String path){
+
+//		System.out.println("generatePf");	
+		String str = getPf(tree);
+		try {
+			File writename = new File(path); 
+			if(writename.exists())
+				writename.delete();
+			writename.createNewFile(); // 创建新文件
+			BufferedWriter out = new BufferedWriter(new FileWriter(writename));
+			out.write(str); 
+			out.flush(); // 把缓存区内容压入文件
+			out.close(); // 最后记得关闭文件
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//遍历 pf AST 获取pf文本
+	public String getPf(ITree tree){
+		String str="";		
+		//输出
+//		System.out.print(tree.toShortString()+","+tree.getId()+"\t\t");	
+//		if(tree.getParent()!=null)
+//			System.out.println(tree.getParent().toShortString()+","+tree.getParent().getId());
+//		else
+//			System.out.println("root");
+		if(tree.getType() == Hidden_Leaf_Node || tree.getType() == Leaf_Node)	
+			str += tree.getLabel();
+		
+		//遍历子节点
+		for(ITree child: tree.getChildren()) {
+			str += getPf(child);			
+		}
+		return str;
+	}
+
+	//读取文件获取pf
+	public String getPf(String projectAddress) {	
+		String res = "";
+		try{
+            InputStream is = new FileInputStream(projectAddress);
+            int iAvail = is.available();
+            byte[] bytes = new byte[iAvail];
+            is.read(bytes);
+            res = new String(bytes);
+            is.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+		return res;
+	}
+	
+	//根据pf文件生成AST
+	public static TreeContext generateAST(String filePath) {
+		File file = new File(filePath);
+    	PfStandaloneSetup.doSetup();
+    	XtextResourceSet resourceSet = new XtextResourceSet();
+    	resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL,	Boolean.TRUE);
+		URI uri = URI.createURI(file.getPath());
+		XtextResource xtextResource = (XtextResource)resourceSet.getResource(uri, true);
+		IParseResult parseResult = xtextResource.getParseResult();
+		ICompositeNode rootNode = parseResult.getRootNode();
+        TreeContext context = new TreeContext();
+        id = 0;
+		buildTree(context, rootNode);
+		return context;
+	}
+
+	//将Xtext格式AST转换为GumTree格式语法树
+    public static void buildTree(TreeContext context,INode node) {
+    	String tokenName = "";
+    	int type = 0;
+        String label = node.getText();
+    	if(node instanceof HiddenLeafNode){//LeafNode的子类  
+    		// TerminalRuleImpl 空格 换行
+//    		System.out.println("============HiddenLeafNode============");
+//    		System.out.println("$"+node.getText()+"#");
+//    		label = node.getText(); 
+            tokenName = "3HiddenLeafNode";
+            type = Hidden_Leaf_Node;
+    	}else if(node instanceof LeafNode) {
+    		//KeywordImpl	problem:
+    		//RuleCallImpl LightControler	LC	"Light Controller"
+    		//EnumLiteralDeclarationImpl M
+//    		System.out.println("============LeafNode============");
+//    		System.out.println("$"+node.getText()+"#");
+//    		label = node.getText(); 
+            tokenName = "4LeafNode";
+            type = Leaf_Node;
+    	}else if(node instanceof RootNode) {//ParserRuleImpl
+//    		System.out.println("============0 rootnode============");
+    		label = ITree.NO_LABEL;  
+            tokenName = "0RootNode";
+            type = Root_Node;
+//    		for(INode child : ((ICompositeNode) node).getChildren()) {    		
+//    			buildTree(context,child);
+//    		}
+    	}else if(node instanceof CompositeNodeWithSemanticElement) {
+    		//RuleCallImpl 
+//    		System.out.println("==============1 CompositeNodeWithSemanticElement ====="); 
+    		label = ITree.NO_LABEL;  
+            tokenName = "1CompositeNodeWithSemanticElement";
+            type = Composite_Node_With_Semantic_Element;
+//    		for(INode child : ((ICompositeNode) node).getChildren()) {              		
+//    			buildTree(context,child);
+//    		}       	
+    	}else if(node instanceof CompositeNode) {
+    		//RuleCallImpl
+//        	System.out.println("============2 CompositeNode =====");
+    		label = ITree.NO_LABEL;  
+            tokenName = "2CompositeNode";
+        type = Composite_Node;
+//    		for(INode child : ((ICompositeNode) node).getChildren()) {         		
+//    			buildTree(context,child);
+//    		} 	
+    	}
+    	ITree t = context.createTree(type, label, tokenName);
+    	
+        int start = node.getTotalOffset();
+        int length = node.getTotalLength();
+        t.setPos(start);
+        t.setLength(length);
+        t.setId(id);
+        id++;
+
+        if (trees.isEmpty())
+            context.setRoot(t);
+        else
+            t.setParentAndUpdateChildren(trees.peek());
+//        System.out.println(t.toShortString()+","+t.getId());
+    	if(node instanceof ICompositeNode) {
+    		trees.push(t);
+    		for(INode child : ((ICompositeNode) node).getChildren()) {              		
+    			buildTree(context,child);
+    		}
+            trees.pop();
+    	}
+    }
 
 }

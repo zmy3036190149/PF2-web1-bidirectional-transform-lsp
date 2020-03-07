@@ -9,8 +9,9 @@ export class DiagramContentChangeEventFactory{
         oldShape:oldShape,
         newShape:newShape,
         lineInfo:null,
-       oldPhenomenon:null,
-       newPhenomenon:null
+        oldPhenomenon:null,
+        newPhenomenon:null,
+        newProject:null
      }
     return diagramContentChangeEvent
  }
@@ -19,11 +20,12 @@ export class DiagramContentChangeEventFactory{
     let diagramContentChangeEvent : DiagramContentChangeEvent={
        shapeType : "phe",
        changeType: changeType,
-       oldShape:null,
-       newShape:null,
        lineInfo:line,
        oldPhenomenon:oldPhenomenon,
-       newPhenomenon:newPhenomenon
+       newPhenomenon:newPhenomenon,
+       oldShape:null,
+       newShape:null,
+       newProject:null
     }
    return diagramContentChangeEvent
 }

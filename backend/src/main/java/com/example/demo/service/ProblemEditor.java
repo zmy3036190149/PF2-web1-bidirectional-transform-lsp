@@ -51,28 +51,18 @@ public class ProblemEditor{
 	 /*xtext ->xmi(已有接口)*/
 	 public static File performSave(String filename) {
 		File file = new File("pf/"+filename);
-		// http://www.eclipse.org/forums/index.php?t=msg&goto=520616&
 		PfStandaloneSetup.doSetup();
-		XtextResourceSet resourceSet = new XtextResourceSet();
-		
-		// http://www.eclipse.org/forums/index.php?t=msg&goto=480679&
-		
-		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL,	Boolean.TRUE);
-		URI uri = URI.createURI(file.getPath()); // your input textual file
-		
-		
-//		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(".pf", new XMIResourceFactoryImpl());
-		
-		Resource xtextResource = resourceSet.getResource(uri, true);
-		
-		File xmlFile = new File("pf/" + filename.replace(".pf", ".xml"));
-//		System.out.println(xmlFile.getPath());
-		URI xmiURI = URI.createURI(xmlFile.getPath());
-		
-		Resource xmiResource = new XMIResourceFactoryImpl().createResource(xmiURI);	//创建特定的资源
 
+		XtextResourceSet resourceSet = new XtextResourceSet();
+		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL,	Boolean.TRUE);	
+		URI uri = URI.createURI(file.getPath());
+		Resource xtextResource = resourceSet.getResource(uri, true);
+
+		File xmlFile = new File("pf/" + filename.replace(".pf", ".xml"));
+		URI xmiURI = URI.createURI(xmlFile.getPath());
+		Resource xmiResource = new XMIResourceFactoryImpl().createResource(xmiURI);	//创建特定的资源
 		xmiResource.getContents().add(xtextResource.getContents().get(0));
-		
+
 		try {
 			xmiResource.save(null);
 			System.out.println("saved "+xmiURI);
@@ -80,7 +70,7 @@ public class ProblemEditor{
 			e.printStackTrace();
 			System.out.println("failed to write " + uri);
 		}
-		
+
 		return xmlFile;
 	}
 	

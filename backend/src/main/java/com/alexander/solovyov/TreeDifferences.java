@@ -15,8 +15,8 @@ import java.util.List;
 
 final public class TreeDifferences extends JFrame {
 
-    public TreeDifferences(final TreeContext sourceContext, final TreeContext destContext,List<Action> actions,MappingStore mappings) {
-        super("AST Differences");
+    public TreeDifferences(String title,final TreeContext sourceContext, final TreeContext destContext,List<Action> actions,MappingStore mappings) {
+        super(title);
         GumTreeDataFetcher fetcher;
         try {
             fetcher = new GumTreeDataFetcher(sourceContext, destContext,actions,mappings);
@@ -24,7 +24,7 @@ final public class TreeDifferences extends JFrame {
             JOptionPane.showMessageDialog(this, "Failed to init GumTree!");
             return;
         }
-        setBounds(100, 100, 800, 600);
+        setBounds(100, 100, 1200, 1200);
 
         final JTree leftPane = new JTree(fetcher.getSourceNode());
         leftPane.setCellRenderer(new AstTreeCellRenderer(true, fetcher));
