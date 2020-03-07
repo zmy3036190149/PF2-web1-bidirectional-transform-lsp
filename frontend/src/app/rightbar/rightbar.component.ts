@@ -185,7 +185,7 @@ export class RightbarComponent implements OnInit {
 	constructor(
 		private projectService: ProjectService,
       private fileService: FileService,
-      private dg_service: DrawGraphService,
+      public dg_service: DrawGraphService,
 	) { 
     projectService.stepEmmited$.subscribe(
       step => {
@@ -215,7 +215,7 @@ export class RightbarComponent implements OnInit {
 		// 		this.problemDiagram = problemDiagram;
 		// 	}
 		// )
-	}
+  }
 
 	ngOnInit() {
 	}

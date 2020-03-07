@@ -55,18 +55,15 @@ public class LSPDiagramObserver extends LSPObserver {
 		long time = System.currentTimeMillis();
 		generateOrgAST(time);
 	}
-
 	@Deprecated
 	public void setRequirementList(List<Requirement> requirementList) {
 		project.getProblemDiagram().setRequirementList(requirementList);
 
 	}
-
 	@Deprecated
 	public void setReferenceList(List<Reference> referenceList) {
 		project.getProblemDiagram().setReferenceList(referenceList);
 	}
-
 	@Deprecated
 	public void setConstraintList(List<Constraint> constraintList) {
 		project.getProblemDiagram().setConstraintList(constraintList);
@@ -158,7 +155,6 @@ public class LSPDiagramObserver extends LSPObserver {
 		// set new orgTree
 		orgTree = oldTree.deepCopy();
 	}
-
 	public void dealWithMessage(String message) {
 		JSONObject json = JSONObject.parseObject(message);
 		JSONObject params = (JSONObject) json.get("params");

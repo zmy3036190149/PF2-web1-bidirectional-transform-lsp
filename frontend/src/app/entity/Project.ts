@@ -23,6 +23,8 @@ export class Project{
 		}else{
 			console.log('this.project.contextDiagram!=null')					
 			this.contextDiagram = ContextDiagram.copyContextDiagram(project.contextDiagram)
+			console.log(this.contextDiagram.interfaceList.length)
+			console.log(this.contextDiagram.problemDomainList.length)
 		}
 		if(project.problemDiagram==null){
 			console.log('this.project.problemDiagram==null')
@@ -464,7 +466,7 @@ export class Project{
 		this.changeLineWithNewProject(oldList,newList)
 	}
 
-	changeConstraint(old,new1){
+	changeConstraint(old:Constraint,new1){
 		let i = 0
 		for (let item of this.getConstraintList()) {
 			if (item.getName() == old.getName()) {

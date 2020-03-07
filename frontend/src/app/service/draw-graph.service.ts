@@ -68,7 +68,6 @@ export class DrawGraphService {
   selectedGraphIndex = 0;
   graphs = new Array<joint.dia.Graph>();
   phenomenonList = []
-  referencePhenomenonList = new Array<RequirementPhenomenon>();
   constraintPhenomenonList = new Array<RequirementPhenomenon>();
   refPheList = new Array<Phenomenon>();
   initiatorList = new Array<String>();
@@ -81,6 +80,8 @@ export class DrawGraphService {
   phenomenon_no = 1;
   link_name_no = 1;
 
+  rcSource = null;
+  rcTarget = null;
   link_source = undefined;
   link_target = undefined;
   selectedId = undefined;
@@ -117,9 +118,9 @@ export class DrawGraphService {
   interval1
   //==============================WebSocket=========================
   openWebSocket(){
-    // this.ws = new WebSocket('ws://localhost:8080/webSocket');    
     this.ws = new WebSocket('ws://localhost:8080/DiagramLSP');
     var that = this
+
     this.ws.onopen = function () {
       //console.log('client: ws connection is open');
       // that.ws.send('hello');
@@ -138,7 +139,7 @@ export class DrawGraphService {
       // }
       // that.setProject(project, project.title)
     };
-    */
+
     this.ws.onmessage = function (e) {
       // var project = JSON.parse(e.data) 
       //console.log("=====dg收到了消息=======") 
@@ -147,13 +148,18 @@ export class DrawGraphService {
       //console.log("============")
       if(message.method =="Diagram/didChange"){
         let params = <DidChangeDiagramParams>message.params
+        console.log("----------------------\n")
+        console.log(params.contentChanges[0]);
+        console.log("----------------------\n")
         let diagramContentChangeEvent = <DiagramContentChangeEvent>params.contentChanges[0]
         that.wsChange(diagramContentChangeEvent)
       }
     };
+
     this.ws.onerror = function (e) {
       //console.log('=================================error================================', e);
     };
+
     this.ws.onclose = function(e){
       //console.log("=================================close===============================",e);
       that.openWebSocket()
@@ -633,6 +639,7 @@ export class DrawGraphService {
     //console.log(message)
     this.ws.send(JSON.stringify(message)) 
   }
+  //this.sendChangePhenomenonMessage("add","ref",this.reference,null,phenomenon) 
   sendChangePhenomenonMessage(changeType:string,linetype:string,line:Line,oldPhenomenon,newPhenomenon){
     let version = this.version == undefined ? "undefined" : this.version
     let diagram: VersionedDiagramIdentifier={
@@ -1405,7 +1412,8 @@ export class DrawGraphService {
   }
 
   deleteMachinews(old:Machine) {
-    this.project.deleteRelatedLink(this.project.contextDiagram.machine.shortname)    
+    let shortname = old.getShortname();
+    this.project.deleteRelatedLink(shortname)    
     this.project.contextDiagram.machine = undefined;
     this.project.problemDiagram.contextDiagram.machine = undefined;    
     this.projectService.sendProject(this.project)    
@@ -1669,46 +1677,38 @@ export class DrawGraphService {
   deleteProblemDomain(graph) {
     let name = this.selectedElement.attr('root').title;
     let shortname = this.selectedElement.attr('root').shortname;
-    let list = this.project.contextDiagram.problemDomainList
-    //find old Entity
+    let pdList = this.project.contextDiagram.problemDomainList
+
+    //delete problem domain
     let i = 0;
-    let old
-    for (let item of list) {
+    let oldPd
+    for (let item of pdList) {
       if (item.name == name) {
-        old = item
-        // list.splice(i, 1);
+        oldPd = item
         break;
       }
       i++;
     }
-    //console.log('name=' + name);
-    // graph.removeCells([this.selectedElement])
-    // this.projectService.sendProject(this.project);    
-    this.sendChangeShapeMessage( "delete", "pro", old, null)
+    this.sendChangeShapeMessage( "delete", "pro", oldPd, null)
   }
   deleteProblemDomainws(pd1:ProblemDomain) {
     let pd = ProblemDomain.copyProblemDomain(pd1)
     let name = pd.name
     let shortname = pd.shortname
-    let list = this.project.contextDiagram.problemDomainList
-    //delete Entity
+    let pdList = this.project.contextDiagram.problemDomainList
+
+    //delete related links
+    this.project.deleteRelatedLink(shortname)
+    //delete problemdomain 
     let i = 0;
-    for (let item of list) {
+    for (let item of pdList) {
       if (item.name == name) {
-        list.splice(i, 1);
+        pdList.splice(i, 1);
         break;
       }
       i++;
     }
-    //console.log('name=' + name);
-    for(let graph of this.graphs){    
-      this.project.deleteRelatedLink(shortname)
-      for(let element of graph.getCells() ){
-        if (shortname == element.attr('root').shortname)
-          graph.removeCells([element])
-      }      
-    }
-    this.projectService.sendProject(this.project);    
+    this.projectService.sendProject(this.project);   
   }
 
   //=====================================Requirement==========================
@@ -2234,10 +2234,7 @@ export class DrawGraphService {
       for(let phe of target.phes)
         this.selectPhes.push(phe)
     } 
-      
-    //console.log('initInterfacePopBox');
-    //console.log(pro);
-    //console.log(this.selectPhes);
+    
   }
   getProblemEntityByShortName(shortname){    
     for(let pro of this.project.contextDiagram.problemDomainList){
@@ -2442,6 +2439,7 @@ export class DrawGraphService {
     return link;
   }
   initReferencePopBox() {
+    console.log(11111)
     for (let item of this.project.problemDiagram.referenceList) {
       if (item.name == this.selectedElement.attr('root').title) {
         this.reference = item;
@@ -2533,10 +2531,7 @@ export class DrawGraphService {
    
     setTimeout(
       function(){    
-        // console.log('设置initiator选中项为0');
-        ($("#referencePopBox .initiator").get(0) as any).selectedIndex=  0  
-        // console.log('获取initiator选中项')
-        // console.log($("#referencePopBox .initiator").val())         
+        ($("#referencePopBox .initiator").get(0) as any).selectedIndex=  0       
       },
       15)
     
@@ -2964,15 +2959,8 @@ export class DrawGraphService {
     if (this.selectedType == 'interface') {
       this.addInterfacePhenomenon();
     } else if (this.selectedType == 'reference') {
-/*      //phenomenon
-      let selectedDiv = document.getElementById(this.selectedType + 'PopBox');
-      let selectElement = selectedDiv.getElementsByClassName("phes")[0];
-      let selectedIndex = (selectElement as any).selectedIndex;
-      let phenomenon = this.refPheList[selectedIndex];
-      this.addReferencePhenomenon(phenomenon);*/
       this.addReferencePhenomenon();
     } else if (this.selectedType == 'constraint') {
-      //phenomenon
       this.addConstraintPhenomenon();
     }
     this.projectService.sendProject(this.project);
@@ -2985,27 +2973,40 @@ export class DrawGraphService {
   }
   addReferencePhenomenon() {
     let phenomenon = new RequirementPhenomenon();
-    this.changePhenomenon1(phenomenon, this.phenomenonList);
+
     //phenomenon_requirement
     let source = this.getElementById(this.selectedElement.source().id);
     let target = this.getElementById(this.selectedElement.target().id);
-
+    if(source != null) this.rcSource = source;
+    else source = this.rcSource;
+    if(target != null) this.rcTarget = target;
+    else target = this.rcTarget;
+ 
     let reqno;
-    if (source.attr('root').name == 'requirement') {
-      reqno = this.getReqNo(source.attr('root').title);
+    if (source.attr('root').name == 'requirement') {      
+      reqno=this.getReqNo(source.attr('root').title);
     } else {
-      reqno = this.getReqNo(target.attr('root').title);
-    }
+      reqno=this.getReqNo(target.attr('root').title);
+    }   
     phenomenon.requirement = reqno;
     this.project.getDescription(this.reference)
     this.sendChangePhenomenonMessage("add","ref",this.reference,null,phenomenon) 
+    // const that = this;
+    //  setTimeout(function () {
+    //   that.changePhenomenon1(phenomenon);
+    //  }, 100);
   }
   addConstraintPhenomenon() {
     let phenomenon = new RequirementPhenomenon();
-    this.changePhenomenon1(phenomenon, this.phenomenonList);
+    
       //phenomenon_requirement
-      let source=this.getElementById(this.selectedElement.source().id);    
-      let target = this.getElementById(this.selectedElement.target().id);  
+      let source = this.getElementById(this.selectedElement.source().id);
+      let target = this.getElementById(this.selectedElement.target().id);
+      if(source != null) this.rcSource = source;
+      else source = this.rcSource;
+      if(target != null) this.rcTarget = target;
+      else target = this.rcTarget;
+      
       let reqno;
       if (source.attr('root').name == 'requirement') {      
         reqno=this.getReqNo(source.attr('root').title);
@@ -3016,11 +3017,11 @@ export class DrawGraphService {
     this.project.getDescription(this.constraint)
     this.sendChangePhenomenonMessage("add","con",this.constraint,null,phenomenon) 
   }
-  changePhenomenon(phenomenon, phenomenonList) {
+  changePhenomenon(phenomenon) {
     let selectedDiv = document.getElementById(this.selectedType + 'PopBox');
     //name
     let phenomenonName = (selectedDiv.getElementsByClassName("name")[0] as any).value;    
-    for (let existPhenomenon of phenomenonList) {
+    for (let existPhenomenon of this.phenomenonList) {
       if (existPhenomenon.name == phenomenonName) {
         alert(phenomenonName + 'already exists');
         return;
@@ -3052,21 +3053,15 @@ export class DrawGraphService {
 
     //from & to
     let selectElement = selectedDiv.getElementsByClassName("initiator")[0];
-    //console.log(selectElement);
     let selectedIndex = (selectElement as any).selectedIndex;
     let initiator = (selectElement as any).options[selectedIndex].text;
     let receiver = (selectElement as any).options[1 - selectedIndex].text;
     phenomenon.to = receiver;    
     phenomenon.from = initiator;
- 
-    //console.log('index:' + selectedIndex + ", initiator:" + initiator + ', receiver: ' + receiver);
-    //console.log('index:' + selectedIndex + ", type:" + phenomenonType);
-    phenomenonList.push(phenomenon);
-    //console.log("add phenomenon:");
-    //console.log(phenomenonList);
+    this.phenomenonList.push(phenomenon);
 
   }
-  changePhenomenon1(phenomenon, phenomenonList) {
+  changePhenomenon1(phenomenon) {
     //get message from popBox
     let selectedDiv = document.getElementById(this.selectedType + 'PopBox');
     //name
@@ -3090,10 +3085,7 @@ export class DrawGraphService {
     let relatedPhes =[]
     let unRelatedPhes = []
     this.getRelatedPhes(this.initiator,relatedPhes,unRelatedPhes)
-    // let relatedOntologyPhes =[]
-    // let unRelatedOntologyPhes = []
-    // this.getRelatedOntologyPhes(this.initiator,relatedOntologyPhes,unRelatedOntologyPhes)
-    for (let existPhenomenon of phenomenonList) {
+    for (let existPhenomenon of this.phenomenonList) {
       if (existPhenomenon.name == phenomenonName) {
         alert(phenomenonName + 'already exists');
         return;
@@ -3233,15 +3225,7 @@ export class DrawGraphService {
       typeIndex++
     }
 
-    if(this.selectedType=='reference'){
-      // setTimeout(
-      //   function(){              
-      //     setTimeout(
-      //       function(){                                
-      //       },
-      //       50);
-      //   },
-      //   15);      
+    if(this.selectedType=='reference'){   
       
       $("#referencePopBox .name").val(phe.name); 
       ($("#referencePopBox .phenomenonType").get(0) as any).selectedIndex=typeIndex  
@@ -3263,6 +3247,10 @@ export class DrawGraphService {
     } else if (this.selectedType == 'constraint') {
       let phenomenon = this.deletePhenomenon1();
       this.sendChangePhenomenonMessage("delete","con",this.constraint,phenomenon,null) 
+      const that = this;
+      setTimeout(function () {
+        let phenomenon = that.deletePhenomenon1();
+      }, 100);
     }
   }
   deletePhenomenon1():Phenomenon {
@@ -3279,5 +3267,59 @@ export class DrawGraphService {
       }
       i += 1;
     }
+  }
+  getPhenomenonByNo(phenomenonNo):Phenomenon{
+    for(let phenomenon of this.phenomenonList){
+      if(phenomenon.no === phenomenonNo) return phenomenon;
+    }
+  }
+
+  getAllPhenomenon(){
+    let res = new Array<Phenomenon>();
+    for(let interfacee of this.project.contextDiagram.interfaceList){
+      for(let phenomenon of interfacee.phenomenonList){
+        res.push(phenomenon);
+      }
+    }
+    for(let reference of this.project.problemDiagram.referenceList){
+      for(let phenomenon of reference.phenomenonList){
+        res.push(phenomenon);
+      }
+    }
+    for(let constraint of this.project.problemDiagram.constraintList){
+      for(let phenomenon of constraint.phenomenonList){
+        res.push(phenomenon);
+      }
+    }
+    for  ( let  i  =   0 ; i  <  res.length; i ++ )  {       
+			for  ( let  j  =  res.length  -   1 ; j  >  i; j -- )  {       
+				if  (res[i].no == res[j].no)  {       
+				res.splice(j,1);       
+				}        
+			}        
+		}
+    return res;
+  }
+
+  getAllRequirementPhenomenon(){
+    let res = new Array<Phenomenon>();
+    for(let reference of this.project.problemDiagram.referenceList){
+      for(let phenomenon of reference.phenomenonList){
+        res.push(phenomenon);
+      }
+    }
+    for(let constraint of this.project.problemDiagram.constraintList){
+      for(let phenomenon of constraint.phenomenonList){
+        res.push(phenomenon);
+      }
+    }
+    for  ( let  i  =   0 ; i  <  res.length; i ++ )  {       
+			for  ( let  j  =  res.length  -   1 ; j  >  i; j -- )  {       
+				if  (res[i].no == res[j].no)  {       
+				res.splice(j,1);       
+				}        
+			}        
+		}
+    return res;
   }
 }
