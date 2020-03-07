@@ -68,6 +68,7 @@ export class DrawGraphService {
   selectedGraphIndex = 0;
   graphs = new Array<joint.dia.Graph>();
   phenomenonList = []
+  referencePhenomenonList = new Array<RequirementPhenomenon>();
   constraintPhenomenonList = new Array<RequirementPhenomenon>();
   refPheList = new Array<Phenomenon>();
   initiatorList = new Array<String>();
@@ -139,6 +140,7 @@ export class DrawGraphService {
       // }
       // that.setProject(project, project.title)
     };
+    */
 
     this.ws.onmessage = function (e) {
       // var project = JSON.parse(e.data) 
@@ -1412,6 +1414,7 @@ export class DrawGraphService {
   }
 
   deleteMachinews(old:Machine) {
+    this.project.deleteRelatedLink(this.project.contextDiagram.machine.shortname)    
     let shortname = old.getShortname();
     this.project.deleteRelatedLink(shortname)    
     this.project.contextDiagram.machine = undefined;
@@ -1707,6 +1710,14 @@ export class DrawGraphService {
         break;
       }
       i++;
+    }
+    //delete problemdomain on graphs
+    for(let graph of this.graphs){    
+      this.project.deleteRelatedLink(shortname)
+      for(let element of graph.getCells() ){
+        if (shortname == element.attr('root').shortname)
+          graph.removeCells([element])
+      }      
     }
     this.projectService.sendProject(this.project);   
   }
@@ -3131,7 +3142,7 @@ export class DrawGraphService {
     } 
     //console.log('addphe: constraint=',constraint)     
     phenomenon.constraint = constraint
-    phenomenonList.push(phenomenon)  
+    this.phenomenonList.push(phenomenon)  
     //console.log(phenomenonList)
   }  
 
@@ -3247,10 +3258,10 @@ export class DrawGraphService {
     } else if (this.selectedType == 'constraint') {
       let phenomenon = this.deletePhenomenon1();
       this.sendChangePhenomenonMessage("delete","con",this.constraint,phenomenon,null) 
-      const that = this;
-      setTimeout(function () {
-        let phenomenon = that.deletePhenomenon1();
-      }, 100);
+      // const that = this;
+      // setTimeout(function () {
+      //   let phenomenon = that.deletePhenomenon1();
+      // }, 100);
     }
   }
   deletePhenomenon1():Phenomenon {

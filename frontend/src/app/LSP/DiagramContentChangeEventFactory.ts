@@ -4,7 +4,6 @@ import { DiagramContentChangeEvent } from './DiagramContentChangeEvent';
 export class DiagramContentChangeEventFactory{
  public getShapeChangeEvent(shapeType,changeType,oldShape,newShape):DiagramContentChangeEvent{
      let diagramContentChangeEvent : DiagramContentChangeEvent={
-        newProject:null,
         shapeType : shapeType,
         changeType:changeType,
         oldShape:oldShape,
@@ -19,7 +18,6 @@ export class DiagramContentChangeEventFactory{
 
  public getPhenomenonChangeEvent(changeType,line,oldPhenomenon,newPhenomenon):DiagramContentChangeEvent{
     let diagramContentChangeEvent : DiagramContentChangeEvent={
-       newProject:null,
        shapeType : "phe",
        changeType: changeType,
        lineInfo:line,
