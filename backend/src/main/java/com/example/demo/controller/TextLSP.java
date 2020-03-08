@@ -1,36 +1,23 @@
 package com.example.demo.controller;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.concurrent.CopyOnWriteArraySet;
-import javax.websocket.*;
+
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import org.eclipse.xtend.lib.macro.services.Problem;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.bean.Project;
-import com.example.demo.bean.Reference;
-import com.example.demo.bean.Requirement;
 import com.example.demo.LSP.LSPObserver;
 import com.example.demo.LSP.LSPObservers;
 import com.example.demo.LSP.LSPSubject;
 import com.example.demo.LSP.LSPSubjects;
 import com.example.demo.LSP.LSPTextObserver;
 import com.example.demo.LSP.LSPTextSubject;
-import com.example.demo.bean.Constraint;
-import com.example.demo.bean.ContextDiagram;
-import com.example.demo.bean.TextObserver;
-import com.example.demo.bean.Subject;
-import com.example.demo.bean.Machine;
-import com.example.demo.bean.TextSubject;
-import com.example.demo.bean.Interface;
-import com.example.demo.bean.Observer;
-import com.example.demo.bean.ProblemDiagram;
-import com.example.demo.bean.ProblemDomain;
-import com.example.demo.bean.TextObserver;
-import com.example.demo.bean.TextSubject;
-//import com.google.gson.Gson;
 
 /**
  * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
@@ -39,21 +26,22 @@ import com.example.demo.bean.TextSubject;
 @ServerEndpoint("/TextLSP")
 @RestController
 public class TextLSP {
-	//静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
+	// 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
 	private static int onlineCount = 0;
 
-	//concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识
+	// concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。若要实现服务端与单一客户端通信的话，可以使用Map来存放，其中Key可以为用户标识
 	private static CopyOnWriteArraySet<TextLSP> webSocketSet = new CopyOnWriteArraySet<TextLSP>();
 
-	//单例
-	private static class SingletonHolder{
-  	     private static TextLSP instance = new TextLSP();
-    }
-   	public static  TextLSP getInstance(){
-   		return SingletonHolder.instance;
-   	}
+	// 单例
+	private static class SingletonHolder {
+		private static TextLSP instance = new TextLSP();
+	}
 
-	//与某个客户端的连接会话，需要通过它来给客户端发送数据
+	public static TextLSP getInstance() {
+		return SingletonHolder.instance;
+	}
+
+	// 与某个客户端的连接会话，需要通过它来给客户端发送数据
 	private Session session;
 
 	/**
@@ -61,10 +49,10 @@ public class TextLSP {
 	 * @param session  可选的参数。session为与某个客户端的连接会话，需要通过它来给客户端发送数据
 	 */
 	@OnOpen
-	public void onOpen(Session session){
+	public void onOpen(Session session) {
 		this.session = session;
-		webSocketSet.add(this);     //加入set中
-		addOnlineCount();           //在线数加1
+		webSocketSet.add(this); // 加入set中
+		addOnlineCount(); // 在线数加1
 		System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
 	}
 
@@ -72,10 +60,10 @@ public class TextLSP {
 	 * 连接关闭调用的方法
 	 */
 	@OnClose
-	public void onClose(){
+	public void onClose() {
 		unregister(this.session);
-		webSocketSet.remove(this);  //从set中删除
-		subOnlineCount();           //在线数减1
+		webSocketSet.remove(this); // 从set中删除
+		subOnlineCount(); // 在线数减1
 		System.out.println("TextLSP 有一连接关闭！当前在线人数为" + getOnlineCount());
 	}
 
@@ -86,41 +74,46 @@ public class TextLSP {
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		System.out.println(session.getId() + " TextLSP onMessage	"+ message);
-		JSONObject json = JSONObject.parseObject(message); 
+		System.out.println(session.getId() + " TextLSP onMessage	" + message);
+		JSONObject json = JSONObject.parseObject(message);
 		String method = (String) json.get("method");
-		switch(method) {
-		case "TextDocument/didOpen": register(session,json); break;
-		case "TextDocument/didSave": change(session,json); break;
-		default: System.out.println("type="+method+"==");
+		switch (method) {
+		case "TextDocument/didOpen":
+			register(session, json);
+			break;
+		case "TextDocument/didSave":
+			change(session, json);
+			break;
+		default:
+			System.out.println("type=" + method + "==");
 		}
 	}
 
-	void register(Session session,JSONObject json ){
+	void register(Session session, JSONObject json) {
 		System.out.println("============register==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject textDocument = (JSONObject) params.get("textDocument");
 		String uri = (String) textDocument.get("uri");
-		String pf = (String) textDocument.get("text");	
+		String pf = (String) textDocument.get("text");
 
-		//为每个编辑器创建一个observer对象
-		LSPTextObserver observer = new LSPTextObserver(session,uri,pf);
+		// 为每个编辑器创建一个observer对象
+		LSPTextObserver observer = new LSPTextObserver(session, uri, pf);
 		LSPObservers.getObserverSet().add(observer);
 
-		//若存在subject则注册
+		// 若存在subject则注册
 		boolean isFind = false;
-		for(LSPSubject subject: LSPSubjects.getSubjectSet()) {
-			if(uri.equals(subject.getUri()) && subject.getEditorType().contentEquals("text")) {
+		for (LSPSubject subject : LSPSubjects.getSubjectSet()) {
+			if (uri.equals(subject.getUri()) && subject.getEditorType().contentEquals("text")) {
 				subject.attach(observer);
 				System.out.println(LSPSubjects.getSubjectSet());
 				isFind = true;
 			}
 		}
-		
-		//若不存在subject则新建subject并注册
-		if(!isFind) {
-			LSPSubject subject = new LSPTextSubject(uri,observer);
-			LSPSubjects.getSubjectSet().add(subject);	
+
+		// 若不存在subject则新建subject并注册
+		if (!isFind) {
+			LSPSubject subject = new LSPTextSubject(uri, observer);
+			LSPSubjects.getSubjectSet().add(subject);
 		}
 
 		System.out.println("==========================");
@@ -131,37 +124,38 @@ public class TextLSP {
 	 * @param title
 	 * @param version
 	 */
-	void unregister(Session session,JSONObject json){
+	void unregister(Session session, JSONObject json) {
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
-		String uri = (String) diagram.get("uri");		
-		for(LSPSubject lsp: LSPSubjects.getSubjectSet()) {
-			if(uri.equals(lsp.getUri()) ) {
+		String uri = (String) diagram.get("uri");
+		for (LSPSubject lsp : LSPSubjects.getSubjectSet()) {
+			if (uri.equals(lsp.getUri())) {
 				lsp.detach(session);
-				if(lsp.getObserverSet().isEmpty()) {
+				if (lsp.getObserverSet().isEmpty()) {
 					LSPSubjects.getSubjectSet().remove(lsp);
-					System.out.println(lsp.getUri()+"无连接,删除该元素");
+					System.out.println(lsp.getUri() + "无连接,删除该元素");
 				}
 			}
 		}
 	}
-	void unregister(Session session){
-		for(LSPSubject lsp: LSPSubjects.getSubjectSet()) {			
-				lsp.detach(session);	
-				if(lsp.getObserverSet().isEmpty()) {
-					LSPSubjects.getSubjectSet().remove(lsp);
-					System.out.println(lsp.getUri()+"无连接,删除该元素");
-				}
+
+	void unregister(Session session) {
+		for (LSPSubject lsp : LSPSubjects.getSubjectSet()) {
+			lsp.detach(session);
+			if (lsp.getObserverSet().isEmpty()) {
+				LSPSubjects.getSubjectSet().remove(lsp);
+				System.out.println(lsp.getUri() + "无连接,删除该元素");
+			}
 		}
-		for(LSPObserver lsp: LSPObservers.getObserverSet()) {	
-			if(lsp.getSession()==session) {
+		for (LSPObserver lsp : LSPObservers.getObserverSet()) {
+			if (lsp.getSession() == session) {
 				lsp.deleteFile();
 				LSPObservers.getObserverSet().remove(lsp);
 			}
-	}
+		}
 	}
 
-	//old 修改subject
+	// old 修改subject
 //	void change(String uri,String message){
 //		for(LSPSubject lsp: LSPSubjects.getSubjectSet()) {
 //			if(uri.equals(lsp.getUri())) {
@@ -170,15 +164,15 @@ public class TextLSP {
 //		}
 //	}
 
-	//修改observer
-	void change(Session session,JSONObject json){
+	// 修改observer
+	void change(Session session, JSONObject json) {
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject textDocument = (JSONObject) params.get("textDocument");
 		String uri = (String) textDocument.get("uri");
-		String pf = (String) params.get("text");	
-		for(LSPObserver lsp: LSPObservers.getObserverSet()) {
-			if(session.equals(lsp.getSession())) {
-				lsp.change(pf); 
+		String pf = (String) params.get("text");
+		for (LSPObserver lsp : LSPObservers.getObserverSet()) {
+			if (session.equals(lsp.getSession())) {
+				lsp.change(pf);
 			}
 		}
 	}
@@ -189,7 +183,7 @@ public class TextLSP {
 	 * @param error
 	 */
 	@OnError
-	public void onError(Session session, Throwable error){
+	public void onError(Session session, Throwable error) {
 		System.out.println("发生错误");
 		error.printStackTrace();
 	}
