@@ -1,4 +1,4 @@
-package com.example.demo.bean;
+package com.example.demo.LSP;
 
 import java.io.File;
 import java.util.List;
@@ -7,6 +7,10 @@ import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.demo.bean.Constraint;
+import com.example.demo.bean.ProblemDiagram;
+import com.example.demo.bean.Reference;
+import com.example.demo.bean.Requirement;
 import com.example.demo.service.ASTService;
 import com.example.demo.service.AddressService;
 import com.example.demo.service.FileOperation;

@@ -1,4 +1,4 @@
-package com.example.demo.LSP;
+package com.example.demo.LSP.bean;
 
 public class LineInfo {
 	private String name;

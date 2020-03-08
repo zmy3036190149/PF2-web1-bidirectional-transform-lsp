@@ -1,4 +1,4 @@
-package com.example.demo.bean;
+package com.example.demo.LSP;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,8 +34,12 @@ import com.alexander.solovyov.TreeDifferences;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.LSP.DiagramContentChangeEvent;
-import com.example.demo.LSP.LineInfo;
+import com.example.demo.LSP.bean.DiagramContentChangeEvent;
+import com.example.demo.LSP.bean.LineInfo;
+import com.example.demo.bean.Constraint;
+import com.example.demo.bean.ProblemDiagram;
+import com.example.demo.bean.Reference;
+import com.example.demo.bean.Requirement;
 import com.example.demo.controller.WebSocket;
 import com.example.demo.service.ASTService;
 import com.example.demo.service.AddressService;

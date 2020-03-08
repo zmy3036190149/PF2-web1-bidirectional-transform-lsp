@@ -1,4 +1,4 @@
-package com.example.demo.bean;
+package com.example.demo.LSP;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,19 @@ import javax.websocket.Session;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.LSP.LineInfo;
+import com.example.demo.LSP.bean.LineInfo;
+import com.example.demo.bean.Constraint;
+import com.example.demo.bean.ContextDiagram;
+import com.example.demo.bean.Interface;
+import com.example.demo.bean.Machine;
+import com.example.demo.bean.Phenomenon;
+import com.example.demo.bean.ProblemDiagram;
+import com.example.demo.bean.ProblemDomain;
+import com.example.demo.bean.Project;
+import com.example.demo.bean.Reference;
+import com.example.demo.bean.Requirement;
+import com.example.demo.bean.RequirementPhenomenon;
+import com.example.demo.bean.Shape;
 import com.github.gumtreediff.gen.antlr3.xml.XmlTreeGenerator;
 import com.github.gumtreediff.tree.ITree;
 import com.github.gumtreediff.tree.TreeContext;

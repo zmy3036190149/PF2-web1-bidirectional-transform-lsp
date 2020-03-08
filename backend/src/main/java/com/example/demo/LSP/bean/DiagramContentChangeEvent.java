@@ -1,4 +1,4 @@
-package com.example.demo.LSP;
+package com.example.demo.LSP.bean;
 
 import com.example.demo.bean.Phenomenon;
 import com.example.demo.bean.Shape;

@@ -1,4 +1,4 @@
-package com.example.demo.bean;
+package com.example.demo.LSP;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;

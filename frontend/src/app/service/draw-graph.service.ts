@@ -2979,7 +2979,7 @@ export class DrawGraphService {
   }
   addInterfacePhenomenon() {
     let phenomenon = new Phenomenon();
-    this.changePhenomenon(phenomenon, this.phenomenonList);
+    this.changePhenomenon(phenomenon);
     this.sendChangePhenomenonMessage("add","int",this.interface,null,phenomenon)  
   }
   addReferencePhenomenon() {
