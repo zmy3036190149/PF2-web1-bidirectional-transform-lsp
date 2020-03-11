@@ -136,10 +136,23 @@ export class AppComponent {
       // window.location.assign('/' + this.project)
       var that = this
       that.dg_service.getProject(that.project,version) 
-      that.interval = setInterval(function () {
-        clearInterval(that.interval)         
-        that.textService.getNotNullPf(that.project,version)       
-      }, 1500)
+      that.textService.getNotNullPf(that.project,version)
+
+      //register
+      that.interval = setInterval(function () {              
+        if(that.textService.isPfNull && !that.dg_service.isProjectNull){ 
+          clearInterval(that.interval)  
+          let projectAddress = that.textService.projectAddress
+          let pf = that.textService.pf == "" ?  "#"+that.textService.projectAddress+"#\n" : that.textService.pf
+          that.textService.register(projectAddress,version,that.dg_service.project,pf) 
+          let interval_t_d = setInterval(function(){            
+            clearInterval(interval_t_d)
+            that.dg_service.register(projectAddress,version,that.dg_service.project,pf)
+          },500)
+          
+        }
+      }, 1000)
+      
       //console.log('this.project')
       //console.log(that.project)
       //console.log('version')
@@ -358,13 +371,16 @@ export class AppComponent {
             //diagram
             this.dg_service.initProject(description);
             this.dg_service.initPapers();
-            this.dg_service.register(description,"undefined",this.dg_service.project);
-
+            
             //text
             var that = this
             this.interval = setInterval(function () {
               clearInterval(that.interval)
-              that.textService.register(description,"undefined","problem: #"+description+"#\n");     
+              that.dg_service.register(description,"undefined",that.dg_service.project,"problem: #"+description+"#\n");
+              let interval_t_d = setInterval(function(){
+                clearInterval(interval_t_d)
+                that.textService.register(description,"undefined",that.dg_service.project,"problem: #"+description+"#\n");     
+              },500)
             }, 500)            
             this.closePopEdit();
           }         

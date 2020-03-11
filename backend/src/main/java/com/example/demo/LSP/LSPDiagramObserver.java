@@ -1,7 +1,5 @@
 package com.example.demo.LSP;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,17 +21,16 @@ import com.example.demo.bean.Reference;
 import com.example.demo.bean.Requirement;
 import com.example.demo.bean.RequirementPhenomenon;
 import com.example.demo.bean.Shape;
-import com.github.gumtreediff.gen.antlr3.xml.XmlTreeGenerator;
+import com.example.demo.service.ASTService;
 import com.github.gumtreediff.tree.ITree;
 import com.github.gumtreediff.tree.TreeContext;
 
 public class LSPDiagramObserver extends LSPObserver {
 
-	private Project project = null;
-
 	private int i = 0;
 
 	// ==========================初始化====================
+	@Deprecated
 	public LSPDiagramObserver(Session session, String uri, Project project) {
 		super(session, uri, "diagram");
 		this.project = project;
@@ -67,46 +64,54 @@ public class LSPDiagramObserver extends LSPObserver {
 		long time = System.currentTimeMillis();
 		generateOrgAST(time);
 	}
+
 	@Deprecated
 	public void setRequirementList(List<Requirement> requirementList) {
 		project.getProblemDiagram().setRequirementList(requirementList);
 
 	}
+
 	@Deprecated
 	public void setReferenceList(List<Reference> referenceList) {
 		project.getProblemDiagram().setReferenceList(referenceList);
 	}
+
 	@Deprecated
 	public void setConstraintList(List<Constraint> constraintList) {
 		project.getProblemDiagram().setConstraintList(constraintList);
 	}
 
+	public LSPDiagramObserver(Session session, String uri, Project project, String pf) {
+		super(session, uri, "diagram", project, pf);
+
+		orgPath = rootAddress + "org.xml";// 原始版
+		locPath = rootAddress + "loc.xml";// 客户端传来的最新版
+		oldPath = rootAddress + "old.xml";// 合成的最新版
+		mergePath = rootAddress + "merge.xml";// 合并版
+
+		long time = System.currentTimeMillis();
+		generateTextOrgAST(time);
+		generateTextOldAST(time);
+		generateDiagramOrgAST(time);
+		generateDiagramOldAST(time);
+
+		System.out.println("new LSPDiagramObserver		");
+	}
+
 	// save lastestProject to loc.xml
 	public void saveLastestData() {
-		File dir = new File(rootAddress);
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-		fileService.saveLastestProject(rootAddress, uri, project);
+		saveLastestProject();
 	}
 
 	// 根据xml文件生成AST
 	@Override
 	public TreeContext generateAST(String filePath) {
-		// TODO Auto-generated method stub
-		XmlTreeGenerator xmlTreeGenerator = new XmlTreeGenerator();
-		try {
-			return xmlTreeGenerator.generateFromFile(filePath);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return ASTService.generateXmlAST(filePath);
 	}
 
 	public void setTree(ITree org, ITree old) {
 		super.setTree(org, old);
-		astService.generateXml(old, oldPath);
+		astService.generateXmlFile(old, oldPath);
 		project = astService.getProject(oldPath);
 	}
 
@@ -140,7 +145,8 @@ public class LSPDiagramObserver extends LSPObserver {
 	// ========================change=====================
 
 	// 更新本地project并发送给客户端
-	public void change(String message) {
+	@Deprecated
+	public void change_old(String message) {
 
 		// 更新本地project
 		dealWithMessage(message);
@@ -152,7 +158,7 @@ public class LSPDiagramObserver extends LSPObserver {
 		changeOldAST();
 
 		// 生成 old.xml
-		astService.generateXml(oldTree, oldPath);
+		astService.generateXmlFile(oldTree, oldPath);
 
 		// 发送给远端
 		session.getAsyncRemote().sendText(message);
@@ -167,6 +173,44 @@ public class LSPDiagramObserver extends LSPObserver {
 		// set new orgTree
 		orgTree = oldTree.deepCopy();
 	}
+
+	// 更新本地project及pf并发送给客户端
+	public void change(String message) {
+
+		// 发送给远端
+		session.getAsyncRemote().sendText(message);
+
+		// 更新本地project 并更新 text_oldTree
+		dealWithMessage(message);
+
+		// 将当前 project 存为loc.xml文件
+		saveLastestProject();
+
+		// generate diagram_locTree
+		long time = System.currentTimeMillis();
+		generateDiagramLocAST(time);
+
+		// generate new diagram_oldTree
+		diagram_oldTree = changeOldAST(diagram_orgTree, diagram_oldTree, diagram_locTree);
+		diagram_oldContext.setRoot(diagram_oldTree);
+
+		// generate old.xml for test
+		astService.generateXmlFile(diagram_oldTree, diagram_oldPath);
+
+		// 发送给subject
+		for (LSPSubject subject : LSPSubjects.getSubjectSet()) {
+			if (subject.getUri().contentEquals(uri)) {
+				subject.setValue(diagram_orgTree, diagram_oldTree, text_orgTree, text_oldTree, session);
+			}
+		}
+
+		// set new orgTree
+		text_orgTree = text_oldTree.deepCopy();
+		text_orgContext.setRoot(text_orgTree);
+		diagram_orgTree = diagram_oldTree.deepCopy();
+		diagram_orgContext.setRoot(diagram_orgTree);
+	}
+
 	public void dealWithMessage(String message) {
 		JSONObject json = JSONObject.parseObject(message);
 		JSONObject params = (JSONObject) json.get("params");
@@ -201,32 +245,38 @@ public class LSPDiagramObserver extends LSPObserver {
 				System.out.println("project==null");
 			else if (project.getContextDiagram() == null)
 				System.out.println(" project.getContextDiagram()==null");
-			else
+			else {
 				project.getContextDiagram().setMachine((Machine) newShape);
+				LSPTransform.add((Machine) newShape, text_oldTree);
+			}
 			break;
 		case "pro":
 			newShape = JSON.parseObject(snewShape, ProblemDomain.class);
 			project.getContextDiagram().getProblemDomainList().add((ProblemDomain) newShape);
+			LSPTransform.add((ProblemDomain) newShape, text_oldTree);
 			break;
 		case "req":
 			newShape = JSON.parseObject(snewShape, Requirement.class);
 			project.getProblemDiagram().getRequirementList().add((Requirement) newShape);
+			LSPTransform.add((Requirement) newShape, text_oldTree);
 			break;
 		case "int":
 			newShape = JSON.parseObject(snewShape, Interface.class);
 			project.getContextDiagram().getInterfaceList().add((Interface) newShape);
+			LSPTransform.add((Interface) newShape, text_oldTree);
 			break;
 		case "ref":
 			newShape = JSON.parseObject(snewShape, Reference.class);
 			project.getProblemDiagram().getReferenceList().add((Reference) newShape);
+			LSPTransform.add((Reference) newShape, text_oldTree);
 			break;
 		case "con":
 			newShape = JSON.parseObject(snewShape, Constraint.class);
 			project.getProblemDiagram().getConstraintList().add((Constraint) newShape);
+			LSPTransform.add((Constraint) newShape, text_oldTree);
 			break;
 		case "phe":
 			LineInfo lineInfo = JSON.parseObject(slineInfo, LineInfo.class);
-			addPhenomenon(lineInfo, snewPhenomenon);
 		}
 	}
 
@@ -238,6 +288,7 @@ public class LSPDiagramObserver extends LSPObserver {
 			for (Interface intf : project.getContextDiagram().getInterfaceList()) {
 				if (intf.getName().contentEquals(lineInfo.getName())) {
 					intf.getPhenomenonList().add(newPhenomenon);
+
 				}
 			}
 			break;
@@ -268,27 +319,34 @@ public class LSPDiagramObserver extends LSPObserver {
 		switch (shape) {
 		case "mac":
 			oldShape = JSON.parseObject(soldShape, Machine.class);
+			deleteRelatedLines(oldShape);
 			project.getContextDiagram().setMachine(null);
+			LSPTransform.delete((Machine) oldShape, text_oldTree);
 			break;
 		case "pro":
 			oldShape = JSON.parseObject(soldShape, ProblemDomain.class);
 			delete((ProblemDomain) oldShape, project.getContextDiagram().getProblemDomainList());
+			LSPTransform.delete((ProblemDomain) oldShape, text_oldTree);
 			break;
 		case "req":
 			oldShape = JSON.parseObject(soldShape, Requirement.class);
 			delete((Requirement) oldShape, project.getProblemDiagram().getRequirementList());
+			LSPTransform.delete((Requirement) oldShape, text_oldTree);
 			break;
 		case "int":
 			oldShape = JSON.parseObject(soldShape, Interface.class);
 			delete((Interface) oldShape, project.getContextDiagram().getInterfaceList());
+			LSPTransform.delete((Interface) oldShape, text_oldTree);
 			break;
 		case "ref":
 			oldShape = JSON.parseObject(soldShape, Reference.class);
 			delete((Reference) oldShape, project.getProblemDiagram().getReferenceList());
+			LSPTransform.delete((Reference) oldShape, text_oldTree);
 			break;
 		case "con":
 			oldShape = JSON.parseObject(soldShape, Constraint.class);
 			delete((Constraint) oldShape, project.getProblemDiagram().getConstraintList());
+			LSPTransform.delete((Constraint) oldShape, text_oldTree);
 			break;
 		case "phe":
 			LineInfo lineInfo = JSON.parseObject(slineInfo, LineInfo.class);
@@ -347,7 +405,20 @@ public class LSPDiagramObserver extends LSPObserver {
 		List<Interface> interfaceList = this.project.getContextDiagram().getInterfaceList();
 		List<Reference> referenceList = this.project.getProblemDiagram().getReferenceList();
 		List<Constraint> constraintList = this.project.getProblemDiagram().getConstraintList();
+		if (delete instanceof Machine) {
 
+			Machine machine = (Machine) delete;
+			List<Interface> deleteInterfaceList = new LinkedList<>();
+			for (Interface interfacee : interfaceList) {
+				if (interfacee.getTo().equals(machine.getShortname())
+						|| interfacee.getFrom().equals(machine.getShortname())) {
+					interfacee.getPhenomenonList().clear();
+					deleteInterfaceList.add(interfacee);
+					LSPTransform.delete(interfacee, text_oldTree);
+				}
+			}
+			interfaceList.removeAll(deleteInterfaceList);
+		}
 		if (delete instanceof ProblemDomain) {
 			ProblemDomain problemDomain = (ProblemDomain) delete;
 
@@ -357,6 +428,7 @@ public class LSPDiagramObserver extends LSPObserver {
 						|| interfacee.getFrom().equals(problemDomain.getShortname())) {
 					interfacee.getPhenomenonList().clear();
 					deleteInterfaceList.add(interfacee);
+					LSPTransform.delete(interfacee, text_oldTree);
 				}
 			}
 			interfaceList.removeAll(deleteInterfaceList);
@@ -367,6 +439,7 @@ public class LSPDiagramObserver extends LSPObserver {
 						|| reference.getFrom().equals(problemDomain.getShortname())) {
 					reference.getPhenomenonList().clear();
 					deleteReferebceList.add(reference);
+					LSPTransform.delete(reference, text_oldTree);
 				}
 			}
 			referenceList.removeAll(deleteReferebceList);
@@ -377,6 +450,7 @@ public class LSPDiagramObserver extends LSPObserver {
 						|| constraint.getFrom().equals(problemDomain.getShortname())) {
 					constraint.getPhenomenonList().clear();
 					deleteConstraintList.add(constraint);
+					LSPTransform.delete(constraint, text_oldTree);
 				}
 			}
 			constraintList.removeAll(deleteConstraintList);
@@ -387,32 +461,46 @@ public class LSPDiagramObserver extends LSPObserver {
 
 			List<Reference> deleteReferebceList = new LinkedList<>();
 			for (Reference reference : referenceList) {
-				boolean flag = false;
-				for (RequirementPhenomenon rp : reference.getPhenomenonList()) {
-					if (rp.getRequirement() == requirement.getNo()) {
-						flag = true;
-						break;
-					}
-				}
-				if (flag) {
+//				boolean flag = false;
+//				for (RequirementPhenomenon rp : reference.getPhenomenonList()) {
+//					if (rp.getRequirement() == requirement.getNo()) {
+//						flag = true;
+//						break;
+//					}
+//				}
+//				if (flag) {
+//					reference.getPhenomenonList().clear();
+//					deleteReferebceList.add(reference);
+//					LSPTransform.delete(reference, text_oldTree);
+//				}
+				if (reference.getTo().equals(requirement.getName())
+						|| reference.getFrom().equals(requirement.getName())) {
 					reference.getPhenomenonList().clear();
 					deleteReferebceList.add(reference);
+					LSPTransform.delete(reference, text_oldTree);
 				}
 			}
 			referenceList.removeAll(deleteReferebceList);
 
 			List<Constraint> deleteConstraintList = new LinkedList<>();
 			for (Constraint constraint : constraintList) {
-				boolean flag = false;
-				for (RequirementPhenomenon rp : constraint.getPhenomenonList()) {
-					if (rp.getRequirement() == requirement.getNo()) {
-						flag = true;
-						break;
-					}
-				}
-				if (flag) {
+//				boolean flag = false;
+//				for (RequirementPhenomenon rp : constraint.getPhenomenonList()) {
+//					if (rp.getRequirement() == requirement.getNo()) {
+//						flag = true;
+//						break;
+//					}
+//				}
+//				if (flag) {
+//					constraint.getPhenomenonList().clear();
+//					deleteConstraintList.add(constraint);
+//					LSPTransform.delete(constraint, text_oldTree);
+//				}
+				if (constraint.getTo().equals(requirement.getName())
+						|| constraint.getFrom().equals(requirement.getName())) {
 					constraint.getPhenomenonList().clear();
 					deleteConstraintList.add(constraint);
+					LSPTransform.delete(constraint, text_oldTree);
 				}
 			}
 			constraintList.removeAll(deleteConstraintList);
@@ -434,31 +522,37 @@ public class LSPDiagramObserver extends LSPObserver {
 			newShape = JSON.parseObject(snewShape, Machine.class);
 			oldShape = JSON.parseObject(soldShape, Machine.class);
 			change((Machine) oldShape, (Machine) newShape);
+			LSPTransform.change((Machine) oldShape, (Machine) newShape, text_oldTree);
 			break;
 		case "pro":
 			oldShape = JSON.parseObject(soldShape, ProblemDomain.class);
 			newShape = JSON.parseObject(snewShape, ProblemDomain.class);
 			change((ProblemDomain) oldShape, (ProblemDomain) newShape);
+			LSPTransform.change((ProblemDomain) oldShape, (ProblemDomain) newShape, text_oldTree);
 			break;
 		case "req":
 			oldShape = JSON.parseObject(soldShape, Requirement.class);
 			newShape = JSON.parseObject(snewShape, Requirement.class);
 			change((Requirement) oldShape, (Requirement) newShape);
+			LSPTransform.change((Requirement) oldShape, (Requirement) newShape, text_oldTree);
 			break;
 		case "int":
 			oldShape = JSON.parseObject(soldShape, Interface.class);
 			newShape = JSON.parseObject(snewShape, Interface.class);
 			change((Interface) oldShape, (Interface) newShape);
+			LSPTransform.change((Interface) oldShape, (Interface) newShape, text_oldTree);
 			break;
 		case "ref":
 			oldShape = JSON.parseObject(soldShape, Reference.class);
 			newShape = JSON.parseObject(snewShape, Reference.class);
 			change((Reference) oldShape, (Reference) newShape);
+			LSPTransform.change((Reference) oldShape, (Reference) newShape, text_oldTree);
 			break;
 		case "con":
 			oldShape = JSON.parseObject(soldShape, Constraint.class);
 			newShape = JSON.parseObject(snewShape, Constraint.class);
 			change((Constraint) oldShape, (Constraint) newShape);
+			LSPTransform.change((Constraint) oldShape, (Constraint) newShape, text_oldTree);
 			break;
 		}
 	}
@@ -561,21 +655,14 @@ public class LSPDiagramObserver extends LSPObserver {
 	}
 
 	// ========================merge=======================
-	@Override
-	public void update(String type, ITree org, ITree old) {
-		if (type.contentEquals("diagram")) {
-			System.out.println(session.getId() + " update old ast since another editor change===================");
-			update(org, old);
+	// old
+//	@Override
+//	public void update(String type, ITree org, ITree old) {
+//		if (type.contentEquals("diagram")) {
+//			updateDiagram(org, old);
+//			// notify client the change
+//			notifyClient();
+//		}
+//	}
 
-			// generate merge.xml
-			astService.generateXml(oldTree, mergePath);
-
-			// 生成新的project
-			project = astService.getProject(mergePath);
-
-			// notify client the change
-			notifyClient();
-			System.out.println(" update end ========================================");
-		}
-	}
 }

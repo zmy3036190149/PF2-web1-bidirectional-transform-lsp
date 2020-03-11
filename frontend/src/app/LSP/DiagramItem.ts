@@ -9,9 +9,10 @@ export interface DiagramItem{
     uri:string
     project:Project
     title:String
-    contextDiagram:ContextDiagram
+    text:String
+    // contextDiagram:ContextDiagram
     // problemDiagram:ProblemDiagram
-    requirementList: Requirement[]
-	constraintList: Constraint[]
-	referenceList: Reference[]
+    // requirementList: Requirement[]
+	// constraintList: Constraint[]
+	// referenceList: Reference[]
 }

@@ -26,6 +26,8 @@ export class Machine{
 		return machine
 	}
 	static copyMachine(old){
+		if(old == null)
+			return null
 		let  machine =  new Machine()
 		machine.name=old.name
 		machine.shortname=old.shortname

@@ -347,7 +347,7 @@ export class TopbarComponent implements OnInit {
                   nodes=>{
                     that.dg_service.ontologyEntities = nodes;
                     that.dg_service.initProjectWithOntology(that.dg_service.project.title)  
-                    that.dg_service.register(that.dg_service.projectAddress,"undefined",that.dg_service.project)                       
+                    that.dg_service.register(that.dg_service.projectAddress,"undefined",that.dg_service.project,"")                       
                 })
               }
         ,1500)

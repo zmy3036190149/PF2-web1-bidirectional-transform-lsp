@@ -544,7 +544,7 @@ export class Project{
 			}
 		  }
 	}
-	getDescription(line) {
+	setDescription(line) {
 		let name = line.getName()
 		let pheList = line.getPhenomenonList()
 		//a:M!{on},P!{off}

@@ -95,21 +95,21 @@ public class DiagramLSP {
 		case "Diagram/didOpen":
 			register(session, json);
 			break;
-		case "Diagram/didOpen1":
-			register1(session, json);
-			break;
-		case "Diagram/didOpen2":
-			register2(session, json);
-			break;
-		case "Diagram/didOpen/requirementList":
-			setRequirementList(session, json);
-			break;
-		case "Diagram/didOpen/referenceList":
-			setReferenceList(session, json);
-			break;
-		case "Diagram/didOpen/constraintList":
-			setConstraintList(session, json);
-			break;
+//		case "Diagram/didOpen1":
+//			register1(session, json);
+//			break;
+//		case "Diagram/didOpen2":
+//			register2(session, json);
+//			break;
+//		case "Diagram/didOpen/requirementList":
+//			setRequirementList(session, json);
+//			break;
+//		case "Diagram/didOpen/referenceList":
+//			setReferenceList(session, json);
+//			break;
+//		case "Diagram/didOpen/constraintList":
+//			setConstraintList(session, json);
+//			break;
 		case "Diagram/didClose":
 			unregister(session, json);
 			break;
@@ -122,14 +122,15 @@ public class DiagramLSP {
 
 	}
 
-	void register(Session session, JSONObject json) {
+	// ------------------old -----------------------
+	@Deprecated
+	void register_old(Session session, JSONObject json) {
 		// System.out.println("============register==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
 		// System.out.println(json.toJSONString());
 		// System.out.println(diagram.toJSONString());
 		String uri = (String) diagram.get("uri");
-
 		// Project
 		Project project = new Project();
 		JSONObject pro = (JSONObject) diagram.get("project");
@@ -200,17 +201,26 @@ public class DiagramLSP {
 		// System.out.println("==========================");
 	}
 
-	void register1(Session session, JSONObject json) {
-		// System.out.println("============register1==============");
+	// ------------------ new -----------------------
+	void register(Session session, JSONObject json) {
+		// System.out.println("============register==============");
 		JSONObject params = (JSONObject) json.get("params");
 		JSONObject diagram = (JSONObject) params.get("diagram");
+		// System.out.println(json.toJSONString());
+		// System.out.println(diagram.toJSONString());
 		String uri = (String) diagram.get("uri");
-		String title = (String) diagram.get("title");
+
+		String text = (String) diagram.get("text");
+		// Project
+		Project project = new Project();
+		JSONObject pro = (JSONObject) diagram.get("project");
+		String title = (String) pro.get("title");
+		project.setTitle(title);
 
 		// contextDiagram
 		ContextDiagram contextDiagram = new ContextDiagram();
-		JSONObject jcontextDiagram = (JSONObject) diagram.get("contextDiagram");
-		String cdtitle = (String) jcontextDiagram.get("title");
+		JSONObject jcontextDiagram = (JSONObject) pro.get("contextDiagram");
+		title = (String) jcontextDiagram.get("title");
 		String smachine = jcontextDiagram.getString("machine");
 		Machine machine = JSONObject.parseObject(smachine, Machine.class);
 
@@ -225,14 +235,32 @@ public class DiagramLSP {
 		String sintList = jcontextDiagram.getString("interfaceList");
 		List<Interface> interfaceList = (List<Interface>) JSONObject.parseArray(sintList, Interface.class);
 
-		contextDiagram.setTitle(cdtitle);
+		contextDiagram.setTitle(title);
 		contextDiagram.setMachine(machine);
 		contextDiagram.setProblemDomainList(problemDomainList);
 		contextDiagram.setInterfaceList(interfaceList);
+		project.setContextDiagram(contextDiagram);
+
+		// problemDiagram
+		ProblemDiagram problemDiagram = new ProblemDiagram();
+		JSONObject jproblemDiagram = (JSONObject) pro.get("problemDiagram");
+		title = (String) jproblemDiagram.get("title");
+		String sreqList = jproblemDiagram.getString("requirementList");
+		List<Requirement> requirementList = (List<Requirement>) JSONObject.parseArray(sreqList, Requirement.class);
+		String srefList = jproblemDiagram.getString("referenceList");
+		List<Reference> referenceList = (List<Reference>) JSONObject.parseArray(srefList, Reference.class);
+		String sconList = jproblemDiagram.getString("constraintList");
+		List<Constraint> constraintList = (List<Constraint>) JSONObject.parseArray(sconList, Constraint.class);
+		problemDiagram.setTitle(title);
+		problemDiagram.setRequirementList(requirementList);
+		problemDiagram.setReferenceList(referenceList);
+		problemDiagram.setConstraintList(constraintList);
+		problemDiagram.setContextDiagram(contextDiagram);
+		project.setProblemDiagram(problemDiagram);
 
 //		String sProject =  diagram.getString("pro");
 		// 为每个编辑器创建一个observer对象
-		LSPDiagramObserver observer = new LSPDiagramObserver(session, uri, title, contextDiagram);
+		LSPDiagramObserver observer = new LSPDiagramObserver(session, uri, project, text);
 		LSPObservers.getObserverSet().add(observer);
 
 		// 若存在subject则注册
@@ -246,96 +274,10 @@ public class DiagramLSP {
 
 		// 若不存在subject则新建subject并注册
 		if (!isFind) {
-			LSPSubject subject = new LSPDiagramSubject(uri, observer);
+			LSPSubject subject = new LSPSubject(uri, observer);
 			LSPSubjects.getSubjectSet().add(subject);
 		}
 
-		// System.out.println("==========================");
-	}
-
-	void register2(Session session, JSONObject json) {
-		// System.out.println("============register2==============");
-		JSONObject params = (JSONObject) json.get("params");
-		JSONObject diagram = (JSONObject) params.get("diagram");
-		// System.out.println(json.toJSONString());
-		// System.out.println(diagram.toJSONString());
-
-		// problemDiagram
-		ProblemDiagram problemDiagram = new ProblemDiagram();
-		JSONObject jproblemDiagram = (JSONObject) diagram.get("problemDiagram");
-		String pdtitle = (String) jproblemDiagram.get("title");
-		String sreqList = jproblemDiagram.getString("requirementList");
-		List<Requirement> requirementList = (List<Requirement>) JSONObject.parseArray(sreqList, Requirement.class);
-		String srefList = jproblemDiagram.getString("referenceList");
-		List<Reference> referenceList = (List<Reference>) JSONObject.parseArray(srefList, Reference.class);
-		String sconList = jproblemDiagram.getString("constraintList");
-		List<Constraint> constraintList = (List<Constraint>) JSONObject.parseArray(sconList, Constraint.class);
-		problemDiagram.setTitle(pdtitle);
-		problemDiagram.setRequirementList(requirementList);
-		problemDiagram.setReferenceList(referenceList);
-		problemDiagram.setConstraintList(constraintList);
-
-//		String sProject =  diagram.getString("pro");
-		// 为observer对象设置problemDomain
-		for (LSPObserver observer : LSPObservers.getObserverSet()) {
-			if (session.equals(observer.getSession())) {
-				observer.setProject(problemDiagram);
-			}
-		}
-		// System.out.println("==========================");
-	}
-
-	void setRequirementList(Session session, JSONObject json) {
-		// System.out.println("============setRequirementList==============");
-		JSONObject params = (JSONObject) json.get("params");
-		JSONObject diagram = (JSONObject) params.get("diagram");
-		// System.out.println(json.toJSONString());
-		// System.out.println(diagram.toJSONString());
-		String sreqList = diagram.getString("requirementList");
-		List<Requirement> requirementList = (List<Requirement>) JSONObject.parseArray(sreqList, Requirement.class);
-
-		for (LSPObserver observer : LSPObservers.getObserverSet()) {
-			if (session.equals(observer.getSession())) {
-				observer.setRequirementList(requirementList);
-			}
-		}
-		// System.out.println("==========================");
-	}
-
-	void setReferenceList(Session session, JSONObject json) {
-		// System.out.println("============setReferenceList==============");
-		JSONObject params = (JSONObject) json.get("params");
-		JSONObject diagram = (JSONObject) params.get("diagram");
-
-		String srefList = diagram.getString("referenceList");
-		List<Reference> referenceList = (List<Reference>) JSONObject.parseArray(srefList, Reference.class);
-
-//		String sProject =  diagram.getString("pro");
-		// 为observer对象设置problemDomain
-		for (LSPObserver observer : LSPObservers.getObserverSet()) {
-			if (session.equals(observer.getSession())) {
-				observer.setReferenceList(referenceList);
-			}
-		}
-		// System.out.println("==========================");
-	}
-
-	void setConstraintList(Session session, JSONObject json) {
-		// System.out.println("============setConstraintList==============");
-		JSONObject params = (JSONObject) json.get("params");
-		JSONObject diagram = (JSONObject) params.get("diagram");
-		// System.out.println(json.toJSONString());
-
-		String sconList = diagram.getString("constraintList");
-		List<Constraint> constraintList = (List<Constraint>) JSONObject.parseArray(sconList, Constraint.class);
-
-//		String sProject =  diagram.getString("pro");
-		// 为observer对象设置problemDomain
-		for (LSPObserver observer : LSPObservers.getObserverSet()) {
-			if (session.equals(observer.getSession())) {
-				observer.setConstraintList(constraintList);
-			}
-		}
 		// System.out.println("==========================");
 	}
 

@@ -117,6 +117,8 @@ export class DrawGraphService {
   interface_ontologyPhes
   messageId=0
   interval1
+
+  isProjectNull = false
   //==============================WebSocket=========================
   openWebSocket(){
     this.ws = new WebSocket('ws://localhost:8080/DiagramLSP');
@@ -508,7 +510,7 @@ export class DrawGraphService {
   }
 
   //----------发送消息  new -----------
-  register(title,version,pro:Project){
+  register(title,version,pro:Project,text){
     if(version==undefined)
       version = "undefined"
     //console.log("-------------------diagram register-----:",title,version)
@@ -518,13 +520,16 @@ export class DrawGraphService {
     }
     // let diagram : DiagramItem = {uri:title+version,pro:pro}
     // let cd = pro.contextDiagram
-    let diagram :DiagramItem= {uri:title+version, 
+    let diagram :DiagramItem= {
+      uri:title+version, 
       title:title, 
       project:pro, 
-      contextDiagram:null,
-      requirementList:null,
-      constraintList: null, 
-      referenceList: null }
+      text: text
+      // contextDiagram:null,
+      // requirementList:null,
+      // constraintList: null, 
+      // referenceList: null 
+    }
     let params : DidOpenDiagramParams = {diagram:diagram}
     let message = new DiagramMessageFactory().getDiagramMessage("Diagram/didOpen",params)
     // console.log("============diagram send message=============")
@@ -535,6 +540,7 @@ export class DrawGraphService {
     this.projectAddress = title
     this.version = version
   }
+  /*
   //分批发送project信息
   register2(title,version,pro:Project){
     if(version==undefined)
@@ -610,6 +616,7 @@ export class DrawGraphService {
     //console.log(message)
     this.ws.send(smessage)
   }
+  */
   unregister(title,version){
     if(version==undefined)
       version = "undefined"
@@ -970,7 +977,7 @@ export class DrawGraphService {
       for(let int of this.project.contextDiagram.interfaceList){
         int.name= this.getlink_name(this.link_name_no);
         this.link_name_no += 1;
-        int.description = this.project.getDescription(int);
+        int.description = this.project.setDescription(int);
         // change interface link on graph
         let links = this.graphs[0].getLinks();
         for(let link of links){
@@ -1088,11 +1095,11 @@ export class DrawGraphService {
     if(version==undefined)
       version = "undefined"
     this.version = version
+    this.isProjectNull = false
     this.fileService.getProject(projectAddress,version).subscribe(
       project => {        
-        that.setProject(project)  
-        //console.log(this.project)     
-        that.register(projectAddress,version,project)   
+        that.setProject(project) 
+        this.isProjectNull = true 
       });
   }
   //upload pf 时调用
@@ -1107,7 +1114,7 @@ export class DrawGraphService {
     this.fileService.getPFProject(projectAddress).subscribe(
       project => {
         that.setProject(project)       
-        that.register(projectAddress,version,project)   
+        that.register(projectAddress,version,project,"")   
       });
   }
   getLatestProject(projectAddress: string, version): void {
@@ -1413,8 +1420,8 @@ export class DrawGraphService {
     });
   }
 
-  deleteMachinews(old:Machine) {
-    this.project.deleteRelatedLink(this.project.contextDiagram.machine.shortname)    
+  deleteMachinews(old:Machine) {    
+    old = Machine.copyMachine(old)  
     let shortname = old.getShortname();
     this.project.deleteRelatedLink(shortname)    
     this.project.contextDiagram.machine = undefined;
@@ -2256,7 +2263,7 @@ export class DrawGraphService {
     return null;
   }
   changeInterfaceDetail() {
-    let int = Interface.newInterfaceWithOld(this.interface, this.project.getDescription(this.interface))
+    let int = Interface.newInterfaceWithOld(this.interface, this.project.setDescription(this.interface))
     this.sendChangeShapeMessage("change", "int", this.interface, int)
     //console.log('changeInterfaceDetail');
     //console.log(this.project.contextDiagram.interfaceList);
@@ -2594,7 +2601,7 @@ export class DrawGraphService {
     //console.log(this.initiator_or_receiverList)
   }
   changeReferenceDetail() {
-    let ref = Reference.newReferenceWithOld(this.reference, this.project.getDescription(this.reference))
+    let ref = Reference.newReferenceWithOld(this.reference, this.project.setDescription(this.reference))
     this.sendChangeShapeMessage("change", "ref", this.reference, ref)
   }
   changeReferencews(old:Reference,new1:Reference) {
@@ -2878,7 +2885,7 @@ export class DrawGraphService {
         
   }
   changeConstraintDetail() {
-    let con = Constraint.newConstraintWithOld(this.constraint, this.project.getDescription(this.constraint))
+    let con = Constraint.newConstraintWithOld(this.constraint, this.project.setDescription(this.constraint))
     //console.log(con)
     this.sendChangeShapeMessage("change", "con", this.constraint, con)
   }
@@ -2978,9 +2985,11 @@ export class DrawGraphService {
     //console.log(this.project)
   }
   addInterfacePhenomenon() {
-    let phenomenon = new Phenomenon();
-    this.changePhenomenon(phenomenon);
-    this.sendChangePhenomenonMessage("add","int",this.interface,null,phenomenon)  
+    let phenomenon = new Phenomenon()
+    this.changePhenomenon(phenomenon)    
+    this.project.setDescription(this.interface)
+    // this.sendChangePhenomenonMessage("add","int",this.interface,null,phenomenon)  
+    this.sendChangeShapeMessage("change","int",this.interface,this.interface)
   }
   addReferencePhenomenon() {
     let phenomenon = new RequirementPhenomenon();
@@ -3000,8 +3009,10 @@ export class DrawGraphService {
       reqno=this.getReqNo(target.attr('root').title);
     }   
     phenomenon.requirement = reqno;
-    this.project.getDescription(this.reference)
-    this.sendChangePhenomenonMessage("add","ref",this.reference,null,phenomenon) 
+    this.changePhenomenon1(phenomenon);
+    this.project.setDescription(this.reference)
+    // this.sendChangePhenomenonMessage("add","ref",this.reference,null,phenomenon) 
+    this.sendChangeShapeMessage("change","ref",this.reference,this.reference)
     // const that = this;
     //  setTimeout(function () {
     //   that.changePhenomenon1(phenomenon);
@@ -3024,9 +3035,11 @@ export class DrawGraphService {
       } else {
         reqno=this.getReqNo(target.attr('root').title);
       }   
-      phenomenon.requirement = reqno;      
-    this.project.getDescription(this.constraint)
-    this.sendChangePhenomenonMessage("add","con",this.constraint,null,phenomenon) 
+      phenomenon.requirement = reqno;
+    this.changePhenomenon1(phenomenon)
+    this.project.setDescription(this.constraint)
+    // this.sendChangePhenomenonMessage("add","con",this.constraint,null,phenomenon) 
+    this.sendChangeShapeMessage("change","con",this.constraint,this.constraint)
   }
   changePhenomenon(phenomenon) {
     let selectedDiv = document.getElementById(this.selectedType + 'PopBox');
@@ -3250,22 +3263,26 @@ export class DrawGraphService {
   //deletePhenomenon
   deletePhenomenon() {
     if (this.selectedType == 'interface') {
-      let phenomenon = this.deletePhenomenon1();
-      this.sendChangePhenomenonMessage("delete","int",this.interface,phenomenon,null) 
+      let phenomenon = this.deletePhenomenon1(this.interface);
+      // this.sendChangePhenomenonMessage("delete","int",this.interface,phenomenon,null) 
+    this.sendChangeShapeMessage("change","int",this.interface,this.interface)
     } else if (this.selectedType == 'reference') {
-      let phenomenon = this.deletePhenomenon1();
-      this.sendChangePhenomenonMessage("delete","ref",this.reference,phenomenon,null)
+      let phenomenon = this.deletePhenomenon1(this.reference);
+      // this.sendChangePhenomenonMessage("delete","ref",this.reference,phenomenon,null)
+    this.sendChangeShapeMessage("change","ref",this.reference,this.reference)
     } else if (this.selectedType == 'constraint') {
-      let phenomenon = this.deletePhenomenon1();
-      this.sendChangePhenomenonMessage("delete","con",this.constraint,phenomenon,null) 
+      let phenomenon = this.deletePhenomenon1(this.constraint);
+      this.sendChangeShapeMessage("change","con",this.constraint,this.constraint)
+      // this.sendChangePhenomenonMessage("delete","con",this.constraint,phenomenon,null) 
       // const that = this;
       // setTimeout(function () {
       //   let phenomenon = that.deletePhenomenon1();
       // }, 100);
     }
   }
-  deletePhenomenon1():Phenomenon {
-    let phenomenon = this.deletePhenomenonByNo(this.selectedPhenomenonNo, this.phenomenonList)    
+  deletePhenomenon1(line):Phenomenon {
+    let phenomenon = this.deletePhenomenonByNo(this.selectedPhenomenonNo, this.phenomenonList)       
+    this.project.setDescription(line) 
     this.projectService.sendProject(this.project);
     return phenomenon
   }

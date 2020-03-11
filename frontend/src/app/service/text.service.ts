@@ -18,6 +18,7 @@ import {
   PublishDiagnosticsNotification, PublishDiagnosticsParams,
 } from 'vscode-languageserver-protocol/lib/main';
 import { DiagramMessageFactory } from '../LSP/DiagramMessageFactory';
+import { Project } from '../entity/Project';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,8 @@ export class TextService {
   connection: MessageConnection
   languageClient: MonacoLanguageClient
   filename: string
+  isPfNull = false
+  pf
   constructor(
     private fileService: FileService) { 
     this.messageId=0    
@@ -78,7 +81,7 @@ export class TextService {
     this.interval = setInterval(function(){
       that.didSave()
       }
-    ,1000)
+    ,2000)
   }
 
   //old
@@ -192,6 +195,7 @@ export class TextService {
   getText(){
     return this.editor.getValue()
   }
+  
   //打开项目时调用
   getNotNullPf(projectAddress,version){
     var that = this
@@ -199,15 +203,10 @@ export class TextService {
     if(version==undefined)
       version = "undefined"
     this.version = version
+    this.isPfNull = false
     this.fileService.getNotNullPf(projectAddress,version).subscribe(
       pf => {
-        if(pf!=""){
-          //console.log("===== getNotNullPf ==========")       
-          // //console.log(pf)       
-          that.register(projectAddress,version,pf)
-        }else{ 
-          that.register(projectAddress,version,"#"+projectAddress+"#\n")    
-        }
+        this.isPfNull = true
       })
   }
 
@@ -235,7 +234,7 @@ export class TextService {
     this.ws.onclose = function(e){
       //console.log("=================================close===============================",e);
       that.openWebSocket()      
-      that.register(that.projectAddress,that.version,that.getText())   
+      that.register(that.projectAddress,that.version,null,that.getText())   
     }
   }
   //===========发送消息old===========
@@ -320,15 +319,17 @@ export class TextService {
   }
 
   //===========发送消息 new ===========
-  register(title,version,text){
+  register(title,version,pro:Project,text){
     version = version==undefined?"undefined":version
+    let textDocument = {
+      uri: title + version,
+      languageId: "pf",
+      version: 0,
+      text: text,
+      project: pro
+    }
     let params:DidOpenTextDocumentParams = {
-      textDocument: {
-        uri: title + version,
-        languageId: "pf",
-        version: 0,
-        text: text
-      }
+      textDocument:textDocument
     }
     let message = new DiagramMessageFactory().getDiagramMessage("TextDocument/didOpen",params)
     this.ws.send(JSON.stringify(message))
