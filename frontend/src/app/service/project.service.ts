@@ -188,37 +188,37 @@ export class ProjectService {
 	}
 
 	checkCorrectness(project: Project): Observable<Error[]>{
-		const url = `http://localhost:8080/project/checkCorrectness`;
+		const url = `http://47.52.116.116:8099/project/checkCorrectness`;
 		return this.http.post<Error[]>(url, project, this.httpOptions);
 	}
 
   checkCorrectContext(project: Project): Observable<Error[]> {
-    const url = `http://localhost:8080/project/checkCorrectContext`;
+    const url = `http://47.52.116.116:8099/project/checkCorrectContext`;
     return this.http.post<Error[]>(url, project, this.httpOptions);
   }
 
   checkCorrectProblem(project: Project): Observable<Error[]> {
-    const url = `http://localhost:8080/project/checkCorrectProblem`;
+    const url = `http://47.52.116.116:8099/project/checkCorrectProblem`;
     return this.http.post<Error[]>(url, project, this.httpOptions);
   }
 
 	checkWellFormed(project: Project): Observable<Error[]>{
-		const url = `http://localhost:8080/project/checkWellFormed`;
+		const url = `http://47.52.116.116:8099/project/checkWellFormed`;
 		return this.http.post<Error[]>(url, project, this.httpOptions);
 	}
 
 	getSubProblemDiagram(project: Project): Observable<Project>{
-		const url = `http://localhost:8080/project/getSubProblemDiagram`;
+		const url = `http://47.52.116.116:8099/project/getSubProblemDiagram`;
 		return this.http.post<Project>(url, project, this.httpOptions);
 	}
 
 	getBehIntList(project: Project, sgName: string): Observable<Phenomenon[]>{
-		const url = `http://localhost:8080/project/getBehIntList/${sgName}`;
+		const url = `http://47.52.116.116:8099/project/getBehIntList/${sgName}`;
 		return this.http.post<Phenomenon[]>(url, project, this.httpOptions);
 	}
 
 	getExpIntList(project: Project, sgName: string): Observable<Phenomenon[]>{
-		const url = `http://localhost:8080/project/getExpIntList/${sgName}`;
+		const url = `http://47.52.116.116:8099/project/getExpIntList/${sgName}`;
 		return this.http.post<Phenomenon[]>(url, project, this.httpOptions);
 	}
 

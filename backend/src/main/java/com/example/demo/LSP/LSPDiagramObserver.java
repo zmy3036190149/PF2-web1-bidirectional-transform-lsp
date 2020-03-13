@@ -28,6 +28,7 @@ import com.github.gumtreediff.tree.TreeContext;
 public class LSPDiagramObserver extends LSPObserver {
 
 	private int i = 0;
+	boolean errorFlag = false;
 
 	// ==========================初始化====================
 	@Deprecated
@@ -341,12 +342,28 @@ public class LSPDiagramObserver extends LSPObserver {
 		case "ref":
 			oldShape = JSON.parseObject(soldShape, Reference.class);
 			delete((Reference) oldShape, project.getProblemDiagram().getReferenceList());
-			LSPTransform.delete((Reference) oldShape, text_oldTree);
+			for (Requirement req : project.getProblemDiagram().getRequirementList()) {
+				if (req.getName().contentEquals(((Reference) oldShape).getFrom())) {
+					LSPTransform.delete(req.getShortname(), ((Reference) oldShape).getTo(), text_oldTree);
+				} else if (req.getName().contentEquals(((Reference) oldShape).getTo())) {
+					LSPTransform.delete(((Reference) oldShape).getFrom(), req.getShortname(), text_oldTree);
+				}
+			}
+
 			break;
 		case "con":
 			oldShape = JSON.parseObject(soldShape, Constraint.class);
 			delete((Constraint) oldShape, project.getProblemDiagram().getConstraintList());
-			LSPTransform.delete((Constraint) oldShape, text_oldTree);
+			Constraint constraint = (Constraint) oldShape;
+			for (Requirement req : project.getProblemDiagram().getRequirementList()) {
+				if (req.getName().contentEquals(constraint.getFrom())) {
+					LSPTransform.delete(req.getShortname(), constraint.getTo(), text_oldTree);
+					break;
+				} else if (req.getName().contentEquals(constraint.getTo())) {
+					LSPTransform.delete(constraint.getFrom(), req.getShortname(), text_oldTree);
+					break;
+				}
+			}
 			break;
 		case "phe":
 			LineInfo lineInfo = JSON.parseObject(slineInfo, LineInfo.class);
@@ -406,7 +423,6 @@ public class LSPDiagramObserver extends LSPObserver {
 		List<Reference> referenceList = this.project.getProblemDiagram().getReferenceList();
 		List<Constraint> constraintList = this.project.getProblemDiagram().getConstraintList();
 		if (delete instanceof Machine) {
-
 			Machine machine = (Machine) delete;
 			List<Interface> deleteInterfaceList = new LinkedList<>();
 			for (Interface interfacee : interfaceList) {
@@ -414,21 +430,24 @@ public class LSPDiagramObserver extends LSPObserver {
 						|| interfacee.getFrom().equals(machine.getShortname())) {
 					interfacee.getPhenomenonList().clear();
 					deleteInterfaceList.add(interfacee);
-					LSPTransform.delete(interfacee, text_oldTree);
+					if (!LSPTransform.delete(interfacee, text_oldTree)) {
+						errorFlag = true;
+					}
 				}
 			}
 			interfaceList.removeAll(deleteInterfaceList);
 		}
 		if (delete instanceof ProblemDomain) {
 			ProblemDomain problemDomain = (ProblemDomain) delete;
-
 			List<Interface> deleteInterfaceList = new LinkedList<>();
 			for (Interface interfacee : interfaceList) {
 				if (interfacee.getTo().equals(problemDomain.getShortname())
 						|| interfacee.getFrom().equals(problemDomain.getShortname())) {
 					interfacee.getPhenomenonList().clear();
 					deleteInterfaceList.add(interfacee);
-					LSPTransform.delete(interfacee, text_oldTree);
+					if (!LSPTransform.delete(interfacee, text_oldTree)) {
+						errorFlag = true;
+					}
 				}
 			}
 			interfaceList.removeAll(deleteInterfaceList);
@@ -439,7 +458,12 @@ public class LSPDiagramObserver extends LSPObserver {
 						|| reference.getFrom().equals(problemDomain.getShortname())) {
 					reference.getPhenomenonList().clear();
 					deleteReferebceList.add(reference);
-					LSPTransform.delete(reference, text_oldTree);
+					for (Requirement req : project.getProblemDiagram().getRequirementList()) {
+						if (req.getName().contentEquals(reference.getFrom())
+								|| req.getName().contentEquals(reference.getTo())) {
+							LSPTransform.delete(problemDomain.getShortname(), req.getShortname(), text_oldTree);
+						}
+					}
 				}
 			}
 			referenceList.removeAll(deleteReferebceList);
@@ -450,7 +474,12 @@ public class LSPDiagramObserver extends LSPObserver {
 						|| constraint.getFrom().equals(problemDomain.getShortname())) {
 					constraint.getPhenomenonList().clear();
 					deleteConstraintList.add(constraint);
-					LSPTransform.delete(constraint, text_oldTree);
+					for (Requirement req : project.getProblemDiagram().getRequirementList()) {
+						if (req.getName().contentEquals(constraint.getFrom())
+								|| req.getName().contentEquals(constraint.getTo())) {
+							LSPTransform.delete(req.getShortname(), problemDomain.getShortname(), text_oldTree);
+						}
+					}
 				}
 			}
 			constraintList.removeAll(deleteConstraintList);
@@ -461,46 +490,30 @@ public class LSPDiagramObserver extends LSPObserver {
 
 			List<Reference> deleteReferebceList = new LinkedList<>();
 			for (Reference reference : referenceList) {
-//				boolean flag = false;
-//				for (RequirementPhenomenon rp : reference.getPhenomenonList()) {
-//					if (rp.getRequirement() == requirement.getNo()) {
-//						flag = true;
-//						break;
-//					}
-//				}
-//				if (flag) {
-//					reference.getPhenomenonList().clear();
-//					deleteReferebceList.add(reference);
-//					LSPTransform.delete(reference, text_oldTree);
-//				}
-				if (reference.getTo().equals(requirement.getName())
-						|| reference.getFrom().equals(requirement.getName())) {
+				if (reference.getTo().equals(requirement.getName())) {
 					reference.getPhenomenonList().clear();
 					deleteReferebceList.add(reference);
-					LSPTransform.delete(reference, text_oldTree);
+					LSPTransform.delete(reference.getFrom(), requirement.getShortname(), text_oldTree);
+				} else if (reference.getFrom().equals(requirement.getName())) {
+					reference.getPhenomenonList().clear();
+					deleteReferebceList.add(reference);
+					LSPTransform.delete(requirement.getShortname(), reference.getTo(), text_oldTree);
 				}
 			}
 			referenceList.removeAll(deleteReferebceList);
 
 			List<Constraint> deleteConstraintList = new LinkedList<>();
 			for (Constraint constraint : constraintList) {
-//				boolean flag = false;
-//				for (RequirementPhenomenon rp : constraint.getPhenomenonList()) {
-//					if (rp.getRequirement() == requirement.getNo()) {
-//						flag = true;
-//						break;
-//					}
-//				}
-//				if (flag) {
-//					constraint.getPhenomenonList().clear();
-//					deleteConstraintList.add(constraint);
-//					LSPTransform.delete(constraint, text_oldTree);
-//				}
-				if (constraint.getTo().equals(requirement.getName())
-						|| constraint.getFrom().equals(requirement.getName())) {
+				if (constraint.getTo().equals(requirement.getName())) {
 					constraint.getPhenomenonList().clear();
 					deleteConstraintList.add(constraint);
-					LSPTransform.delete(constraint, text_oldTree);
+					LSPTransform.delete(constraint.getFrom(), requirement.getShortname(), text_oldTree);
+
+				} else if (constraint.getFrom().equals(requirement.getName())) {
+					constraint.getPhenomenonList().clear();
+					deleteConstraintList.add(constraint);
+					LSPTransform.delete(requirement.getShortname(), constraint.getTo(), text_oldTree);
+
 				}
 			}
 			constraintList.removeAll(deleteConstraintList);

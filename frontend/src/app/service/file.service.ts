@@ -36,7 +36,7 @@ export class FileService{
 
   setProject(projectAddress: string): Observable<any> {
     this.projectAddress = projectAddress;
-    const url = `http://localhost:8080/file/setProject/${projectAddress}`;
+    const url = `http://47.52.116.116:8099/file/setProject/${projectAddress}`;
     //console.log(url);
     var res = this.http.post<any>(url, this.httpOptions);
     return res;
@@ -45,7 +45,7 @@ export class FileService{
   //上传文件
   uploadFile(uploader: FileUploader) {
     // 开始上传
-    let url = `http://localhost:8080/file/upload/${this.projectAddress}`
+    let url = `http://47.52.116.116:8099/file/upload/${this.projectAddress}`
     uploader.setOptions({ url: url });
     uploader.uploadAll();
     //console.log(url);
@@ -53,7 +53,7 @@ export class FileService{
     //上传Owl文件
   uploadOwlFile(uploader: FileUploader,type,projectAddress) {
       // 开始上传
-      let url = `http://localhost:8080/file/uploadOwl/${projectAddress}/${type}`
+      let url = `http://47.52.116.116:8099/file/uploadOwl/${projectAddress}/${type}`
       uploader.setOptions({ url: url });
       uploader.uploadAll();
       console.log("uploadOwlFile",url);
@@ -62,7 +62,7 @@ export class FileService{
   //上传pf文件
   uploadpfFile(uploader: FileUploader) {
     // 开始上传
-    let url = `http://localhost:8080/file/uploadpf/${this.projectAddress}`
+    let url = `http://47.52.116.116:8099/file/uploadpf/${this.projectAddress}`
     uploader.setOptions({ url: url });
     uploader.uploadAll();
     //console.log(url);
@@ -70,14 +70,14 @@ export class FileService{
   //将后端owl目录下owl文件移动到Project目录下
   moveOwl(projectAddress: string,owl:string,version){
     this.projectAddress = projectAddress;
-    const url = `http://localhost:8080/file/moveOwl/${projectAddress}/${owl}/${version}`;
+    const url = `http://47.52.116.116:8099/file/moveOwl/${projectAddress}/${owl}/${version}`;
     //console.log(url);
     var res = this.http.post<any>(url, this.httpOptions);
     return res;
   }
   movePOwl(projectAddress: string,pOwl:string,version){
     this.projectAddress = projectAddress;
-    const url = `http://localhost:8080/file/movePOwl/${projectAddress}/${pOwl}/${version}`;
+    const url = `http://47.52.116.116:8099/file/movePOwl/${projectAddress}/${pOwl}/${version}`;
     //console.log(url);
     var res = this.http.post<any>(url, this.httpOptions);
     return res;
@@ -85,7 +85,7 @@ export class FileService{
 
   //读取项目信息
   getProject(projectAddress: string,ver): Observable<Project> {
-    const url = `http://localhost:8080/file/getProject/${projectAddress}/${ver}`;
+    const url = `http://47.52.116.116:8099/file/getProject/${projectAddress}/${ver}`;
     let res = this.http.get<Project>(url);
     //console.log("begin");
     //console.log(url);
@@ -94,7 +94,7 @@ export class FileService{
   }
   // //读取pf，若文件不存在，则返回空串
   // getPf(projectAddress: string,ver):Observable<string> {
-  //     const url = `http://localhost:8080/file/getPf/${projectAddress}/${ver}`;
+  //     const url = `http://47.52.116.116:8099/file/getPf/${projectAddress}/${ver}`;
   //     let res = this.http.get(url, {responseType: 'text'});
   //     //console.log("begin");
   //     //console.log(url);
@@ -103,7 +103,7 @@ export class FileService{
   // }
   //读取pf,若文件不存在，则将项目转为pf文件，再将内容返给客户端
   getNotNullPf(projectAddress: string,ver):Observable<string> {
-      const url = `http://localhost:8080/file/getNotNullPf/${projectAddress}/${ver}`;
+      const url = `http://47.52.116.116:8099/file/getNotNullPf/${projectAddress}/${ver}`;
       let res = this.http.get(url, {responseType: 'text'});
       //console.log("begin");
       //console.log(url);
@@ -112,13 +112,13 @@ export class FileService{
   }
   //将projectAddress对应的项目转为pf文件
   // ProjectToPf(projectAddress: string, project: Project): Observable<boolean> {
-  //   const url = `http://localhost:8080/file/ProjectToPf/${projectAddress}`;
+  //   const url = `http://47.52.116.116:8099/file/ProjectToPf/${projectAddress}`;
   //   var res = this.http.post<boolean>(url, project, this.httpOptions);
   //   return res;
   // }
   //读取项目信息
   getLatestProject(projectAddress: string,ver): Observable<Project> {
-      const url = `http://localhost:8080/file/getLatestProject/${projectAddress}/${ver}`;
+      const url = `http://47.52.116.116:8099/file/getLatestProject/${projectAddress}/${ver}`;
       let res = this.http.get<Project>(url);
       //console.log("begin");
       //console.log(url);
@@ -128,19 +128,19 @@ export class FileService{
 
   //保存项目
   saveProject(projectAddress: string,project: Project): Observable<boolean> {
-    const url = `http://localhost:8080/file/saveProject/${projectAddress}`;
+    const url = `http://47.52.116.116:8099/file/saveProject/${projectAddress}`;
     var res = this.http.post<boolean>(url, project, this.httpOptions);
     return res;
   }
   //保存pf文件
   savePf(projectAddress: string,pf: string): Observable<boolean> {
-    const url = `http://localhost:8080/file/savePf/${projectAddress}`;
+    const url = `http://47.52.116.116:8099/file/savePf/${projectAddress}`;
     var res = this.http.post<boolean>(url, pf, this.httpOptions);
     return res;
   }
 
   format(projectAddress: string, project: Project): Observable<boolean> {
-    const url = `http://localhost:8080/file/format/${projectAddress}`;
+    const url = `http://47.52.116.116:8099/file/format/${projectAddress}`;
     var res = this.http.post<boolean>(url, project, this.httpOptions);
     return res;
   }
@@ -184,34 +184,34 @@ export class FileService{
   }*/
 
   searchProject(): Observable<string[]> {
-    const url = 'http://localhost:8080/file/searchProject';
+    const url = 'http://47.52.116.116:8099/file/searchProject';
     return this.http.get<string[]>(url);
   }
 
   searchVersion(project: string): Observable<string[]> {
-    const url = `http://localhost:8080/file/searchVersion/${project}`;
+    const url = `http://47.52.116.116:8099/file/searchVersion/${project}`;
     return this.http.get<string[]>(url);
   }
   searchOwlVersion(owl: string): Observable<string[]> {
-    const url = `http://localhost:8080/file/searchOwlVersion/${owl}`;
+    const url = `http://47.52.116.116:8099/file/searchOwlVersion/${owl}`;
     return this.http.get<string[]>(url);
   }
 
   getNodes(owlAdd,powlName,nodeName,type):Observable<string[]>{
-		const url = `http://localhost:8080/file/getNodes/${owlAdd}/${powlName}/${nodeName}/${type}`;
+		const url = `http://47.52.116.116:8099/file/getNodes/${owlAdd}/${powlName}/${nodeName}/${type}`;
 		return this.http.get<string[]>(url);
   }
   searchOwl(type): Observable<string[]> {
-    const url = 'http://localhost:8080/file/searchOwl/${type}';
+    const url = 'http://47.52.116.116:8099/file/searchOwl/${type}';
     return this.http.get<string[]>(url);
   }
   getProblemDomains(owlAdd,owlName):Observable<OntologyEntity[]>{
-		const url = `http://localhost:8080/file/getProblemDomains/${owlAdd}/${owlName}`;
+		const url = `http://47.52.116.116:8099/file/getProblemDomains/${owlAdd}/${owlName}`;
 		return this.http.get<OntologyEntity[]>(url);
   }
   //上传pf文件后，获取project
   getPFProject(projectAddress: string): Observable<Project> {
-    const url = `http://localhost:8080/file/xtextToXmi`;
+    const url = `http://47.52.116.116:8099/file/xtextToXmi`;
     let res = this.http.post<Project>(url, projectAddress, this.httpOptions);
     //console.log("begin");
     //console.log(url);

@@ -30,7 +30,7 @@ export class Machine{
 			return null
 		let  machine =  new Machine()
 		machine.name=old.name
-		machine.shortname=old.shortname
+		machine.shortname=old.shortname=="M"?"M1":old.shortname	//for text syn,M is a keyword
 		machine.x=old.x
 		machine.y=old.y
 		machine.h=old.h

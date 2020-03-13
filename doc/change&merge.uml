@@ -1,0 +1,24 @@
+@startuml
+'vscode : Alt + D
+autonumber
+
+participant "Editor" as Editor1
+'participant "LSPServer1" as Server1 #orange
+participant "Observer1" as WSS1 #orange
+participant Subject
+participant "Observer2" as WSS2 #orange
+'participant "Server2" as Server2 #orange
+participant "otherEditor" as Editor2
+'==change==
+ref over Editor1,WSS1: change
+ref over Editor2,WSS2: change
+==merge==
+Editor1 -> WSS1: didSave(loc)
+WSS1 -> Subject: update(diagram_orgAST,\ndiagram_locAST,\ntext_orgAST,\ntext_locAST)
+Subject -> WSS2: notify(diagram_rem_orgAST,\ndiagram_rem_oldAST,\ntext_rem_orgAST,text_rem_oldAST)
+WSS2 -> WSS2: diagram_mergeAST = merge(\ndiagram_rem_orgAST,\ndiagram_rem_oldAST,\ndiagram_loc_orgAST,\ndiagram_loc_oldAST)
+WSS2 -> WSS2: text_mergeAST = merge(\ntext_rem_orgAST,\ntext_rem_oldAST,\ntext_rem_orgAST,\ntext_rem_oldAST)
+WSS2 -> WSS2: new = parse(merge)
+WSS2 -> Editor2: notifyClient(new)
+
+@enduml

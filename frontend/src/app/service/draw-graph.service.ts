@@ -31,6 +31,7 @@ import { DidChangeDiagramParams } from '../LSP/DidChangeDiagramParams.';
 import { DiagramContentChangeEvent } from '../LSP/DiagramContentChangeEvent';
 import { DiagramItem } from '../LSP/DiagramItem';
 import { DidOpenDiagramParams } from '../LSP/DidOpenDiagramParams'
+import { TextService } from './text.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -38,6 +39,7 @@ export class DrawGraphService {
   constructor(
     public component_choice_service: ComponentChoiceService,
     private fileService: FileService,
+    private textService: TextService,
     private projectService: ProjectService) {
     projectService.stepEmmited$.subscribe(
       step => {
@@ -118,10 +120,10 @@ export class DrawGraphService {
   messageId=0
   interval1
 
-  isProjectNull = false
+  isProjectNull = true
   //==============================WebSocket=========================
   openWebSocket(){
-    this.ws = new WebSocket('ws://localhost:8080/DiagramLSP');
+    this.ws = new WebSocket('ws://47.52.116.116:8099/DiagramLSP');
     var that = this
 
     this.ws.onopen = function () {
@@ -167,6 +169,7 @@ export class DrawGraphService {
     this.ws.onclose = function(e){
       //console.log("=================================close===============================",e);
       that.openWebSocket()
+      that.register(that.projectAddress,that.version,that.project,that.textService.pf)
     }
   }
   //-----------接收消息 old ---------
@@ -1095,11 +1098,12 @@ export class DrawGraphService {
     if(version==undefined)
       version = "undefined"
     this.version = version
-    this.isProjectNull = false
+    this.isProjectNull = true
     this.fileService.getProject(projectAddress,version).subscribe(
-      project => {        
+      project => {   
         that.setProject(project) 
-        this.isProjectNull = true 
+        that.isProjectNull = false         
+        console.log(that.isProjectNull)     
       });
   }
   //upload pf 时调用
@@ -1726,6 +1730,8 @@ export class DrawGraphService {
           graph.removeCells([element])
       }      
     }
+    
+    console.log(this.project)
     this.projectService.sendProject(this.project);   
   }
 

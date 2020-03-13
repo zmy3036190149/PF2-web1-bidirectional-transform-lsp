@@ -18,7 +18,7 @@ export class UploadService {
   ) { }
  upload(file: File) {
 	if (!file) { return; }
-	const req = new HttpRequest('POST', `http://localhost:8080/file/upload/${this.projectAddress}`, file, {
+	const req = new HttpRequest('POST', `http://47.52.116.116:8099/file/upload/${this.projectAddress}`, file, {
       reportProgress: true
 	});
 	return this.http.request(req).pipe(

@@ -19,6 +19,7 @@ import {
 } from 'vscode-languageserver-protocol/lib/main';
 import { DiagramMessageFactory } from '../LSP/DiagramMessageFactory';
 import { Project } from '../entity/Project';
+import { ProjectService } from './project.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,18 +36,27 @@ export class TextService {
   connection: MessageConnection
   languageClient: MonacoLanguageClient
   filename: string
-  isPfNull = false
-  pf
+  isPfNull = true
+  pf = ""
+  project:Project
+  hasSpace=false
   constructor(
+    private projectService: ProjectService,
     private fileService: FileService) { 
     this.messageId=0    
     this.openWebSocket()
+    projectService.stepEmmited$.subscribe(
+      project => { 
+        this.project = project;
+    })
   }
   
   languageId = 'problemframe';
+  hasCreatedEditor = false;
   createEditor(title,version,code){ 
     //create model    
     this.filename = title + version+".pf"
+    
     let model = monaco.editor.createModel(code, "problemframe", 
       monaco.Uri.parse("file://E:/test-data/"+this.filename))
     this.editor.setModel(model)
@@ -54,15 +64,19 @@ export class TextService {
       //console.log(model)
       //console.log(model.uri.toString())      
     })
-    var rootUri = "file://E:/test-data/"+this.filename;
+    var that = this
+    if(!this.hasCreatedEditor){
+      this.hasCreatedEditor = true;
+    // var rootUri = "file://E:/test-data/test.pf";
+    var rootUri = "file://root/pf-language-server/test.pf";
     //console.log(this.editor)
     // install Monaco language client services    
     MonacoServices.install(this.editor,{ rootUri: rootUri });
     // create the web socket
-    // const url = 'ws://localhost:8030/sampleServer';
-    const url = 'ws://localhost:8080/LSP';
+    const url = 'ws://47.52.116.116:8030/sampleServer';
+    // const url = 'ws://47.52.116.116:8099/LSP';
     const webSocket = this.createWebSocket(url);
-    var that = this
+    
     // listen when the web socket is opened
     listen({
       webSocket,
@@ -70,18 +84,20 @@ export class TextService {
         // create and start the language client
         const languageClient = this.createLanguageClient(connection);
         const disposable = languageClient.start();
-        connection.onClose(() => disposable.dispose());
-        
+        connection.onClose(() => disposable.dispose());        
         that.connection = connection
         that.languageClient = languageClient
       }
-    });      
+    }); 
+    }
+
+     
     this.editor.setValue(code)  
     //listen when the editor's value changed
     this.interval = setInterval(function(){
       that.didSave()
       }
-    ,2000)
+    ,1000)
   }
 
   //old
@@ -203,17 +219,31 @@ export class TextService {
     if(version==undefined)
       version = "undefined"
     this.version = version
-    this.isPfNull = false
+    this.isPfNull = true
     this.fileService.getNotNullPf(projectAddress,version).subscribe(
       pf => {
-        this.isPfNull = true
+        that.isPfNull = false
+        const r = /problem: (.*)\n/g
+        let line = pf.match(r)[0].trim()
+        let title = line.replace("problem: ","").trim()
+        if(title.indexOf(" ")!= -1){
+          if(title[0]!="#")
+            title = "#"+title
+          if(title[title.length-1]!="#")
+            title += "#"
+        }
+        pf = pf.replace(/problem: .*\n/g,"problem: "+title + "\n")
+        pf = pf.replace("M M ","M1 M ")
+        this.pf = pf
+
+        console.log(that.isPfNull,pf)
       })
   }
 
   //=============websocket============
   //old
   openWebSocket_old(){
-    this.ws = new WebSocket('ws://localhost:8080/webSocket');
+    this.ws = new WebSocket('ws://47.52.116.116:8099/webSocket');
     var that = this
     this.ws.onopen = function () {
       //console.log('client: ws connection is open');
@@ -293,7 +323,7 @@ export class TextService {
 
   //======== websocket new =========
   openWebSocket(){
-    this.ws = new WebSocket('ws://localhost:8080/TextLSP');
+    this.ws = new WebSocket('ws://47.52.116.116:8099/TextLSP');
     var that = this
     this.ws.onopen = function () {
       //console.log('client: ws connection is open');
@@ -312,9 +342,9 @@ export class TextService {
       //console.log('=================================error================================', e);
     };
     this.ws.onclose = function(e){
-      //console.log("=================================close===============================",e);
-      // that.openWebSocket()      
-      // that.register(that.projectAddress,that.version,that.getText())   
+      console.log("=================================close===============================",e);
+      that.openWebSocket()      
+      that.register(that.projectAddress,that.version,that.project,that.pf)   
     }
   }
 
@@ -335,14 +365,13 @@ export class TextService {
     this.ws.send(JSON.stringify(message))
     this.projectAddress = title
     this.version = version
-
+    this.newValue = text
     //createEditor
     this.createEditor(this.projectAddress,this.version,text)
     let that = this
     this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
       function(){that.didSave()},"");
 
-    this.newValue = text
   }
 
   //new

@@ -17,6 +17,8 @@ import com.github.gumtreediff.tree.ITree;
 import com.github.gumtreediff.tree.TreeContext;
 
 public class LSPTextObserver extends LSPObserver {
+	boolean isSyn = false;
+	int times = 0;
 
 	// ==========================初始化====================
 	@Deprecated
@@ -53,7 +55,7 @@ public class LSPTextObserver extends LSPObserver {
 
 	// 根据pf文件生成AST
 	public TreeContext generateAST(String filePath) {
-		return ASTService.generatePfAST(filePath);
+		return ASTService.generateNoErrorPfAST(filePath);
 	}
 
 	// save lastest pf to lastestProject/{uri}/loc.pf
@@ -92,16 +94,28 @@ public class LSPTextObserver extends LSPObserver {
 		orgTree = oldTree.deepCopy();
 	}
 
+	boolean hasSpace(String old, String new1) {
+
+		return true;
+	}
+
 	public void change(String pf) {
 
+		// 判断是否同步
 		this.pf = pf;
-		// save pf to loc.pf, then get locAST
+		// save pf to loc.pf, then gset locAST
 		long time = System.currentTimeMillis();
-		generateTextLocAST(time);
+		if (!generateTextLocAST(time))
+			return;
 
-		// 根据orgAST,oldAST和locAST，生成新的oldAST
-		text_oldTree = changeOldAST(text_orgTree, text_oldTree, text_locTree);
-		text_oldContext.setRoot(text_oldTree);
+		if (text_oldTree == null || text_orgTree == null) {
+			generateTextOrgAST(time);
+			generateTextOldAST(time);
+		} else {
+			// 根据orgAST,oldAST和locAST，生成新的oldAST
+			text_oldTree = changeOldAST(text_orgTree, text_oldTree, text_locTree);
+			text_oldContext.setRoot(text_oldTree);
+		}
 
 		// 生成新的 old.pf
 		ASTService.generatePfFile(text_oldTree, rootAddress, text_oldPath);

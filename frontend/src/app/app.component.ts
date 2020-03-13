@@ -136,11 +136,12 @@ export class AppComponent {
       // window.location.assign('/' + this.project)
       var that = this
       that.dg_service.getProject(that.project,version) 
-      that.textService.getNotNullPf(that.project,version)
 
       //register
-      that.interval = setInterval(function () {              
-        if(that.textService.isPfNull && !that.dg_service.isProjectNull){ 
+      that.interval = setInterval(function () {      
+        if(that.textService.isPfNull)
+          that.textService.getNotNullPf(that.project,version)        
+        if(!that.textService.isPfNull && !that.dg_service.isProjectNull){ 
           clearInterval(that.interval)  
           let projectAddress = that.textService.projectAddress
           let pf = that.textService.pf == "" ?  "#"+that.textService.projectAddress+"#\n" : that.textService.pf
@@ -149,7 +150,6 @@ export class AppComponent {
             clearInterval(interval_t_d)
             that.dg_service.register(projectAddress,version,that.dg_service.project,pf)
           },500)
-          
         }
       }, 1000)
       
@@ -370,7 +370,7 @@ export class AppComponent {
           if(!flag){
             //diagram
             this.dg_service.initProject(description);
-            this.dg_service.initPapers();
+            
             
             //text
             var that = this
@@ -379,9 +379,10 @@ export class AppComponent {
               that.dg_service.register(description,"undefined",that.dg_service.project,"problem: #"+description+"#\n");
               let interval_t_d = setInterval(function(){
                 clearInterval(interval_t_d)
-                that.textService.register(description,"undefined",that.dg_service.project,"problem: #"+description+"#\n");     
+                that.textService.register(description,"undefined",that.dg_service.project,"problem: #"+description+"#\n");
+                that.dg_service.initPapers();     
               },500)
-            }, 500)            
+            }, 100)            
             this.closePopEdit();
           }         
         }

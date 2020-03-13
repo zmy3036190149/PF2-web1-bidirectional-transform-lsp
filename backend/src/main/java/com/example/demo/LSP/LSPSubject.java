@@ -151,7 +151,11 @@ public class LSPSubject {
 		// 生成 old.pf (for test)
 		ASTService.generatePfFile(text_old, rootAddress, text_oldPath);
 		// 生成 old.xml (for test)
-		astService.generateXmlFile(diagram_old, diagram_oldPath);
+		ASTService.generateXmlFile(diagram_old, diagram_oldPath);
+		diagram_orgTree = diagram_org;
+		diagram_oldTree = diagram_old;
+		text_orgTree = text_org;
+		text_oldTree = text_old;
 		notifyObserver(text_org, text_old, diagram_org, diagram_old, session);
 
 	}

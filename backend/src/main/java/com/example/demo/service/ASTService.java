@@ -15,7 +15,9 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.impl.CompositeNode;
@@ -63,7 +65,7 @@ public class ASTService {
 
 	// ================== project =============================
 	// 根据AST生成 xml文件
-	public void generateXmlFile(ITree tree, String path) {
+	public static void generateXmlFile(ITree tree, String path) {
 		ITree root = getProjectParent(tree);
 		String str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?";
 		str += parseAST(root);
@@ -82,7 +84,7 @@ public class ASTService {
 		}
 	}
 
-	public ITree getProjectParent(ITree tree) {
+	public static ITree getProjectParent(ITree tree) {
 		for (ITree child : tree.getChildren()) {
 			if (child.getLabel().contentEquals("project"))
 				return tree;
@@ -97,7 +99,7 @@ public class ASTService {
 	}
 
 	// 遍历xml AST
-	public String parseAST(ITree tree) {
+	public static String parseAST(ITree tree) {
 		String str = "";
 		// 输出
 //		System.out.print(tree.toShortString()+","+tree.getId()+"\t\t");	
@@ -174,7 +176,7 @@ public class ASTService {
 	}
 
 	// 获取最新的project
-	public Project getProject(String projectAddress) {
+	public static Project getProject(String projectAddress) {
 		Project project = new Project();
 		SAXReader saxReader = new SAXReader();
 		try {
@@ -229,7 +231,7 @@ public class ASTService {
 		return project;
 	}
 
-	private Machine getMachine(Element machineElement) {
+	private static Machine getMachine(Element machineElement) {
 		// TODO Auto-generated method stub
 		Machine machine = new Machine();
 
@@ -255,7 +257,7 @@ public class ASTService {
 		return machine;
 	}
 
-	private List<ProblemDomain> getProblemDomainList(Element problemDomainListElement) {
+	private static List<ProblemDomain> getProblemDomainList(Element problemDomainListElement) {
 		// TODO Auto-generated method stub
 		List<ProblemDomain> problemDomainList = new ArrayList<ProblemDomain>();
 
@@ -325,7 +327,7 @@ public class ASTService {
 		return problemDomainList;
 	}
 
-	private List<Interface> getInterfaceList(Element interfaceListElement) {
+	private static List<Interface> getInterfaceList(Element interfaceListElement) {
 		// TODO Auto-generated method stub
 		List<Interface> interfaceList = new ArrayList<Interface>();
 		List<?> interfaceElementList = interfaceListElement.elements("Element");
@@ -367,7 +369,7 @@ public class ASTService {
 		return interfaceList;
 	}
 
-	private List<Phenomenon> getPhenomenonList(List<?> phenomenonElementList) {
+	private static List<Phenomenon> getPhenomenonList(List<?> phenomenonElementList) {
 		// TODO Auto-generated method stub
 		List<Phenomenon> phenomenonList = new ArrayList<Phenomenon>();
 		for (Object object : phenomenonElementList) {
@@ -393,7 +395,7 @@ public class ASTService {
 		return phenomenonList;
 	}
 
-	private List<Requirement> getRequirementList(Element requirementListElement) {
+	private static List<Requirement> getRequirementList(Element requirementListElement) {
 		// TODO Auto-generated method stub
 		List<?> requirementElementList = requirementListElement.elements("Element");
 		List<Requirement> requirementList = new ArrayList<Requirement>();
@@ -407,7 +409,7 @@ public class ASTService {
 		return requirementList;
 	}
 
-	private Requirement getRequirement(Element requirementElement) {
+	private static Requirement getRequirement(Element requirementElement) {
 		// TODO Auto-generated method stub
 		Requirement requirement = new Requirement();
 
@@ -435,7 +437,7 @@ public class ASTService {
 		return requirement;
 	}
 
-	private List<Constraint> getConstraintList(Element constraintListElement) {
+	private static List<Constraint> getConstraintList(Element constraintListElement) {
 		// TODO Auto-generated method stub
 		List<Constraint> constraintList = new ArrayList<Constraint>();
 		List<?> constraintElementList = constraintListElement.elements("Element");
@@ -475,7 +477,7 @@ public class ASTService {
 		return constraintList;
 	}
 
-	private List<RequirementPhenomenon> getRequirementPhenomenonList(List<?> phenomenonElementList) {
+	private static List<RequirementPhenomenon> getRequirementPhenomenonList(List<?> phenomenonElementList) {
 		// TODO Auto-generated method stub
 		List<RequirementPhenomenon> phenomenonList = new ArrayList<RequirementPhenomenon>();
 		for (Object object : phenomenonElementList) {
@@ -505,7 +507,7 @@ public class ASTService {
 		return phenomenonList;
 	}
 
-	private List<Reference> getReferenceList(Element referenceListElement) {
+	private static List<Reference> getReferenceList(Element referenceListElement) {
 		// TODO Auto-generated method stub
 		List<Reference> referenceList = new ArrayList<Reference>();
 		List<?> referenceElementList = referenceListElement.elements("Element");
@@ -599,6 +601,26 @@ public class ASTService {
 	}
 
 	// 根据pf文件生成AST
+	public static TreeContext generateNoErrorPfAST(String filePath) {
+		File file = new File(filePath);
+		PfStandaloneSetup.doSetup();
+		XtextResourceSet resourceSet = new XtextResourceSet();
+		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+		URI uri = URI.createURI(file.getPath());
+		XtextResource xtextResource = (XtextResource) resourceSet.getResource(uri, true);
+		IParseResult parseResult = xtextResource.getParseResult();
+		EList<Diagnostic> error = xtextResource.getErrors();
+		if (error.isEmpty()) {
+			ICompositeNode rootNode = parseResult.getRootNode();
+			TreeContext context = new TreeContext();
+			id = 0;
+			buildTree(context, rootNode);
+			return context;
+		}
+		return null;
+	}
+
+	// 根据pf文件生成AST
 	public static TreeContext generatePfAST(String filePath) {
 		File file = new File(filePath);
 		PfStandaloneSetup.doSetup();
@@ -607,11 +629,13 @@ public class ASTService {
 		URI uri = URI.createURI(file.getPath());
 		XtextResource xtextResource = (XtextResource) resourceSet.getResource(uri, true);
 		IParseResult parseResult = xtextResource.getParseResult();
+
 		ICompositeNode rootNode = parseResult.getRootNode();
 		TreeContext context = new TreeContext();
 		id = 0;
 		buildTree(context, rootNode);
 		return context;
+
 	}
 
 	// 将Xtext格式AST转换为GumTree格式语法树

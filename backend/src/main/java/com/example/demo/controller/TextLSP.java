@@ -64,7 +64,7 @@ public class TextLSP {
 		this.session = session;
 		webSocketSet.add(this); // 加入set中
 		addOnlineCount(); // 在线数加1
-		System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+		System.out.println("TextLSP有新连接加入！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
@@ -131,7 +131,6 @@ public class TextLSP {
 		System.out.println("==========================");
 	}
 
-	@Deprecated
 	void register(Session session, JSONObject json) {
 		System.out.println("============register==============");
 		JSONObject params = (JSONObject) json.get("params");

@@ -133,7 +133,21 @@ export class TopbarComponent implements OnInit {
           var that = this;
           that.interval = setInterval(function () {
             clearInterval(that.interval);
-            that.dg_service.getProject(that.projectAddress,undefined);
+            that.dg_service.getProject(that.projectAddress,undefined);            
+            let iinterval = setInterval(function () {      
+              if(that.textService.isPfNull)
+                that.textService.getNotNullPf(that.projectAddress,undefined)        
+              if(!that.textService.isPfNull && !that.dg_service.isProjectNull){ 
+                clearInterval(iinterval)  
+                let projectAddress = that.textService.projectAddress
+                let pf = that.textService.pf == "" ?  "#"+that.textService.projectAddress+"#\n" : that.textService.pf
+                that.textService.register(projectAddress,undefined,that.dg_service.project,pf) 
+                let interval_t_d = setInterval(function(){            
+                  clearInterval(interval_t_d)
+                  that.dg_service.register(projectAddress,undefined,that.dg_service.project,pf)
+                },500)
+              }
+            }, 1000)
           }, 1500);
         } else {
           alert('The project already exists!');
@@ -217,7 +231,7 @@ export class TopbarComponent implements OnInit {
    // this.version = window.location.pathname.split('/')[2];
     // }
     var project = this.dg_service.project;
-    var url = 'http://localhost:8080/file/download/' + project.title + '/' ;
+    var url = 'http://47.52.116.116:8099/file/download/' + project.title + '/' ;
     //console.log(url);
     var form = document.createElement('form');
     document.body.appendChild(form);
@@ -264,7 +278,7 @@ export class TopbarComponent implements OnInit {
     // this.version = window.location.pathname.split('/')[2];
     // }
     var project = this.dg_service.project;
-    var url = 'http://localhost:8080/file/formatdownload/' + project.title + '/';
+    var url = 'http://47.52.116.116:8099/file/formatdownload/' + project.title + '/';
     //console.log(url);
     var form = document.createElement('form');
     document.body.appendChild(form);

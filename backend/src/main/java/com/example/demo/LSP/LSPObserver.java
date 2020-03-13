@@ -7,7 +7,6 @@ import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alexander.solovyov.TreeDifferences;
 import com.example.demo.bean.Constraint;
 import com.example.demo.bean.ProblemDiagram;
 import com.example.demo.bean.Project;
@@ -89,6 +88,8 @@ public abstract class LSPObserver {
 	protected ITree diagram_orgTree;
 	protected ITree diagram_oldTree;
 	protected ITree diagram_locTree;
+
+	protected boolean hasSpace = false;
 
 	// ==========================初始化====================
 	@Deprecated
@@ -241,32 +242,48 @@ public abstract class LSPObserver {
 		text_oldTree = text_old;
 		diagram_orgTree = diagram_org;
 		diagram_oldTree = diagram_old;
+		// generate new Project and Pf
+		pf = ASTService.getPf(text_old);
+		ASTService.generateXmlFile(diagram_old, diagram_oldPath);
+		project = ASTService.getProject(diagram_oldPath);
 	}
 
-	public void generateTextOrgAST(long time) {
+	public boolean generateTextOrgAST(long time) {
 		saveLastestPf();
 		Rename(text_locPath, text_orgPath);
-		text_orgContext = ASTService.generatePfAST(text_orgPath);
+		text_orgContext = ASTService.generateNoErrorPfAST(text_orgPath);
+		if (text_orgContext == null)
+			return false;
 		text_orgTree = text_orgContext.getRoot();
+		if (text_orgTree == null)
+			return false;
 		text_orgTree = ASTService.addTime((Tree) text_orgTree, time);
 		text_orgContext.setRoot(text_orgTree);
+		return true;
 	}
 
-	public void generateTextOldAST(long time) {
+	public boolean generateTextOldAST(long time) {
 		saveLastestPf();
 		Rename(text_locPath, text_oldPath);
-		text_oldContext = ASTService.generatePfAST(text_oldPath);
+		text_oldContext = ASTService.generateNoErrorPfAST(text_oldPath);
+		if (text_oldContext == null)
+			return false;
 		text_oldTree = text_oldContext.getRoot();
 		text_oldTree = ASTService.addTime((Tree) text_oldTree, time);
 		text_oldContext.setRoot(text_oldTree);
+		return true;
 	}
 
-	public void generateTextLocAST(long time) {
+	public boolean generateTextLocAST(long time) {
 		saveLastestPf();
-		text_locContext = ASTService.generatePfAST(text_locPath);
+		TreeContext tc = ASTService.generateNoErrorPfAST(text_locPath);
+		if (tc == null)
+			return false;
+		text_locContext = tc;
 		text_locTree = text_locContext.getRoot();
 		text_locTree = ASTService.addTime((Tree) text_locTree, time);
 		text_locContext.setRoot(text_locTree);
+		return true;
 	}
 
 	public void generateDiagramOrgAST(long time) {
@@ -367,6 +384,15 @@ public abstract class LSPObserver {
 		actionGenerator.generate();
 		List<Action> actions_old_loc = actionGenerator.getActions();
 
+		// 判断变化的内容是否有空格，回车键
+		hasSpace = false;
+		for (Action action_old_loc : actions_old_loc) {
+			String label = action_old_loc.getNode().getLabel();
+			if (label.contains(" ") || label.contains("\n")) {
+				hasSpace = true;
+				break;
+			}
+		}
 		// 构建time-AST
 		return generateTimeAST(orgTree, oldTree, locTree, mappings_org_old, mappings_old_loc, actions_old_loc);
 
@@ -436,8 +462,20 @@ public abstract class LSPObserver {
 
 	// 根据远端传来的orgAST和oldAST,修改本地AST
 	public void updateTree(ITree rem_orgTree, ITree rem_oldTree, TreeContext orgContext, TreeContext oldContext) {
-		ITree orgTree = orgContext.getRoot();
-		ITree oldTree = oldContext.getRoot();
+		ITree orgTree;
+		ITree oldTree;
+		if (orgContext == null) {
+			orgTree = rem_orgTree.deepCopy();
+			orgContext = new TreeContext();
+			orgContext.setRoot(orgTree);
+			oldTree = rem_oldTree.deepCopy();
+			oldContext = new TreeContext();
+			oldContext.setRoot(orgTree);
+		} else {
+			orgTree = orgContext.getRoot();
+			oldTree = oldContext.getRoot();
+		}
+
 		// delta1 locOrg locOld
 		Matcher matcher_locOrg_locOld = Matchers.getInstance().getMatcher(orgTree, oldTree);
 		matcher_locOrg_locOld.match();
@@ -445,10 +483,10 @@ public abstract class LSPObserver {
 		ActionGenerator actionGenerator_locOrg_locOld = new ActionGenerator(orgTree, oldTree, mappings_locOrg_locOld);
 		actionGenerator_locOrg_locOld.generate();
 		List<Action> actions_locOrg_locOld = actionGenerator_locOrg_locOld.getActions();
-		TreeDifferences app1 = new TreeDifferences("locOrg locOld", orgContext, oldContext, actions_locOrg_locOld,
-				mappings_locOrg_locOld);
-		if (orgContext == text_orgContext)
-			app1.setVisible(true);
+//		TreeDifferences app1 = new TreeDifferences("locOrg locOld", orgContext, oldContext, actions_locOrg_locOld,
+//				mappings_locOrg_locOld);
+//		if (orgContext == text_orgContext)
+//			app1.setVisible(true);
 
 		// delta2 locOrg remOld
 		Matcher matcher2 = Matchers.getInstance().getMatcher(orgTree, rem_oldTree);
@@ -462,10 +500,10 @@ public abstract class LSPObserver {
 		}
 		TreeContext remOldContext = new TreeContext();
 		remOldContext.setRoot(rem_oldTree);
-		TreeDifferences app2 = new TreeDifferences("locOrg remOld", orgContext, remOldContext, actions_locOrg_remOld,
-				mappings_locOrg_remOld);
-		if (orgContext == text_orgContext)
-			app2.setVisible(true);
+//		TreeDifferences app2 = new TreeDifferences("locOrg remOld", orgContext, remOldContext, actions_locOrg_remOld,
+//				mappings_locOrg_remOld);
+//		if (orgContext == text_orgContext)
+//			app2.setVisible(true);
 
 		// delta3 locOrg remOrg
 		Matcher matcher3 = Matchers.getInstance().getMatcher(orgTree, rem_orgTree);
@@ -477,10 +515,10 @@ public abstract class LSPObserver {
 
 		TreeContext remOrgContext = new TreeContext();
 		remOrgContext.setRoot(rem_orgTree);
-		TreeDifferences app3 = new TreeDifferences("locOrg remOrg", orgContext, remOrgContext, actions_locOrg_remOrg,
-				mappings_locOrg_remOrg);
-		if (orgContext == text_orgContext)
-			app3.setVisible(true);
+//		TreeDifferences app3 = new TreeDifferences("locOrg remOrg", orgContext, remOrgContext, actions_locOrg_remOrg,
+//				mappings_locOrg_remOrg);
+//		if (orgContext == text_orgContext)
+//			app3.setVisible(true);
 
 		boolean isChange = false;
 		boolean conflict = false;

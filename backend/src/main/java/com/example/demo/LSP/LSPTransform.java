@@ -3,6 +3,7 @@ package com.example.demo.LSP;
 import java.io.File;
 import java.util.List;
 
+import com.alexander.solovyov.TreeDifferences;
 import com.example.demo.bean.Constraint;
 import com.example.demo.bean.Interface;
 import com.example.demo.bean.Machine;
@@ -14,6 +15,11 @@ import com.example.demo.bean.Requirement;
 import com.example.demo.service.ASTService;
 import com.example.demo.service.FileOperation;
 import com.example.demo.service.ProblemEditor;
+import com.github.gumtreediff.actions.ActionGenerator;
+import com.github.gumtreediff.actions.model.Action;
+import com.github.gumtreediff.matchers.MappingStore;
+import com.github.gumtreediff.matchers.Matcher;
+import com.github.gumtreediff.matchers.Matchers;
 import com.github.gumtreediff.tree.ITree;
 import com.github.gumtreediff.tree.Tree;
 import com.github.gumtreediff.tree.TreeContext;
@@ -50,7 +56,7 @@ public class LSPTransform {
 	}
 
 	public static void add(Reference reference, ITree tree) {
-		String str = "\n" + reference.getFrom() + " ~> " + reference.getTo() + " \"" + reference.getName() + "\"\n";
+		String str = "\n" + reference.getFrom() + " ~~ " + reference.getTo() + " \"" + reference.getName() + "\"\n";
 		changeAST(tree, Integer.MAX_VALUE, str);
 	}
 
@@ -156,6 +162,8 @@ public class LSPTransform {
 		str = "problem: #1#\n" + str + " M111 M \"machine\"";
 		FileOperation.writeToFile(str, filePath);
 		TreeContext tc = ASTService.generatePfAST(filePath);
+		if (tc == null)
+			return;
 		ITree t = tc.getRoot();
 		for (ITree child : t.getChildren()) {
 			if (child.getType() == 1) {
@@ -235,25 +243,76 @@ public class LSPTransform {
 	public static void delete(Requirement requirement, ITree tree) {
 		for (ITree t : tree.getTrees()) {
 			if (t.getLabel().contentEquals("R")) {
-				ITree parent = t.getParent();
-				while (parent.getType() != 1) {
-					parent = parent.getParent();
+				ITree lineTree = t.getParent();
+				while (lineTree.getType() != 1) {
+					lineTree = lineTree.getParent();
 				}
-				for (ITree child : parent.getTrees()) {
+				for (ITree child : lineTree.getTrees()) {
 					if (child.getLabel().contentEquals(requirement.getShortname())) {
-						parent.getParent().getChildren().remove(parent);
+						lineTree.getParent().getChildren().remove(lineTree);
+						return;
 					}
 				}
 			}
 		}
+		// 没有类型，找到type =1的节点，若子节点无类型，判断是否包含requirement名称
+		boolean isFindRequirement = false;
+		boolean isRequirement = true;
+		for (ITree lineTree : tree.getChildren()) {
+			if (lineTree.getType() == 1) {
+				for (ITree t : lineTree.getTrees()) {
+					if (t.getLabel().contentEquals(requirement.getShortname())) {
+						isFindRequirement = true;
+					} else if (t.getLabel().contentEquals("--") || t.getLabel().contentEquals("->")
+							|| t.getLabel().contentEquals("~~") || t.getLabel().contentEquals("~>")
+							|| t.getLabel().contentEquals("<~") || t.getLabel().contentEquals("C")
+							|| t.getLabel().contentEquals("B") || t.getLabel().contentEquals("X")) {
+						isRequirement = false;
+					}
+				}
+				if (isFindRequirement || isRequirement) {
+					tree.getChildren().remove(lineTree);
+				}
+			}
+		}
+
 	}
 
-	public static void delete(Interface interfacee, ITree tree) {
+	public static boolean delete(Interface interfacee, ITree tree) {
+		if (tree == null) {
+			// 生成 pf, 直接替换
+			return false;
+		}
 		for (ITree t : tree.getTrees()) {
 			if (t.getLabel().contentEquals("--") || t.getLabel().contentEquals("->")) {
 				ITree parent = t.getParent();
-				while (parent.getType() != 1) {
+				while (parent.getType() != 1 && parent.getType() != 0) {
+					if (parent.getParent() == null) {
+						System.err.println("parent.getParent()==null");
+						break;
+					}
 					parent = parent.getParent();
+					System.out.print(parent.getType());
+				}
+				if (parent.getType() == 0) {
+					System.err.println("parent.getType() == 0");
+					TreeContext orgContext = new TreeContext();
+					orgContext.setRoot(tree);
+					TreeContext oldContext = new TreeContext();
+					ITree treecopy = tree.deepCopy();
+					oldContext.setRoot(treecopy);
+					Matcher matcher2 = Matchers.getInstance().getMatcher(tree, treecopy);
+					matcher2.match();
+					MappingStore mappings_locOrg_remOld = matcher2.getMappings();
+					ActionGenerator actionGenerator2 = new ActionGenerator(tree, treecopy, mappings_locOrg_remOld);
+					actionGenerator2.generate();
+					List<Action> actions_locOrg_remOld = actionGenerator2.getActions();
+					for (Action action : actions_locOrg_remOld) {
+						System.out.println(action.toString());
+					}
+					TreeDifferences app1 = new TreeDifferences("", orgContext, oldContext, actions_locOrg_remOld,
+							mappings_locOrg_remOld);
+					app1.setVisible(true);
 				}
 				int flag = 0;
 				for (ITree child : parent.getTrees()) {
@@ -268,9 +327,10 @@ public class LSPTransform {
 				}
 			}
 		}
+		return true;
 	}
 
-	public static void delete(Reference reference, ITree tree) {
+	public static void delete(String from, String to, ITree tree) {
 		for (ITree t : tree.getTrees()) {
 			if (t.getLabel().contentEquals("~~") || t.getLabel().contentEquals("~>")) {
 				ITree parent = t.getParent();
@@ -279,34 +339,13 @@ public class LSPTransform {
 				}
 				int flag = 0;
 				for (ITree child : parent.getTrees()) {
-					if (child.getLabel().contentEquals(reference.getFrom())) {
+					if (child.getLabel().contentEquals(from)) {
 						flag++;
-					} else if (child.getLabel().contentEquals(reference.getTo())) {
-						flag++;
-					}
-				}
-				if (flag == 2)
-					parent.getParent().getChildren().remove(parent);
-			}
-		}
-	}
-
-	public static void delete(Constraint constraint, ITree tree) {
-		for (ITree t : tree.getTrees()) {
-			if (t.getLabel().contentEquals("~~") || t.getLabel().contentEquals("~>")) {
-				ITree parent = t.getParent();
-				while (parent.getType() != 1) {
-					parent = parent.getParent();
-				}
-				int flag = 0;
-				for (ITree child : parent.getTrees()) {
-					if (child.getLabel().contentEquals(constraint.getFrom())) {
-						flag++;
-					} else if (child.getLabel().contentEquals(constraint.getTo())) {
+					} else if (child.getLabel().contentEquals(to)) {
 						flag++;
 					}
 				}
-				if (flag == 2)
+				if (flag == 2)// requirement's shortName != reference's from(to)
 					parent.getParent().getChildren().remove(parent);
 			}
 		}

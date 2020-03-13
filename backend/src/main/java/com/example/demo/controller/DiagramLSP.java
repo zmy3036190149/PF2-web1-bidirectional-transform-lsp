@@ -67,7 +67,7 @@ public class DiagramLSP {
 		this.session = session;
 		webSocketSet.add(this); // 加入set中
 		addOnlineCount(); // 在线数加1
-		// System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+		System.out.println("DiagramLSP有新连接加入！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class DiagramLSP {
 		unregister(this.session);
 		webSocketSet.remove(this); // 从set中删除
 		subOnlineCount(); // 在线数减1
-		// System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
+		System.out.println("DiagramLSP有一连接关闭！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
